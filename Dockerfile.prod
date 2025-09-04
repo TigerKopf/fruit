@@ -4,14 +4,10 @@
 FROM nginx:alpine
 
 # Verwenden einer ARG für die PHP-Version für bessere Flexibilität
-# Dies kann je nach Alpine-Version php7, php81, php82 usw. sein.
-# Überprüfen Sie mit 'docker run --rm nginx:alpine apk search php8' oder 'apk search php'
-# welche Versionen und Paketnamen tatsächlich verfügbar sind.
-ARG PHP_VERSION=82 # <- HIER GEÄNDERT auf 82
+# Überprüfen Sie mit 'docker run --rm nginx:alpine apk search php', welche Versionen verfügbar sind.
+ARG PHP_VERSION=82 
 
 # Aktualisiere Pakete und installiere PHP-FPM sowie wichtige PHP-Erweiterungen
-# 'php${PHP_VERSION}-fpm' ist der PHP FastCGI Process Manager
-# Die anderen sind gängige Erweiterungen für Webanwendungen
 RUN apk update && \
     apk add --no-cache \
     php${PHP_VERSION} \
@@ -25,7 +21,6 @@ RUN apk update && \
     && rm -rf /var/cache/apk/*
 
 # Konfiguriere PHP-FPM, um Logs an stderr zu senden, im Vordergrund zu laufen und den richtigen Benutzer zu verwenden.
-# Dies ist entscheidend, damit Docker Logs korrekt erfasst und PHP-FPM als Dienst fungiert.
 RUN sed -i "s/^;error_log = .*$/error_log = \/proc\/self\/fd\/2/g" /etc/php${PHP_VERSION}/php-fpm.conf && \
     sed -i "s/^;daemonize = yes$/daemonize = no/g" /etc/php${PHP_VERSION}/php-fpm.conf && \
     sed -i "s/^;catch_workers_output = yes$/catch_workers_output = yes/g" /etc/php${PHP_VERSION}/php-fpm.d/www.conf && \
@@ -33,30 +28,37 @@ RUN sed -i "s/^;error_log = .*$/error_log = \/proc\/self\/fd\/2/g" /etc/php${PHP
     sed -i "s/^user = nobody$/user = nginx/g" /etc/php${PHP_VERSION}/php-fpm.d/www.conf && \
     sed -i "s/^group = nobody$/group = nginx/g" /etc/php${PHP_VERSION}/php-fpm.d/www.conf
 
-# Erstelle die NGINX-Konfigurationsdatei direkt im Dockerfile
-RUN --mount=type=tmpfs,target=/tmp echo 'worker_processes auto; \
-events { worker_connections 1024; } \
-http { \
-    include       mime.types; \
-    default_type  application/octet-stream; \
-    sendfile        on; \
-    keepalive_timeout  65; \
-    server { \
-        listen 80; \
-        server_name localhost; \
-        root /usr/share/nginx/html; \
-        index index.php index.html index.htm; \
-        location / { try_files $uri $uri/ =404; } \
-        location ~ \.php$ { \
-            fastcgi_split_path_info ^(.+\.php)(/.+)$; \
-            fastcgi_pass 127.0.0.1:9000; \
-            fastcgi_index index.php; \
-            include fastcgi_params; \
-            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name; \
-            fastcgi_param PATH_INFO $fastcgi_path_info; \
-        } \
-    } \
-}' > /tmp/nginx.conf && mv /tmp/nginx.conf /etc/nginx/nginx.conf
+# Erstelle die NGINX-Konfigurationsdatei direkt im Dockerfile mittels HEREDOC
+# Dies ist robuster als ein einzelner langer 'echo'-Befehl.
+RUN install -m 0644 /dev/null /etc/nginx/nginx.conf && cat << 'EOF' > /etc/nginx/nginx.conf
+worker_processes auto;
+events {
+    worker_connections 1024;
+}
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    sendfile        on;
+    keepalive_timeout  65;
+    server {
+        listen 80;
+        server_name localhost;
+        root /usr/share/nginx/html;
+        index index.php index.html index.htm;
+        location / {
+            try_files $uri $uri/ =404;
+        }
+        location ~ \.php$ {
+            fastcgi_split_path_info ^(.+\.php)(/.+)$;
+            fastcgi_pass 127.0.0.1:9000;
+            fastcgi_index index.php;
+            include fastcgi_params;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+            fastcgi_param PATH_INFO $fastcgi_path_info;
+        }
+    }
+}
+EOF
 
 # Kopiere die PHP- und HTML-Dateien in das NGINX-Standardverzeichnis
 COPY ./web /usr/share/nginx/html
@@ -64,13 +66,39 @@ COPY ./web /usr/share/nginx/html
 # Setze korrekte Berechtigungen für die Webdateien, damit NGINX und PHP-FPM sie lesen können.
 RUN chown -R nginx:nginx /usr/share/nginx/html && chmod -R 755 /usr/share/nginx/html
 
-# Erstelle das Entrypoint-Skript direkt im Dockerfile und mache es ausführbar
-RUN --mount=type=tmpfs,target=/tmp echo '#!/bin/sh \
-set -e \
-/usr/sbin/php-fpm -F & \
-exec nginx -g "daemon off;"' > /tmp/docker-entrypoint.sh && \
-    mv /tmp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh && \
-    chmod +x /usr/local/bin/docker-entrypoint.sh
+# Erstelle das Entrypoint-Skript direkt im Dockerfile mittels HEREDOC und mache es ausführbar
+RUN install -m 0755 /dev/null /usr/local/bin/docker-entrypoint.sh && cat << 'EOF' > /usr/local/bin/docker-entrypoint.sh
+#!/bin/sh
+set -e
+
+echo "Starting PHP-FPM..."
+# Starte PHP-FPM im Vordergrund, aber als Hintergrundprozess des Skripts
+# Wir erfassen die PID, um später zu überprüfen, ob es noch läuft.
+/usr/sbin/php-fpm -F &
+PHP_FPM_PID=$!
+
+# Gib PHP-FPM einen Moment, um vollständig zu starten
+sleep 2
+
+# Überprüfe, ob PHP-FPM tatsächlich läuft
+if ! ps -p $PHP_FPM_PID > /dev/null; then
+    echo "ERROR: PHP-FPM konnte nicht gestartet werden oder ist sofort abgestürzt!"
+    # Wenn PHP-FPM abstürzt, beenden wir das Skript, was den Container beendet.
+    exit 1
+fi
+echo "PHP-FPM (PID $PHP_FPM_PID) läuft."
+
+echo "Testing NGINX configuration..."
+# Überprüfe die NGINX-Konfiguration auf Syntaxfehler.
+# Wenn ein Fehler gefunden wird, beendet 'nginx -t' mit einem Fehlercode,
+# was dank 'set -e' das Skript und den Container beendet.
+nginx -t
+
+echo "Starting NGINX in foreground..."
+# Starte NGINX im Vordergrund als Hauptprozess des Containers.
+# Wenn NGINX fehlschlägt, wird der Container beendet.
+exec nginx -g "daemon off;"
+EOF
 
 # Expose Port 80 (der Standardport, auf dem NGINX lauscht)
 EXPOSE 80
