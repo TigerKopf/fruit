@@ -1,0 +1,39 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /               # Je nach Serverkonfiguration anpassen (z.B. /meinshop/)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>```
+
+
+Diese Regeln sorgen dafür, dass jede Anfrage, die nicht auf eine existierende Datei oder ein Verzeichnis im `public`-Ordner zeigt, an `index.php` weitergeleitet wird. In `index.php` müssen Sie dann einen Router implementieren, der die URL parst und den entsprechenden Controller und dessen Methode aufruft.
+
+#### Admin-Login-Logik und "Cookie Passwort"
+
+1.  **Hashed Password speichern:** Im `app/config/app.php` sollte das gehashte Passwort für den Admin-Zugang gespeichert werden. Initial können Sie das Passwort `1234` hashen lassen:
+    ```php
+    // app/config/app.php
+    <?php
+    return [
+        'admin_password_hash' => password_hash('1234', PASSWORD_DEFAULT),
+        'session_name' => 'admin_session_id',
+        'session_lifetime' => 3600, // 1 Stunde
+        // ... weitere Einstellungen
+    ];
+    ```
+   
+2.  **Login-Prozess (`AuthController.php`):**
+    *   Wenn `/admin` aufgerufen wird, prüfen Sie, ob eine gültige Admin-Session existiert.
+    *   Falls nicht, zeigen Sie `views/admin/login.php` an.
+    *   Bei Formular-Submission:
+        *   Nehmen Sie das eingegebene Passwort.
+        *   Hashen Sie es.
+        *   Vergleichen Sie den Hash mit dem in `app/config/app.php` gespeicherten `admin_password_hash` mittels `password_verify()`.
+        *   Bei Erfolg: Starten Sie eine PHP-Session (`session_start()`), speichern Sie einen Session-Token in der Session und setzen Sie ein HTTP-only Session-Cookie (z.B. mit dem Namen `admin_session_id`, wie in der Konfiguration definiert). Leiten Sie dann zu `/admin/dashboard` um.
+        *   Bei Fehler: Zeigen Sie eine Fehlermeldung an.
+3.  **Zugriffskontrolle (Middleware im `Core.php` oder `index.php`):**
+    *   Für alle Routen, die mit `/admin` beginnen (außer `/admin` selbst für den Login), überprüfen Sie, ob eine gültige Admin-Session existiert.
+    *   Falls nicht, leiten Sie den Benutzer zu `/admin` um.
+
+Diese Struktur bietet eine solide Grundlage für Ihre E-Commerce-Webseite. Viel Erfolg bei der Umsetzung!

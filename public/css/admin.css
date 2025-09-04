@@ -1,0 +1,427 @@
+/* public/css/admin.css - Google Dark Mode Style */
+
+/* -------------------------------------- */
+/* 1. Basic Reset & Global Styles         */
+/* -------------------------------------- */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', 'Arial', sans-serif; /* Roboto ist eine Google-Schriftart, Arial als Fallback */
+    line-height: 1.6;
+    color: #e8eaed; /* Heller Grauton für den Haupttext */
+    background-color: #202124; /* Dunkler Hintergrund, typisch für Google Dark Mode */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+    color: #8ab4f8; /* Helles Google-Blau für Links im Darkmode */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+ul {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #e8eaed; /* Helle Überschriftenfarbe */
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+p {
+    margin-bottom: 1rem;
+}
+
+/* -------------------------------------- */
+/* 2. Layout Structure                    */
+/* -------------------------------------- */
+.admin-container {
+    max-width: 1400px; /* Breiterer Container für Admin-Bereich */
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.admin-header {
+    background-color: #282a2d; /* Etwas hellerer Dunkelgrau für den Header */
+    padding: 16px 0;
+    border-bottom: 1px solid #3c4043; /* Dezenterer Rahmen */
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.15); /* Leichter Schatten */
+}
+
+.admin-header .admin-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-logo {
+    font-size: 1.8em;
+    font-weight: 500;
+    color: #8ab4f8; /* Akzentfarbe für das Logo */
+}
+
+.admin-nav ul {
+    display: flex;
+    gap: 24px;
+}
+
+.admin-nav ul li a {
+    color: #bdc1c6; /* Helles Grau für Navigationslinks */
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.admin-nav ul li a:hover,
+.admin-nav ul li a.active {
+    color: #8ab4f8; /* Akzentfarbe bei Hover und aktivem Link */
+    text-decoration: none;
+}
+
+.admin-main-content {
+    display: flex;
+    gap: 32px;
+    padding: 32px 0;
+}
+
+.admin-sidebar {
+    flex: 0 0 250px; /* Feste Breite für die Sidebar */
+    background-color: #282a2d;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,0.2), 0 1px 2px 0 rgba(0,0,0,0.12); /* Subtiler Schatten */
+}
+
+.admin-sidebar h3 {
+    font-size: 1.4em;
+    color: #e8eaed;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #3c4043;
+    padding-bottom: 10px;
+}
+
+.admin-sidebar ul li {
+    margin-bottom: 10px;
+}
+
+.admin-sidebar ul li a {
+    display: block;
+    padding: 8px 12px;
+    color: #bdc1c6;
+    border-radius: 4px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.admin-sidebar ul li a:hover,
+.admin-sidebar ul li a.current {
+    background-color: #3c4043;
+    color: #8ab4f8;
+    text-decoration: none;
+}
+
+.admin-content-area {
+    flex-grow: 1;
+    background-color: #282a2d; /* Hintergrund für Inhaltsbereich */
+    padding: 32px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,0.2), 0 1px 2px 0 rgba(0,0,0,0.12);
+}
+
+.admin-footer {
+    background-color: #282a2d;
+    color: #bdc1c6;
+    text-align: center;
+    padding: 24px 0;
+    margin-top: 48px;
+    border-top: 1px solid #3c4043;
+}
+
+.admin-footer a {
+    color: #bdc1c6;
+}
+
+.admin-footer a:hover {
+    color: #8ab4f8;
+}
+
+
+/* -------------------------------------- */
+/* 3. Forms & Buttons                     */
+/* -------------------------------------- */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #bdc1c6;
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+textarea,
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #5f6368; /* Dezenter Rand im Darkmode */
+    border-radius: 4px;
+    background-color: #3c4043; /* Dunklerer Hintergrund für Input-Felder */
+    color: #e8eaed;
+    font-size: 1em;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+    border-color: #8ab4f8; /* Akzentfarbe bei Fokus */
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(138, 180, 248, 0.3); /* Dezenter Fokus-Glow */
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    text-align: center;
+    border: none;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+}
+
+.btn-primary {
+    background-color: #8ab4f8; /* Helles Google-Blau für primäre Aktionen */
+    color: #202124; /* Dunkler Text auf hellem Button */
+}
+
+.btn-primary:hover {
+    background-color: #a7c5fb; /* Etwas heller bei Hover */
+    box-shadow: 0 3px 6px 0 rgba(0,0,0,0.25);
+}
+
+.btn-secondary {
+    background-color: #5f6368; /* Grauer Button für sekundäre Aktionen */
+    color: #e8eaed;
+}
+
+.btn-secondary:hover {
+    background-color: #70757a;
+    box-shadow: 0 3px 6px 0 rgba(0,0,0,0.25);
+}
+
+.btn-success {
+    background-color: #5cb85c; /* Google-Grün für Erfolgsaktionen */
+    color: #e8eaed;
+}
+
+.btn-success:hover {
+    background-color: #4CAF50;
+}
+
+.btn-danger {
+    background-color: #dc3545; /* Google-Rot für kritische Aktionen */
+    color: #e8eaed;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* -------------------------------------- */
+/* 4. Admin Specific Components           */
+/* -------------------------------------- */
+
+/* Login Page */
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    background-color: #202124;
+}
+
+.login-card {
+    background-color: #282a2d;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    border: 1px solid #3c4043;
+}
+
+.login-card h2 {
+    color: #e8eaed;
+    margin-bottom: 30px;
+    font-size: 2em;
+}
+
+.error-message {
+    color: #dc3545;
+    background-color: #3c4043;
+    border: 1px solid #dc3545;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+/* Tables */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #303134; /* Hintergrund für Tabellenkörper */
+    border-radius: 8px;
+    overflow: hidden; /* Für abgerundete Ecken */
+}
+
+.data-table th, .data-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #4a4a4a; /* Dezente Trennlinien */
+}
+
+.data-table thead {
+    background-color: #3c4043; /* Etwas dunklerer Header-Hintergrund */
+    color: #e8eaed;
+}
+
+.data-table tbody tr:hover {
+    background-color: #3c4043; /* Hover-Effekt für Zeilen */
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: none; /* Letzte Zeile ohne unteren Rand */
+}
+
+/* Cards / Panels (for dashboard, forms) */
+.card {
+    background-color: #282a2d;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,0.2), 0 1px 2px 0 rgba(0,0,0,0.12);
+    margin-bottom: 32px;
+    border: 1px solid #3c4043;
+}
+
+.card-header {
+    font-size: 1.5em;
+    font-weight: 500;
+    color: #e8eaed;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #3c4043;
+    padding-bottom: 10px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.metric-card {
+    background-color: #282a2d;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,0.2), 0 1px 2px 0 rgba(0,0,0,0.12);
+    text-align: center;
+    border: 1px solid #3c4043;
+}
+
+.metric-card .value {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #8ab4f8; /* Akzentfarbe für wichtige Metriken */
+    margin-bottom: 10px;
+}
+
+.metric-card .label {
+    font-size: 1.1em;
+    color: #bdc1c6;
+}
+
+/* Utility Classes */
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+.mt-20 { margin-top: 20px; }
+.mb-20 { margin-bottom: 20px; }
+.p-20 { padding: 20px; }
+
+/* -------------------------------------- */
+/* 5. Responsive Design                   */
+/* -------------------------------------- */
+@media (max-width: 992px) {
+    .admin-main-content {
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .admin-sidebar {
+        flex: none;
+        width: 100%;
+        order: 2; /* Sidebar nach unten verschieben */
+    }
+
+    .admin-content-area {
+        order: 1; /* Inhalt nach oben verschieben */
+    }
+
+    .admin-nav ul {
+        flex-direction: column;
+        align-items: flex-start; /* Links oben ausrichten */
+        gap: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-header .admin-container {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .admin-logo {
+        margin-bottom: 10px;
+    }
+
+    .admin-container {
+        padding: 0 16px;
+    }
+
+    .login-card {
+        padding: 30px;
+    }
+
+    .data-table {
+        font-size: 0.9em; /* Kleinere Schrift für Tabellen */
+    }
+    .data-table th, .data-table td {
+        padding: 10px 12px;
+    }
+}
