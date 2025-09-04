@@ -1,3 +1,7 @@
-#!/usr/bin/env bash
-service nginx start
-php-fpm
+#!/bin/sh
+
+# Starten Sie PHP-FPM im Hintergrund
+php-fpm -D
+
+# Starten Sie NGINX im Vordergrund
+nginx -g 'daemon off;'
