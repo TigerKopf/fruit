@@ -5,7 +5,7 @@ services:
     image: nginx:latest
     container_name: nginx
     ports:
-      - "8080:80"
+      - "801:80"
     volumes:
       - ./src:/var/www/html
       - ./nginx:/etc/nginx/conf.d
