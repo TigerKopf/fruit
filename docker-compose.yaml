@@ -1,63 +1,6 @@
-version: '3.8'
-
+version: '3'
 services:
-  httpd:
-    image: httpd:latest
-    container_name: httpd_app
-    ports:
-      - "801:801"
-    volumes:
-      # Bindet den Root Ihres Coolify-Repositorys (dargestellt durch .)
-      # in das DocumentRoot von Apache im Container ein. [5]
-      - type: bind
-        source: .
-        target: /var/www/html
-        is_directory: true 
-      
-      # Bindet Ihre benutzerdefinierte Apache-Konfiguration ein. [5]
-      # Stellen Sie sicher, dass die Datei 'httpd/httpd.conf' in Ihrem Repository existiert.
-      - ./httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf
-      
-      # Bindet das benutzerdefinierte Entrypoint-Skript ein.
-      - ./entrypoint-httpd.sh:/usr/local/bin/entrypoint-httpd.sh
-    
-    # Verwendet das benutzerdefinierte Entrypoint-Skript für den Dienst.
-    entrypoint: ["/usr/local/bin/entrypoint-httpd.sh"]
-    
-    environment:
-      - SERVICE_FQDN_HTTPD_80
-      - APACHE_DOCUMENT_ROOT=${APACHE_DOCUMENT_ROOT:?/var/www/html}
-      - APACHE_SERVER_ADMIN=${APACHE_SERVER_ADMIN:-webmaster@localhost}
-    labels:
-      - coolify.managed=true
-      - coolify.applicationId=YOUR_COOLIFY_APP_ID # WICHTIG: Ersetzen Sie dies
-      - coolify.type=application
-      - traefik.enable=true
-      - "traefik.http.routers.httpd_router.rule=Host(`${SERVICE_FQDN_HTTPD_80:?}`) && PathPrefix(`/`)"
-      - traefik.http.routers.httpd_router.entryPoints=http
-    depends_on:
-      - php
-
-  php:
-    image: php:8.2-fpm
-    container_name: php_app
-    volumes:
-      # Bindet den Root Ihres Coolify-Repositorys auch für PHP-FPM ein. [5]
-      - type: bind
-        source: .
-        target: /var/www/html
-        is_directory: true
-      
-      # Optional: Binden Sie Ihre benutzerdefinierte PHP-Konfiguration ein.
-      # - ./php/php.ini:/usr/local/etc/php/php.ini
-      
-      # Bindet das benutzerdefinierte Entrypoint-Skript ein.
-      - ./entrypoint-php.sh:/usr/local/bin/entrypoint-php.sh
-    
-    # Verwendet das benutzerdefinierte Entrypoint-Skript für den Dienst.
-    entrypoint: ["/usr/local/bin/entrypoint-php.sh"]
-    
-    environment:
-      - PHP_MEMORY_LIMIT=${PHP_MEMORY_LIMIT:?128M}
-      - PHP_TIMEZONE=${PHP_TIMEZONE:-UTC}
-      - PHP_DB_PASSWORD=${SERVICE_PASSWORD_PHP_DB:-}
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
