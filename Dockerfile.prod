@@ -1,37 +1,17 @@
-# Dockerfile.prod
-# Verwende ein offizielles PHP-FPM Alpine Image als Basis
-# php:8.2-fpm-alpine ist eine gute Wahl für PHP 8.2 auf einer schlanken Basis.
-# Überprüfen Sie https://hub.docker.com/_/php für andere Versionen, falls benötigt.
-FROM php:8.2-fpm-alpine
+FROM php:7.2-fpm
 
-# Aktualisiere Pakete und installiere NGINX sowie Entwicklungs-Tools für PHP-Erweiterungen.
-# Die meisten PHP-Erweiterungen benötigen '-dev' Pakete zur Kompilierung,
-# die später wieder entfernt werden können, um die Image-Größe zu reduzieren.
-RUN apk update && \
-    apk add --no-cache nginx \
-        nginx-mod-http-headers \
-        # icu-dev ist für die intl-Erweiterung erforderlich
-        libicu-dev \
-        # mysql-client ist für pdo_mysql notwendig, selbst wenn nur die PDO-Erweiterung kompiliert wird.
-        # Es bringt die Abhängigkeiten für die MySQL-Bibliothek mit.
-        mysql-client-libs \
-    && rm -rf /var/cache/apk/*
+RUN apt-get update -y \
+    && apt-get install -y nginx
 
-# PHP-CPPFLAGS werden von den docker-php-ext-* Skripten verwendet
+# PHP_CPPFLAGS are used by the docker-php-ext-* scripts
 ENV PHP_CPPFLAGS="$PHP_CPPFLAGS -std=c++11"
 
-# Installiere gängige PHP-Erweiterungen
-# docker-php-ext-install ist ein Helfer-Skript des offiziellen PHP-Images
-RUN docker-php-ext-install pdo_mysql opcache \
+RUN docker-php-ext-install pdo_mysql \
+    && docker-php-ext-install opcache \
+    && apt-get install libicu-dev -y \
     && docker-php-ext-configure intl \
-    && docker-php-ext-install intl
-
-# Optional: Bereinige Build-Abhängigkeiten, um das Image kleiner zu machen
-# Wenn Sie weitere Erweiterungen installieren müssen, tun Sie dies vorher.
-RUN apk del --no-cache libicu-dev
-
-# Konfiguriere Opcache
-# Der Inhalt wird direkt in eine .ini-Datei geschrieben.
+    && docker-php-ext-install intl \
+    && apt-get remove libicu-dev icu-devtools -y
 RUN { \
         echo 'opcache.memory_consumption=128'; \
         echo 'opcache.interned_strings_buffer=8'; \
@@ -39,95 +19,15 @@ RUN { \
         echo 'opcache.revalidate_freq=2'; \
         echo 'opcache.fast_shutdown=1'; \
         echo 'opcache.enable_cli=1'; \
-    } > /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
+    } > /usr/local/etc/php/conf.d/php-opocache-cfg.ini
 
-# Erstelle die NGINX-Konfigurationsdatei direkt im Dockerfile
-# Wir verwenden hier ein server-Block, der PHP-Anfragen an PHP-FPM (localhost:9000) weiterleitet.
-# Das offizielle PHP-FPM Image konfiguriert PHP-FPM standardmäßig so.
-# nginx:alpine nutzt /etc/nginx/http.d/default.conf als Standard.
-RUN install -m 0644 /dev/null /etc/nginx/http.d/default.conf && cat << 'EOF' > /etc/nginx/http.d/default.conf
-server {
-    listen 80;
-    server_name localhost;
+COPY nginx-site.conf /etc/nginx/sites-enabled/default
+COPY entrypoint.sh /etc/entrypoint.sh
 
-    # Setze den Web-Root auf das Standardverzeichnis des PHP-FPM-Containers
-    root /var/www/html;
-    index index.php index.html index.htm;
+COPY --chown=www-data:www-data . /var/www/mysite
 
-    client_max_body_size 30m;
+WORKDIR /var/www/mysite
 
-    location / {
-        # Versuche, die Datei direkt zu finden; wenn nicht, leite an index.php weiter (Front-Controller-Muster)
-        # Wenn Ihre App ein spezifisches "public"-Verzeichnis hat, ändern Sie dies entsprechend:
-        # try_files $uri $uri/ /index.php$is_args$args;
-        try_files $uri $uri/ =404; # Oder lassen Sie es bei diesem generischen Fall
-    }
+EXPOSE 80 443
 
-    # Weiterleitung von .php-Dateien an PHP-FPM
-    location ~ [^/]\.php(/|$) {
-        fastcgi_split_path_info ^(.+\.php)(/.+)$;
-        # Mitigate https://httpoxy.org/ vulnerabilities
-        fastcgi_param HTTP_PROXY "";
-        fastcgi_pass 127.0.0.1:9000; # PHP-FPM lauscht auf 127.0.0.1:9000
-        fastcgi_index index.php;
-        # FastCGI-Parameter von NGINX: Diese Datei ist in nginx:alpine vorhanden.
-        include fastcgi_params;
-        # Stellen Sie sicher, dass SCRIPT_FILENAME korrekt auf die Datei auf dem Dateisystem verweist
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        fastcgi_param PATH_INFO $fastcgi_path_info;
-    }
-
-    # Verhindere, dass NGINX verborgene Dateien oder Systemdateien wie .git oder .htaccess ausliefert
-    location ~ /\. {
-        deny all;
-    }
-}
-EOF
-
-# NGINX muss unter demselben Benutzer wie PHP-FPM laufen, um Berechtigungsprobleme zu vermeiden.
-# Das offizielle PHP-FPM Image verwendet 'www-data'.
-RUN sed -i 's/user  nginx;/user  www-data;/g' /etc/nginx/nginx.conf
-
-# Kopiere die PHP- und HTML-Dateien in das Standard-Web-Root des PHP-FPM-Containers.
-# Verwende --chown, um sicherzustellen, dass die Dateien dem 'www-data'-Benutzer gehören.
-COPY --chown=www-data:www-data ./web /var/www/html
-
-# Setze das Arbeitsverzeichnis des Containers
-WORKDIR /var/www/html
-
-# Erstelle das Entrypoint-Skript direkt im Dockerfile mittels HEREDOC und mache es ausführbar
-# Dies ist die robustere Variante, die PHP-FPM zuerst startet.
-RUN install -m 0755 /dev/null /usr/local/bin/docker-entrypoint.sh && cat << 'EOF' > /usr/local/bin/docker-entrypoint.sh
-#!/usr/bin/env sh
-set -e
-
-# Start PHP-FPM im Hintergrund
-echo "Starting PHP-FPM..."
-php-fpm -D
-PHP_FPM_PID=$! # Speichere die PID von PHP-FPM
-
-# Gib PHP-FPM einen Moment, um vollständig zu starten
-sleep 2
-
-# Überprüfe, ob PHP-FPM tatsächlich läuft
-if ! ps -p $PHP_FPM_PID > /dev/null; then
-    echo "ERROR: PHP-FPM konnte nicht gestartet werden oder ist sofort abgestürzt!"
-    exit 1
-fi
-echo "PHP-FPM (PID $PHP_FPM_PID) läuft."
-
-# Überprüfe die NGINX-Konfiguration auf Syntaxfehler
-echo "Testing NGINX configuration..."
-nginx -t
-
-# Starte NGINX im Vordergrund als Hauptprozess des Containers.
-# 'exec' ersetzt den aktuellen Shell-Prozess durch NGINX.
-echo "Starting NGINX in foreground..."
-exec nginx -g 'daemon off;'
-EOF
-
-# Expose Port 80 (der Standardport, auf dem NGINX lauscht)
-EXPOSE 80
-
-# Starte NGINX und PHP-FPM mit dem benutzerdefinierten Entrypoint-Skript
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+ENTRYPOINT ["/etc/entrypoint.sh"]
