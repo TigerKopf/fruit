@@ -1,11 +1,27 @@
 # Dockerfile.prod
-# Use the official NGINX image
+# Verwende ein NGINX Alpine Image als Basis
 FROM nginx:alpine
 
-# Copy the production HTML files into the default NGINX public directory
+# Aktualisiere Pakete und installiere PHP-FPM sowie wichtige PHP-Erweiterungen
+# 'php-fpm' ist der PHP FastCGI Process Manager
+# 'php-mysqli', 'php-json', 'php-gd', 'php-xml', 'php-curl', 'php-mbstring' sind gängige Erweiterungen
+RUN apk update && \
+    apk add --no-cache php php-fpm php-mysqli php-json php-gd php-xml php-curl php-mbstring && \
+    rm -rf /var/cache/apk/*
+
+# Kopiere die benutzerdefinierte NGINX-Konfiguration
+# Diese Konfiguration leitet .php-Anfragen an PHP-FPM weiter
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Kopiere die PHP- und HTML-Dateien in das NGINX-Standardverzeichnis
 COPY ./web /usr/share/nginx/html
 
-# Expose port 80 (the default port NGINX listens on)
+# Kopiere das Entrypoint-Skript und mache es ausführbar
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# Expose Port 80 (der Standardport, auf dem NGINX lauscht)
 EXPOSE 80
 
-# Start NGINX (this is the default behavior, no CMD or ENTRYPOINT needed)
+# Starte NGINX und PHP-FPM mit dem benutzerdefinierten Entrypoint-Skript
+CMD ["docker-entrypoint.sh"]
