@@ -8,7 +8,7 @@ services:
       - "80:80" # Port 80 des Hosts auf Port 80 des Containers mappen
     volumes:
       - ./public:/var/www/html # Ordner 'public' des Hosts auf Apache's DocumentRoot mappen
-      - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf # Benutzerdefinierte Apache-Konfiguration laden
+#      - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf # Benutzerdefinierte Apache-Konfiguration laden
     depends_on:
       - php # Stellt sicher, dass PHP-FPM vor Apache startet
 
