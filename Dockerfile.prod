@@ -1,81 +1,110 @@
 # Dockerfile.prod
+# Verwende ein offizielles PHP-FPM Alpine Image als Basis
+# php:8.2-fpm-alpine ist eine gute Wahl für PHP 8.2 auf einer schlanken Basis.
+# Überprüfen Sie https://hub.docker.com/_/php für andere Versionen, falls benötigt.
+FROM php:8.2-fpm-alpine
 
-# Verwende das offizielle NGINX Alpine Image als Basis
-FROM nginx:alpine
-
-# Verwenden einer ARG für die PHP-Version für bessere Flexibilität
-# Überprüfen Sie mit 'docker run --rm nginx:alpine apk search php', welche Versionen verfügbar sind.
-ARG PHP_VERSION=82 
-
-# Aktualisiere Pakete und installiere PHP-FPM sowie wichtige PHP-Erweiterungen
+# Aktualisiere Pakete und installiere NGINX sowie Entwicklungs-Tools für PHP-Erweiterungen.
+# Die meisten PHP-Erweiterungen benötigen '-dev' Pakete zur Kompilierung,
+# die später wieder entfernt werden können, um die Image-Größe zu reduzieren.
 RUN apk update && \
-    apk add --no-cache \
-    php${PHP_VERSION} \
-    php${PHP_VERSION}-fpm \
-    php${PHP_VERSION}-mysqli \
-    php${PHP_VERSION}-json \
-    php${PHP_VERSION}-gd \
-    php${PHP_VERSION}-xml \
-    php${PHP_VERSION}-curl \
-    php${PHP_VERSION}-mbstring \
+    apk add --no-cache nginx \
+        nginx-mod-http-headers \
+        # icu-dev ist für die intl-Erweiterung erforderlich
+        libicu-dev \
+        # mysql-client ist für pdo_mysql notwendig, selbst wenn nur die PDO-Erweiterung kompiliert wird.
+        # Es bringt die Abhängigkeiten für die MySQL-Bibliothek mit.
+        mysql-client-libs \
     && rm -rf /var/cache/apk/*
 
-# Konfiguriere PHP-FPM, um Logs an stderr zu senden, im Vordergrund zu laufen und den richtigen Benutzer zu verwenden.
-RUN sed -i "s/^;error_log = .*$/error_log = \/proc\/self\/fd\/2/g" /etc/php${PHP_VERSION}/php-fpm.conf && \
-    sed -i "s/^;daemonize = yes$/daemonize = no/g" /etc/php${PHP_VERSION}/php-fpm.conf && \
-    sed -i "s/^;catch_workers_output = yes$/catch_workers_output = yes/g" /etc/php${PHP_VERSION}/php-fpm.d/www.conf && \
-    sed -i "s/^listen = .*$/listen = 127.0.0.1:9000/g" /etc/php${PHP_VERSION}/php-fpm.d/www.conf && \
-    sed -i "s/^user = nobody$/user = nginx/g" /etc/php${PHP_VERSION}/php-fpm.d/www.conf && \
-    sed -i "s/^group = nobody$/group = nginx/g" /etc/php${PHP_VERSION}/php-fpm.d/www.conf
+# PHP-CPPFLAGS werden von den docker-php-ext-* Skripten verwendet
+ENV PHP_CPPFLAGS="$PHP_CPPFLAGS -std=c++11"
 
-# Erstelle die NGINX-Konfigurationsdatei direkt im Dockerfile mittels HEREDOC
-# Dies ist robuster als ein einzelner langer 'echo'-Befehl.
-RUN install -m 0644 /dev/null /etc/nginx/nginx.conf && cat << 'EOF' > /etc/nginx/nginx.conf
-worker_processes auto;
-events {
-    worker_connections 1024;
-}
-http {
-    include       mime.types;
-    default_type  application/octet-stream;
-    sendfile        on;
-    keepalive_timeout  65;
-    server {
-        listen 80;
-        server_name localhost;
-        root /usr/share/nginx/html;
-        index index.php index.html index.htm;
-        location / {
-            try_files $uri $uri/ =404;
-        }
-        location ~ \.php$ {
-            fastcgi_split_path_info ^(.+\.php)(/.+)$;
-            fastcgi_pass 127.0.0.1:9000;
-            fastcgi_index index.php;
-            include fastcgi_params;
-            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-            fastcgi_param PATH_INFO $fastcgi_path_info;
-        }
+# Installiere gängige PHP-Erweiterungen
+# docker-php-ext-install ist ein Helfer-Skript des offiziellen PHP-Images
+RUN docker-php-ext-install pdo_mysql opcache \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install intl
+
+# Optional: Bereinige Build-Abhängigkeiten, um das Image kleiner zu machen
+# Wenn Sie weitere Erweiterungen installieren müssen, tun Sie dies vorher.
+RUN apk del --no-cache libicu-dev
+
+# Konfiguriere Opcache
+# Der Inhalt wird direkt in eine .ini-Datei geschrieben.
+RUN { \
+        echo 'opcache.memory_consumption=128'; \
+        echo 'opcache.interned_strings_buffer=8'; \
+        echo 'opcache.max_accelerated_files=4000'; \
+        echo 'opcache.revalidate_freq=2'; \
+        echo 'opcache.fast_shutdown=1'; \
+        echo 'opcache.enable_cli=1'; \
+    } > /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
+
+# Erstelle die NGINX-Konfigurationsdatei direkt im Dockerfile
+# Wir verwenden hier ein server-Block, der PHP-Anfragen an PHP-FPM (localhost:9000) weiterleitet.
+# Das offizielle PHP-FPM Image konfiguriert PHP-FPM standardmäßig so.
+# nginx:alpine nutzt /etc/nginx/http.d/default.conf als Standard.
+RUN install -m 0644 /dev/null /etc/nginx/http.d/default.conf && cat << 'EOF' > /etc/nginx/http.d/default.conf
+server {
+    listen 80;
+    server_name localhost;
+
+    # Setze den Web-Root auf das Standardverzeichnis des PHP-FPM-Containers
+    root /var/www/html;
+    index index.php index.html index.htm;
+
+    client_max_body_size 30m;
+
+    location / {
+        # Versuche, die Datei direkt zu finden; wenn nicht, leite an index.php weiter (Front-Controller-Muster)
+        # Wenn Ihre App ein spezifisches "public"-Verzeichnis hat, ändern Sie dies entsprechend:
+        # try_files $uri $uri/ /index.php$is_args$args;
+        try_files $uri $uri/ =404; # Oder lassen Sie es bei diesem generischen Fall
+    }
+
+    # Weiterleitung von .php-Dateien an PHP-FPM
+    location ~ [^/]\.php(/|$) {
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        # Mitigate https://httpoxy.org/ vulnerabilities
+        fastcgi_param HTTP_PROXY "";
+        fastcgi_pass 127.0.0.1:9000; # PHP-FPM lauscht auf 127.0.0.1:9000
+        fastcgi_index index.php;
+        # FastCGI-Parameter von NGINX: Diese Datei ist in nginx:alpine vorhanden.
+        include fastcgi_params;
+        # Stellen Sie sicher, dass SCRIPT_FILENAME korrekt auf die Datei auf dem Dateisystem verweist
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+    }
+
+    # Verhindere, dass NGINX verborgene Dateien oder Systemdateien wie .git oder .htaccess ausliefert
+    location ~ /\. {
+        deny all;
     }
 }
 EOF
 
-# Kopiere die PHP- und HTML-Dateien in das NGINX-Standardverzeichnis
-COPY ./web /usr/share/nginx/html
+# NGINX muss unter demselben Benutzer wie PHP-FPM laufen, um Berechtigungsprobleme zu vermeiden.
+# Das offizielle PHP-FPM Image verwendet 'www-data'.
+RUN sed -i 's/user  nginx;/user  www-data;/g' /etc/nginx/nginx.conf
 
-# Setze korrekte Berechtigungen für die Webdateien, damit NGINX und PHP-FPM sie lesen können.
-RUN chown -R nginx:nginx /usr/share/nginx/html && chmod -R 755 /usr/share/nginx/html
+# Kopiere die PHP- und HTML-Dateien in das Standard-Web-Root des PHP-FPM-Containers.
+# Verwende --chown, um sicherzustellen, dass die Dateien dem 'www-data'-Benutzer gehören.
+COPY --chown=www-data:www-data ./web /var/www/html
+
+# Setze das Arbeitsverzeichnis des Containers
+WORKDIR /var/www/html
 
 # Erstelle das Entrypoint-Skript direkt im Dockerfile mittels HEREDOC und mache es ausführbar
+# Dies ist die robustere Variante, die PHP-FPM zuerst startet.
 RUN install -m 0755 /dev/null /usr/local/bin/docker-entrypoint.sh && cat << 'EOF' > /usr/local/bin/docker-entrypoint.sh
-#!/bin/sh
+#!/usr/bin/env sh
 set -e
 
+# Start PHP-FPM im Hintergrund
 echo "Starting PHP-FPM..."
-# Starte PHP-FPM im Vordergrund, aber als Hintergrundprozess des Skripts
-# Wir erfassen die PID, um später zu überprüfen, ob es noch läuft.
-/usr/sbin/php-fpm -F &
-PHP_FPM_PID=$!
+php-fpm -D
+PHP_FPM_PID=$! # Speichere die PID von PHP-FPM
 
 # Gib PHP-FPM einen Moment, um vollständig zu starten
 sleep 2
@@ -83,25 +112,22 @@ sleep 2
 # Überprüfe, ob PHP-FPM tatsächlich läuft
 if ! ps -p $PHP_FPM_PID > /dev/null; then
     echo "ERROR: PHP-FPM konnte nicht gestartet werden oder ist sofort abgestürzt!"
-    # Wenn PHP-FPM abstürzt, beenden wir das Skript, was den Container beendet.
     exit 1
 fi
 echo "PHP-FPM (PID $PHP_FPM_PID) läuft."
 
+# Überprüfe die NGINX-Konfiguration auf Syntaxfehler
 echo "Testing NGINX configuration..."
-# Überprüfe die NGINX-Konfiguration auf Syntaxfehler.
-# Wenn ein Fehler gefunden wird, beendet 'nginx -t' mit einem Fehlercode,
-# was dank 'set -e' das Skript und den Container beendet.
 nginx -t
 
-echo "Starting NGINX in foreground..."
 # Starte NGINX im Vordergrund als Hauptprozess des Containers.
-# Wenn NGINX fehlschlägt, wird der Container beendet.
-exec nginx -g "daemon off;"
+# 'exec' ersetzt den aktuellen Shell-Prozess durch NGINX.
+echo "Starting NGINX in foreground..."
+exec nginx -g 'daemon off;'
 EOF
 
 # Expose Port 80 (der Standardport, auf dem NGINX lauscht)
 EXPOSE 80
 
 # Starte NGINX und PHP-FPM mit dem benutzerdefinierten Entrypoint-Skript
-CMD ["docker-entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
