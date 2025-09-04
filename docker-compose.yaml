@@ -5,7 +5,7 @@ services:
     image: httpd:2.4 # Verwendet das offizielle Apache HTTPD 2.4 Image
     container_name: apache_web
     ports:
-      - "8000:8000" # Port 80 des Hosts auf Port 80 des Containers mappen
+      - "43543:8345" # Port 80 des Hosts auf Port 80 des Containers mappen
     volumes:
       - ./public:/var/www/html # Ordner 'public' des Hosts auf Apache's DocumentRoot mappen
 #      - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf # Benutzerdefinierte Apache-Konfiguration laden
