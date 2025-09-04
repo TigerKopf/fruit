@@ -4,7 +4,7 @@ services:
   web:
     image: php:8.2-apache # Sie können hier jede gewünschte PHP-Version mit Apache wählen, z.B. php:8.3-apache
     ports:
-      - "80:80" # Mappt Port 80 des Hosts auf Port 80 des Containers
+      - "801:801" # Mappt Port 80 des Hosts auf Port 80 des Containers
     volumes:
       - ./public:/var/www/html # Bind-Mount des lokalen 'www'-Ordners in das HTML-Verzeichnis des Containers
     restart: always # Startet den Dienst immer neu, wenn er stoppt
