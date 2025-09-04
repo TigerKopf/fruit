@@ -1,11 +1,5 @@
 FROM php:7.2-fpm
 
-RUN apt-get update -y \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        nginx \
-        libicu-dev \
-    && rm -rf /var/lib/apt/lists/*
-
 # PHP_CPPFLAGS are used by the docker-php-ext-* scripts
 ENV PHP_CPPFLAGS="$PHP_CPPFLAGS -std=c++11"
 
