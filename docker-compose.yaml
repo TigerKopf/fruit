@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  web:
+    image: httpd:2.4 # Verwendet das offizielle Apache HTTPD 2.4 Image
+    container_name: apache_web
+    ports:
+      - "80:80" # Port 80 des Hosts auf Port 80 des Containers mappen
+    volumes:
+      - ./public:/var/www/html # Ordner 'public' des Hosts auf Apache's DocumentRoot mappen
+      - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf # Benutzerdefinierte Apache-Konfiguration laden
+    depends_on:
+      - php # Stellt sicher, dass PHP-FPM vor Apache startet
+
+  php:
+    image: php:8.2-fpm # Verwendet das offizielle PHP 8.2 FPM Image (Sie können die Version anpassen)
+    container_name: php_fpm
+    volumes:
+      - ./public:/var/www/html # PHP-FPM benötigt ebenfalls Zugriff auf die Dateien
+    # Optional: Wenn Sie PHP-Einstellungen ändern möchten
+    # environment:
+    #   PHP_INI_SCAN_DIR: /usr/local/etc/php/conf.d/
+    #   memory_limit: 256M
