@@ -2,22 +2,9 @@ version: '3.8'
 
 services:
   web:
-    image: httpd:2.4 # Verwendet das offizielle Apache HTTPD 2.4 Image
-    container_name: apache_web
+    image: php:8.2-apache # Sie können hier jede gewünschte PHP-Version mit Apache wählen, z.B. php:8.3-apache
     ports:
-      - "43543:8345" # Port 80 des Hosts auf Port 80 des Containers mappen
+      - "80:80" # Mappt Port 80 des Hosts auf Port 80 des Containers
     volumes:
-      - ./public:/var/www/html # Ordner 'public' des Hosts auf Apache's DocumentRoot mappen
-#      - ./apache/httpd.conf:/usr/local/apache2/conf/httpd.conf # Benutzerdefinierte Apache-Konfiguration laden
-    depends_on:
-      - php # Stellt sicher, dass PHP-FPM vor Apache startet
-
-  php:
-    image: php:8.2-fpm # Verwendet das offizielle PHP 8.2 FPM Image (Sie können die Version anpassen)
-    container_name: php_fpm
-    volumes:
-      - ./public:/var/www/html # PHP-FPM benötigt ebenfalls Zugriff auf die Dateien
-    # Optional: Wenn Sie PHP-Einstellungen ändern möchten
-    # environment:
-    #   PHP_INI_SCAN_DIR: /usr/local/etc/php/conf.d/
-    #   memory_limit: 256M
+      - ./public:/var/www/html # Bind-Mount des lokalen 'www'-Ordners in das HTML-Verzeichnis des Containers
+    restart: always # Startet den Dienst immer neu, wenn er stoppt
