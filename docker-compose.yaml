@@ -6,5 +6,5 @@ services:
     ports:
       - "801:801" # Mappt Port 80 des Hosts auf Port 80 des Containers
     volumes:
-      - ./public:/var/www/html # Bind-Mount des lokalen 'www'-Ordners in das HTML-Verzeichnis des Containers
+      - ./:/var/www/html # Bind-Mount des lokalen 'www'-Ordners in das HTML-Verzeichnis des Containers
     restart: always # Startet den Dienst immer neu, wenn er stoppt
