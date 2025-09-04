@@ -7,7 +7,7 @@ services:
     ports:
       - "801:801" # Mappt Port 80 des Hosts auf Port 80 des Containers
     volumes:
-      - app_data:/var/www/html # Bindet das benannte Volume für den Anwendungscode ein
+      - /:/var/www/html # Bindet das benannte Volume für den Anwendungscode ein
       # UNKOMMENTIEREN und `httpd/httpd.conf` erstellen für benutzerdefinierte Apache-Konfiguration
       # Diese Datei sollte Direktiven enthalten, um .php-Anfragen an den PHP-FPM-Dienst weiterzuleiten.
       # Beispielinhalt für httpd.conf (stellen Sie sicher, dass mod_proxy und mod_proxy_fcgi aktiviert sind):
