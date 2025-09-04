@@ -5,15 +5,24 @@ FROM nginx:alpine
 
 # Verwenden einer ARG für die PHP-Version für bessere Flexibilität
 # Dies kann je nach Alpine-Version php7, php81, php82 usw. sein.
-# Überprüfen Sie mit 'docker run --rm nginx:alpine apk search php', welche Versionen verfügbar sind.
-ARG PHP_VERSION=81 
+# Überprüfen Sie mit 'docker run --rm nginx:alpine apk search php8' oder 'apk search php'
+# welche Versionen und Paketnamen tatsächlich verfügbar sind.
+ARG PHP_VERSION=82 # <- HIER GEÄNDERT auf 82
 
 # Aktualisiere Pakete und installiere PHP-FPM sowie wichtige PHP-Erweiterungen
 # 'php${PHP_VERSION}-fpm' ist der PHP FastCGI Process Manager
 # Die anderen sind gängige Erweiterungen für Webanwendungen
 RUN apk update && \
-    apk add --no-cache php${PHP_VERSION} php${PHP_VERSION}-fpm php${PHP_VERSION}-mysqli php${PHP_VERSION}-json php${PHP_VERSION}-gd php${PHP_VERSION}-xml php${PHP_VERSION}-curl php${PHP_VERSION}-mbstring && \
-    rm -rf /var/cache/apk/*
+    apk add --no-cache \
+    php${PHP_VERSION} \
+    php${PHP_VERSION}-fpm \
+    php${PHP_VERSION}-mysqli \
+    php${PHP_VERSION}-json \
+    php${PHP_VERSION}-gd \
+    php${PHP_VERSION}-xml \
+    php${PHP_VERSION}-curl \
+    php${PHP_VERSION}-mbstring \
+    && rm -rf /var/cache/apk/*
 
 # Konfiguriere PHP-FPM, um Logs an stderr zu senden, im Vordergrund zu laufen und den richtigen Benutzer zu verwenden.
 # Dies ist entscheidend, damit Docker Logs korrekt erfasst und PHP-FPM als Dienst fungiert.
@@ -25,8 +34,6 @@ RUN sed -i "s/^;error_log = .*$/error_log = \/proc\/self\/fd\/2/g" /etc/php${PHP
     sed -i "s/^group = nobody$/group = nginx/g" /etc/php${PHP_VERSION}/php-fpm.d/www.conf
 
 # Erstelle die NGINX-Konfigurationsdatei direkt im Dockerfile
-# `--mount=type=tmpfs` wird verwendet, um temporäre Dateien effizienter zu handhaben und
-# die Image-Größe zu minimieren, indem die temporäre Datei nicht in einem Layer persistent gemacht wird.
 RUN --mount=type=tmpfs,target=/tmp echo 'worker_processes auto; \
 events { worker_connections 1024; } \
 http { \
