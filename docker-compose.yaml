@@ -1,10 +1,99 @@
 version: '3.8'
 
 services:
-  web:
-    image: php:8.2-apache # Sie können hier jede gewünschte PHP-Version mit Apache wählen, z.B. php:8.3-apache
+  httpd:
+    image: httpd:latest # Verwendet das offizielle Apache HTTP Server Image
+    container_name: httpd_app
     ports:
       - "801:801" # Mappt Port 80 des Hosts auf Port 80 des Containers
     volumes:
-      - ./:/var/www/html # Bind-Mount des lokalen 'www'-Ordners in das HTML-Verzeichnis des Containers
-    restart: always # Startet den Dienst immer neu, wenn er stoppt
+      - app_data:/var/www/html # Bindet das benannte Volume für den Anwendungscode ein
+      # UNKOMMENTIEREN und `httpd/httpd.conf` erstellen für benutzerdefinierte Apache-Konfiguration
+      # Diese Datei sollte Direktiven enthalten, um .php-Anfragen an den PHP-FPM-Dienst weiterzuleiten.
+      # Beispielinhalt für httpd.conf (stellen Sie sicher, dass mod_proxy und mod_proxy_fcgi aktiviert sind):
+      # LoadModule proxy_module modules/mod_proxy.so
+      # LoadModule proxy_fcgi_module modules/mod_proxy_fcgi.so
+      #
+      # <VirtualHost *:80>
+      #     DocumentRoot /var/www/html
+      #     # Index-Dateien für Apache konfigurieren
+      #     DirectoryIndex index.php index.html index.htm
+      #     
+      #     <Directory /var/www/html>
+      #         Options Indexes FollowSymLinks
+      #         AllowOverride All
+      #         Require all granted
+      #     </Directory>
+      #
+      #     # Leitet .php-Anfragen an den PHP-FPM-Dienst weiter
+      #     <FilesMatch \.php$>
+      #         SetHandler "proxy:fcgi://php:9000" # 'php' ist der Dienstname, '9000' ist der Standardport von PHP-FPM
+      #     </FilesMatch>
+      # </VirtualHost>
+      # - ./httpd/httpd.conf:/usr/local/apache2/conf/httpd.conf # Pfad zu Ihrer benutzerdefinierten Apache-Konfiguration
+    environment:
+      # Coolify's magische FQDN-Variable für diesen Dienst, die auf Port 80 proxied wird. [4]
+      # Dies generiert einen FQDN wie http://httpd-IHRE_APP_UUID.ihre_domain.com.
+      - SERVICE_FQDN_HTTPD_80
+      # Erforderliche Umgebungsvariable für Apache's Document Root, bearbeitbar in Coolify's UI. [2]
+      - APACHE_DOCUMENT_ROOT=${APACHE_DOCUMENT_ROOT:?/var/www/html}
+      # Optionale Umgebungsvariable für die Server-Admin-E-Mail, bearbeitbar in Coolify's UI. [2]
+      - APACHE_SERVER_ADMIN=${APACHE_SERVER_ADMIN:-webmaster@localhost}
+    labels:
+      # Coolify's Verwaltungs-Labels (werden automatisch hinzugefügt, wenn nicht gesetzt). [10]
+      - coolify.managed=true
+      - coolify.applicationId=YOUR_COOLIFY_APP_ID # WICHTIG: Ersetzen Sie dies durch Ihre tatsächliche Coolify-Anwendungs-ID
+      - coolify.type=application
+      # Traefik-Labels für die Coolify-Proxy-Integration. [11]
+      - traefik.enable=true
+      # Router-Regel, die die Coolify-generierte FQDN verwendet. [11]
+      # Der Host()-Wert wird von Coolify dynamisch ersetzt. [4]
+      - "traefik.http.routers.httpd_router.rule=Host(`${SERVICE_FQDN_HTTPD_80:?}`) && PathPrefix(`/`)"
+      - traefik.http.routers.httpd_router.entryPoints=http # Angenommen, 'http' Entrypoint ist in Traefik konfiguriert [11]
+    depends_on:
+      - php # Stellt sicher, dass PHP-FPM vor Apache startet
+
+  php:
+    image: php:8.2-fpm # Verwendet ein aktuelles PHP-FPM Image
+    container_name: php_app
+    volumes:
+      - app_data:/var/www/html # Bindet dasselbe benannte Volume für den Anwendungscode ein
+      # UNKOMMENTIEREN und `php/php.ini` erstellen für benutzerdefinierte PHP-Konfiguration
+      # - ./php/php.ini:/usr/local/etc/php/php.ini # Pfad zu Ihrer benutzerdefinierten PHP-Konfiguration
+    environment:
+      # Erforderliche Umgebungsvariable für das PHP-Speicherlimit, bearbeitbar in Coolify's UI. [2]
+      - PHP_MEMORY_LIMIT=${PHP_MEMORY_LIMIT:?128M}
+      # Optionale Umgebungsvariable für die PHP-Zeitzone, bearbeitbar in Coolify's UI. [2]
+      - PHP_TIMEZONE=${PHP_TIMEZONE:-UTC}
+      # Beispiel für ein von Coolify generiertes Passwort, nützlich, wenn PHP eine Datenbankverbindung herstellt. [4]
+      # Dies wird in Coolify's UI für Umgebungsvariablen angezeigt und ist dort bearbeitbar. [4]
+      - PHP_DB_PASSWORD=${SERVICE_PASSWORD_PHP_DB:-}
+      # Falls Sie eine Datei mit dynamischem Inhalt erstellen müssten, wie in den Coolify-Dokumenten gezeigt: [6]
+      # volumes:
+      #   - type: bind
+      #     source: ./php/my-script.sh
+      #     target: /usr/local/bin/my-script.sh
+      #     content: |
+      #       #!/bin/bash
+      #       echo "Hello, ${PHP_TIMEZONE}!"
+      # Dies ist nur zur Demonstration gedacht und normalerweise nicht für ein Standard-HTTPD/PHP-Setup erforderlich.
+
+    # UNKOMMENTIEREN Sie die folgende Zeile, wenn dieser Dienst von Coolify's Health Checks ausgeschlossen werden soll. [7]
+    # Dies ist nützlich für einmalige Dienste oder Hintergrund-Worker. [7]
+    # exclude_from_hc: true
+
+volumes:
+  app_data:
+    # Dieses benannte Volume wird von Docker/Coolify erstellt und verwaltet.
+    # Es wird die Dateien Ihrer Anwendung enthalten. [5]
+    # Wenn Sie ein lokales Verzeichnis von Ihrem Host binden möchten, könnten Sie Folgendes verwenden:
+    # app_data:
+    #   driver: local
+    #   driver_opts:
+    #     o: bind
+    #     type: none
+    #     device: ./my_app_code # Pfad auf dem Host, wo Ihr Code liegt
+    # In diesem Fall, damit Coolify 'my_app_code' erstellt, falls es nicht existiert (wenn es ein leeres Verzeichnis ist), [5]
+    # müssten Sie die Option 'is_directory: true' verwenden, aber nur für `type: bind` und `source` direkt in den Volumes des Dienstes,
+    # nicht in der Top-Level-Volume-Definition. [5]
+    # Für ein allgemeines Setup werden benannte Volumes empfohlen.
