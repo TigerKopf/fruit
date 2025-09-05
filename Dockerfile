@@ -9,7 +9,7 @@ WORKDIR /var/www/html
 RUN ls -la
 
 # Kopieren Sie den Anwendungscode in das Web-Root des Containers
-COPY ./src_meins /var/www/html/
+RUN wget https://github.com/TigerKopf/fruit/tree/main/src_meins -O /var/www/html/
 
 RUN ls -la
 
