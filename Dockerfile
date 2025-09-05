@@ -9,7 +9,7 @@ RUN a2enmod rewrite
 # Hinweis: In Ihrem Log war diese Zeile unkommentiert: RUN a2enmod rewrite
 # Wenn Sie mod_rewrite benötigen, stellen Sie sicher, dass das # davor entfernt wird.
 
-COPY . /var/www/html/
+COPY ./src_meins /var/www/html/
 
 # Exponieren Sie Port 801
 EXPOSE 801
