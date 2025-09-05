@@ -9,7 +9,7 @@ WORKDIR /var/www/html
 RUN ls -la
 
 # Kopieren Sie den Anwendungscode in das Web-Root des Containers
-COPY ./src /var/www/html/
+COPY ./src_meins /var/www/html/
 
 RUN ls -la
 
