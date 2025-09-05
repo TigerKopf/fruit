@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "801:801"
+    volumes:
+      - ./src:/var/www/html # Optional: Für Live-Änderungen ohne Rebuild
+    depends_on:
+      - db
+    environment:
+      # Du könntest hier auch Umgebungsvariablen für die DB- und SMTP-Konfiguration übergeben,
+      # anstatt sie direkt in config.php und Dockerfile zu hinterlegen.
+      # Zum Beispiel:
+      # DB_HOST: db
+      # DB_USER: mariadb
+      # ...
+      # SMTP_HOST: your_smtp_host.com
+      # SMTP_USER: your_smtp_username
+      # SMTP_PASS: your_smtp_password
+
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: q55Xr2tn5aL00XfbkdckrSYOmeq414sitzZ8dc7hRdmqRuzB0ltW8OkW1IoClWrr
+      MYSQL_DATABASE: default
+      MYSQL_USER: mariadb
+      MYSQL_PASSWORD: I8Q8WHc5EViIcrRpSvToHPCfTqQq78pfppjzgmmA0BTSpDSW0Dv3CrhGcVZccfBe
+    volumes:
+      - ./db_data:/var/lib/mysql # Persistente Daten
+      - ./database.sql:/docker-entrypoint-initdb.d/init.sql # Ausführen des SQL-Skripts beim ersten Start
+    ports:
+      - "3306:3306" # Optional: Nur zum Debuggen oder für direkten Zugriff
