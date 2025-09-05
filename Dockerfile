@@ -1,7 +1,9 @@
 # Verwenden Sie ein offizielles PHP-Image mit Apache
 FROM php:8.2-apache
 
-RUN ls && pwd
+RUN ls
+RUN pwd
+RUN ls /var/www/html
 
 # Kopieren Sie den Anwendungscode in das Web-Root des Containers
 COPY src/ /var/www/html/
@@ -9,6 +11,10 @@ COPY src/ /var/www/html/
 # Kopieren Sie Konfigurationsdateien in einen nicht direkt über das Web zugänglichen Ort
 # Diese werden dann von den PHP-Skripten mit require_once eingebunden.
 COPY config/ /etc/php-app-config/
+
+RUN ls
+RUN pwd
+RUN ls /var/www/html
 
 # Installieren Sie den MySQL PDO-Treiber für die Datenbankverbindung
 RUN docker-php-ext-install pdo pdo_mysql
