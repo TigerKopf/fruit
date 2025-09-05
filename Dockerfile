@@ -48,3 +48,4 @@ ENV MAIL_TO_ADDRESS="your_recipient@example.com" \
     DB_PASS="your_db_password"
 
 # Apache wird als Standard-CMD des Basis-Images gestartet (apache2-foreground)
+CMD ["apache2-foreground"]
