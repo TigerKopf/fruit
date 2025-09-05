@@ -1,7 +1,7 @@
 # Verwenden Sie ein offizielles PHP-Image mit Apache
 FROM php:8.2-apache
 
-RUN ls -la
+RUN ls -la ./src_meins
 
 # Setzen Sie das Arbeitsverzeichnis
 WORKDIR /var/www/html
