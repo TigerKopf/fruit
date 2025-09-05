@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Seite nicht gefunden</title>
+    <!-- Google Fonts: Roboto für einen sauberen, modernen Look -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1a73e8; /* Google Blau */
+            --primary-blue-hover: #1764cb;
+            --text-dark: #3c4043; /* Dunkelgrau für Haupttext */
+            --text-medium: #5f6368; /* Mittelgrau für Paragraphen */
+            --text-light: #7f878f; /* Helleres Grau für subtile Texte */
+            --bg-light: #f8f9fa; /* Sehr helles Grau, fast Weiß */
+            --bg-white: #ffffff; /* Reines Weiß */
+            --border-color: #dadce0; /* Dezente Randfarbe */
+            --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --shadow-medium: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow: hidden; /* Verhindert ungewolltes Scrollen, wenn z.B. Animationen über den Rand gehen */
+            padding: 20px; /* Etwas Polsterung an den Rändern für kleine Bildschirme */
+            box-sizing: border-box; /* Stellt sicher, dass Padding nicht die Gesamtbreite erhöht */
+        }
+
+        .container {
+            padding: 40px;
+            background-color: var(--bg-white);
+            border-radius: 8px;
+            box-shadow: var(--shadow-light);
+            max-width: 600px;
+            width: 100%;
+            animation: fadeIn 0.8s ease-out;
+            box-sizing: border-box;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .illustration {
+            margin-bottom: 30px;
+        }
+
+        .illustration img, .illustration svg {
+            max-width: 180px; /* Etwas größer für bessere Sichtbarkeit */
+            height: auto;
+            /* Eine sanfte, schwebende Animation für das GIF/SVG */
+            animation: floatAnimation 3s ease-in-out infinite;
+        }
+
+        @keyframes floatAnimation {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); } /* Leicht stärkeres Schweben */
+            100% { transform: translateY(0px); }
+        }
+
+        h1 {
+            font-size: 6em; /* Groß für 404 */
+            margin: 0;
+            color: #e0e0e0; /* Sehr helles Grau für die große 404-Zahl */
+            letter-spacing: -3px;
+            font-weight: 700;
+            position: relative;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.03); /* Ganz dezenter Schatten */
+            line-height: 0.9; /* Verringert den Zeilenabstand */
+        }
+
+        h1::after {
+            content: 'Seite nicht gefunden'; /* Google-Stil: Kurze, prägnante Unterschrift */
+            position: absolute;
+            bottom: -20px; /* Positionierung unter der 404-Zahl */
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.2em; /* Relativ zur h1-Größe */
+            color: var(--text-light);
+            opacity: 0.9;
+            white-space: nowrap; /* Verhindert Umbruch */
+        }
+
+        h2 {
+            font-size: 2em;
+            color: var(--text-dark);
+            margin-top: 40px; /* Mehr Abstand nach der 404-Zahl */
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: var(--text-medium);
+        }
+
+        .actions {
+            margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap; /* Erlaubt Umbruch auf kleineren Bildschirmen */
+            justify-content: center;
+            gap: 15px; /* Abstand zwischen den Buttons */
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 25px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            font-size: 1em;
+            cursor: pointer;
+            white-space: nowrap; /* Verhindert Umbruch im Button-Text */
+        }
+
+        .button.primary {
+            background-color: var(--primary-blue);
+            color: var(--bg-white);
+            box-shadow: var(--shadow-medium);
+            border: 1px solid var(--primary-blue); /* Für konsistenten Stil */
+        }
+
+        .button.primary:hover {
+            background-color: var(--primary-blue-hover);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .button.secondary {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .button.secondary:hover {
+            background-color: #e8eaed; /* Etwas dunkleres Hellgrau */
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Responsive Anpassungen */
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+            h1 {
+                font-size: 4.5em;
+            }
+            h1::after {
+                font-size: 0.25em;
+                bottom: -15px;
+            }
+            h2 {
+                font-size: 1.6em;
+                margin-top: 30px;
+            }
+            p {
+                font-size: 0.95em;
+            }
+            .actions {
+                flex-direction: column; /* Buttons untereinander auf kleinen Bildschirmen */
+                align-items: center; /* Zentrieren der Buttons */
+            }
+            .button {
+                width: 100%; /* Buttons nehmen die volle Breite ein */
+                max-width: 280px; /* Maximale Breite für bessere Lesbarkeit */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="illustration">
+            <!-- 
+                Platzhalter für dein transparentes GIF oder SVG.
+                
+                Option 1: Transparentes GIF (z.B. ein verlorener Astronaut, ein Roboter, der nach etwas sucht, etc.)
+                Lade dein GIF in dein src_meins/img/ Verzeichnis hoch und ersetze den Pfad.
+                <img src="/img/your-transparent-gif.gif" alt="Verlorene Seite Illustration">
+
+                Option 2: Ein einfaches, modernes SVG-Icon (empfohlen für Skalierbarkeit und Leistung)
+                Ich habe ein Beispiel-SVG für eine "kaputte Verbindung" oder "nicht gefunden" eingefügt.
+                Du kannst es durch ein eigenes SVG ersetzen. Viele Icon-Bibliotheken bieten solche SVGs.
+            -->
+            <svg viewBox="0 0 24 24" width="180" height="180" stroke="var(--primary-blue)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10.29 3.86L1.86 12.29a2 2 0 0 0 0 2.83l8.43 8.43a2 2 0 0 0 2.83 0l8.43-8.43a2 2 0 0 0 0-2.83L13.12 3.86a2 2 0 0 0-2.83 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="15"></line>
+                <line x1="12" y1="18" x2="12" y2="18.01"></line>
+            </svg>
+        </div>
+
+        <h1>404</h1>
+        <!-- H2 ist die Hauptüberschrift, h1 ist die große Zahl -->
+        <h2>Upps! Da ist etwas schiefgelaufen.</h2>
+        <p>
+            Die von Ihnen angeforderte Seite konnte leider nicht gefunden werden.<br>
+            Das kann passieren, wenn die Adresse falsch eingegeben wurde oder die Seite verschoben/gelöscht wurde.
+        </p>
+        <div class="actions">
+            <a href="/" class="button primary">Zur Startseite</a>
+            <a href="#" class="button secondary" onclick="history.back(); return false;">Zurück zur vorherigen Seite</a>
+            <!-- Optional: Eine einfache Suchoption -->
+            <!--
+            <form action="/search" method="get" class="search-form">
+                <input type="text" name="q" placeholder="Suchen auf dieser Seite..." aria-label="Sucheingabe">
+                <button type="submit" aria-label="Suchen">Suchen</button>
+            </form>
+            -->
+        </div>
+    </div>
+</body>
+</html>
