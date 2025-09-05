@@ -1,9 +1,6 @@
 # Verwenden Sie ein offizielles PHP-Image mit Apache
 FROM php:8.2-apache
 
-# Setzen Sie das Arbeitsverzeichnis
-WORKDIR /var/www/html
-
 # Kopieren Sie den Anwendungscode in das Web-Root des Containers
 COPY src/ /var/www/html/
 
@@ -11,11 +8,14 @@ COPY src/ /var/www/html/
 # Diese werden dann von den PHP-Skripten mit require_once eingebunden.
 COPY config/ /etc/php-app-config/
 
+# Setzen Sie das Arbeitsverzeichnis
+WORKDIR /var/www/html
+
 # Installieren Sie den MySQL PDO-Treiber für die Datenbankverbindung
 RUN docker-php-ext-install pdo pdo_mysql
 
 # Aktivieren Sie optional mod_rewrite, falls saubere URLs benötigt werden (nicht zwingend für dieses Formular)
-# RUN a2enmod rewrite
+RUN a2enmod rewrite
 
 # Exponieren Sie Port 801
 EXPOSE 801
