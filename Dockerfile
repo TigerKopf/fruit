@@ -1,5 +1,3 @@
-RUN ls -la
-
 # Verwenden Sie ein offizielles PHP-Image mit Apache
 FROM php:8.2-apache
 
