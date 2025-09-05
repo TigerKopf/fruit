@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Musterseite für Designelemente (Google AI Studio Stil)</title>
+    <!-- Importiere Google Fonts - Roboto ist Googles Standard-Schriftart -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300,400,500,700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS-Variablen für konsistente Farben und Abstände (angelehnt an Google AI Studio / Material Design 3) */
+        :root {
+            /* Grundfarben */
+            --primary-color: #1a73e8; /* Google Blue 500 */
+            --primary-color-dark: #174ea6; /* Darker blue for hover */
+            --secondary-color: #3c4043; /* Dark Gray for secondary actions/text */
+            --text-color-high-emphasis: #202124; /* Darkest gray for main text */
+            --text-color-medium-emphasis: #5f6368; /* Medium gray for secondary text */
+            --text-color-light: #ffffff; /* White for text on dark backgrounds */
+
+            /* Hintergrundfarben */
+            --background-body: #f8f9fa; /* Lightest gray for overall background */
+            --background-card: #ffffff; /* White for content cards */
+            --background-dark-nav: #202124; /* Dark background for nav/footer */
+
+            /* Akzent- und Statusfarben */
+            --accent-info: #e3f2fd; /* Light blue for info boxes */
+            --accent-info-border: #90caf9;
+            --accent-info-text: #1565c0;
+            --accent-alert: #ffebee; /* Light red for alert boxes */
+            --accent-alert-border: #ef9a9a;
+            --accent-alert-text: #c62828;
+            --accent-mark: #fce205; /* Google-like yellow for mark */
+
+            /* Grenzen und Schatten (Elevation) */
+            --border-color-subtle: #dadce0; /* Light gray border */
+            --border-radius-base: 8px; /* Standard rounded corners */
+            --border-radius-sm: 4px; /* Smaller rounded corners */
+
+            /* Material Design 3 Box Shadows (subtle elevation) */
+            --shadow-elevation-1: 0px 1px 3px rgba(0, 0, 0, 0.08), 0px 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-elevation-2: 0px 4px 6px rgba(0, 0, 0, 0.1), 0px 2px 4px rgba(0, 0, 0, 0.06);
+            --shadow-elevation-3: 0px 6px 10px rgba(0, 0, 0, 0.12), 0px 3px 6px rgba(0, 0, 0, 0.08);
+
+            /* Abstände */
+            --spacing-xs: 8px;
+            --spacing-sm: 12px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-xxl: 48px;
+        }
+
+        /* Allgemeine Stile für Body und HTML */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            color: var(--text-color-high-emphasis);
+            background-color: var(--background-body);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Hauptcontainer für den Inhalt */
+        main {
+            max-width: 960px;
+            margin: var(--spacing-xxl) auto;
+            padding: 0 var(--spacing-lg);
+        }
+
+        /* Sektionen als "Karten" */
+        section {
+            background-color: var(--background-card);
+            padding: var(--spacing-xxl);
+            margin-bottom: var(--spacing-xl);
+            border-radius: var(--border-radius-base);
+            box-shadow: var(--shadow-elevation-1); /* Subtle card elevation */
+        }
+
+        /* Header-Stil */
+        header {
+            background-color: var(--background-card); /* White header for a cleaner look */
+            color: var(--text-color-high-emphasis);
+            padding: var(--spacing-xl) var(--spacing-lg);
+            text-align: center;
+            border-bottom: 1px solid var(--border-color-subtle);
+            box-shadow: var(--shadow-elevation-1); /* Subtle shadow for header */
+        }
+
+        header h1 {
+            margin: 0;
+            font-weight: 500;
+            font-size: 2.8em;
+            color: var(--text-color-high-emphasis);
+        }
+
+        header p {
+            margin-top: var(--spacing-xs);
+            font-size: 1.2em;
+            color: var(--text-color-medium-emphasis);
+        }
+
+        /* Navigations-Stil */
+        nav {
+            background-color: var(--background-dark-nav);
+            padding: var(--spacing-sm) 0;
+            box-shadow: var(--shadow-elevation-1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: var(--spacing-xs); /* Space between nav items */
+        }
+
+        nav li a {
+            display: block;
+            color: var(--text-color-light);
+            text-decoration: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            border-radius: var(--border-radius-sm);
+            font-weight: 400;
+        }
+
+        nav li a:hover,
+        nav li a:focus {
+            background-color: rgba(255, 255, 255, 0.15); /* Slightly brighter hover for dark nav */
+            color: var(--text-color-light);
+            outline: none; /* Remove default focus outline */
+        }
+
+        nav li a.active { /* Example for an active nav item */
+            background-color: var(--primary-color);
+            color: var(--text-color-light);
+            font-weight: 500;
+        }
+
+        /* Typografie */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-color-high-emphasis);
+            margin-top: var(--spacing-xl);
+            margin-bottom: var(--spacing-md);
+            font-weight: 500;
+            line-height: 1.2;
+        }
+
+        h1 { font-size: 2.5em; }
+        h2 { font-size: 2em; }
+        h3 { font-size: 1.7em; }
+        h4 { font-size: 1.4em; }
+        h5 { font-size: 1.2em; }
+        h6 { font-size: 1.1em; color: var(--text-color-medium-emphasis); }
+
+        p {
+            margin-bottom: var(--spacing-md);
+            color: var(--text-color-medium-emphasis);
+        }
+
+        strong, b { font-weight: 700; color: var(--text-color-high-emphasis); }
+        em, i { font-style: italic; }
+        u { text-decoration: underline; }
+        strike, s { text-decoration: line-through; }
+        mark {
+            background-color: var(--accent-mark);
+            padding: 2px 4px;
+            border-radius: var(--border-radius-sm);
+        }
+
+        /* Blockzitat */
+        blockquote {
+            background-color: var(--background-body);
+            border-left: 4px solid var(--primary-color);
+            padding: var(--spacing-md) var(--spacing-lg);
+            margin: var(--spacing-md) 0;
+            color: var(--text-color-medium-emphasis);
+            font-style: italic;
+            border-radius: var(--border-radius-sm);
+            box-shadow: var(--shadow-elevation-1);
+        }
+
+        blockquote p {
+            margin: 0;
+            color: inherit; /* Inherit color from blockquote */
+        }
+
+        blockquote cite {
+            display: block;
+            text-align: right;
+            margin-top: var(--spacing-xs);
+            font-size: 0.9em;
+            color: var(--text-color-medium-emphasis);
+        }
+
+        /* Code-Beispiele */
+        code {
+            font-family: 'Roboto Mono', monospace;
+            background-color: var(--background-body);
+            padding: 2px 4px;
+            border-radius: var(--border-radius-sm);
+            font-size: 0.9em;
+            color: var(--secondary-color);
+        }
+
+        pre {
+            background-color: var(--background-dark-nav);
+            color: var(--text-color-light);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            overflow-x: auto;
+            margin-bottom: var(--spacing-md);
+            box-shadow: var(--shadow-elevation-1);
+        }
+
+        pre code {
+            background-color: transparent;
+            color: var(--text-color-light);
+            padding: 0;
+            font-size: 1em;
+        }
+
+        /* Listen */
+        ul, ol {
+            margin-left: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+            color: var(--text-color-medium-emphasis);
+        }
+
+        ul li, ol li {
+            margin-bottom: var(--spacing-xs);
+        }
+
+        dl {
+            margin-bottom: var(--spacing-md);
+            color: var(--text-color-medium-emphasis);
+        }
+
+        dt {
+            font-weight: 500;
+            margin-top: var(--spacing-xs);
+            color: var(--text-color-high-emphasis);
+        }
+
+        dd {
+            margin-left: var(--spacing-md);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        /* Links */
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover,
+        a:focus {
+            color: var(--primary-color-dark);
+            text-decoration: underline;
+            outline: none;
+        }
+
+        /* Bilder */
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: var(--spacing-md) auto;
+            border-radius: var(--border-radius-sm);
+            box-shadow: var(--shadow-elevation-1);
+        }
+
+        /* Tabellen */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: var(--spacing-lg);
+            box-shadow: var(--shadow-elevation-1);
+            border-radius: var(--border-radius-base);
+            overflow: hidden; /* For rounded corners */
+        }
+
+        th, td {
+            padding: var(--spacing-sm) var(--spacing-md);
+            text-align: left;
+            border-bottom: 1px solid var(--border-color-subtle);
+        }
+
+        thead th {
+            background-color: var(--background-body); /* Lighter header */
+            color: var(--text-color-high-emphasis);
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #fcfcfc; /* Very subtle zebra striping */
+        }
+
+        tbody tr:hover {
+            background-color: var(--background-body);
+        }
+
+        tfoot td {
+            background-color: var(--background-body);
+            color: var(--text-color-medium-emphasis);
+            font-size: 0.85em;
+            text-align: center;
+        }
+
+        /* Formulare */
+        form {
+            padding: var(--spacing-lg);
+            background-color: var(--background-card);
+            border-radius: var(--border-radius-base);
+            box-shadow: var(--shadow-elevation-1);
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-md);
+        }
+
+        label {
+            display: block;
+            margin-bottom: var(--spacing-xs);
+            font-weight: 500;
+            color: var(--text-color-medium-emphasis);
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="number"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--border-color-subtle);
+            border-radius: var(--border-radius-sm);
+            font-family: 'Roboto', sans-serif;
+            font-size: 1em;
+            color: var(--text-color-high-emphasis);
+            box-sizing: border-box;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            background-color: var(--background-card);
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2); /* Google focus ring */
+            background-color: var(--background-card);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        input[type="radio"],
+        input[type="checkbox"] {
+            margin-right: var(--spacing-xs);
+            accent-color: var(--primary-color); /* Style for native checkboxes/radios */
+        }
+
+        /* Buttons */
+        button, .button-style {
+            display: inline-flex; /* Use flex for alignment, especially with icons if added */
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-sm) var(--spacing-lg);
+            font-size: 0.95em;
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            border-radius: var(--border-radius-base);
+            transition: background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+            box-shadow: none; /* Default to no shadow for all buttons */
+            margin-right: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
+            height: 40px; /* Consistent height */
+            min-width: 80px;
+            box-sizing: border-box;
+        }
+
+        /* Primary Button */
+        button[type="submit"], .button-primary {
+            background-color: var(--primary-color);
+            color: var(--text-color-light);
+            box-shadow: var(--shadow-elevation-1); /* Primary buttons get a subtle shadow */
+        }
+
+        button[type="submit"]:hover, .button-primary:hover {
+            background-color: var(--primary-color-dark);
+            box-shadow: var(--shadow-elevation-2); /* More prominent shadow on hover */
+        }
+
+        button[type="submit"]:focus, .button-primary:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* Secondary Button (Outlined style) */
+        button[type="reset"], .button-secondary {
+            background-color: var(--background-card);
+            color: var(--primary-color);
+            border: 1px solid var(--border-color-subtle);
+        }
+
+        button[type="reset"]:hover, .button-secondary:hover {
+            background-color: var(--background-body);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            box-shadow: var(--shadow-elevation-1);
+        }
+        button[type="reset"]:focus, .button-secondary:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* Tertiary Button (Text style - for links acting as buttons) */
+        .button-style { /* Using this for "Link als Button" */
+            background-color: transparent;
+            color: var(--primary-color);
+            border: none;
+            box-shadow: none;
+            padding-left: var(--spacing-xs); /* Adjust padding for text-only buttons */
+            padding-right: var(--spacing-xs);
+        }
+
+        .button-style:hover {
+            background-color: rgba(26, 115, 232, 0.08); /* Light blue background on hover */
+            color: var(--primary-color-dark);
+            text-decoration: none;
+            box-shadow: none;
+        }
+        .button-style:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+
+        button:disabled,
+        button:disabled:hover,
+        button:disabled.button-style:hover {
+            background-color: var(--background-body);
+            color: var(--text-color-medium-emphasis);
+            border: 1px solid var(--border-color-subtle);
+            cursor: not-allowed;
+            box-shadow: none;
+            outline: none;
+        }
+        button:disabled[type="submit"], button:disabled.button-primary {
+            background-color: var(--border-color-subtle);
+            color: var(--text-color-medium-emphasis);
+            box-shadow: none;
+            border: none;
+        }
+
+
+        /* Horizontale Trennlinie */
+        hr {
+            border: none;
+            border-top: 1px solid var(--border-color-subtle);
+            margin: var(--spacing-xl) 0;
+        }
+
+        /* Info- und Alert-Boxen */
+        .info-box, .alert-box {
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-base);
+            margin-bottom: var(--spacing-md);
+            font-size: 0.95em;
+            box-shadow: var(--shadow-elevation-1);
+            line-height: 1.4;
+        }
+
+        .info-box {
+            background-color: var(--accent-info);
+            color: var(--accent-info-text);
+            border: 1px solid var(--accent-info-border);
+        }
+
+        .alert-box {
+            background-color: var(--accent-alert);
+            color: var(--accent-alert-text);
+            border: 1px solid var(--accent-alert-border);
+        }
+
+        .info-box strong, .alert-box strong {
+            font-weight: 700;
+            color: inherit; /* Inherit color from parent box */
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--background-dark-nav);
+            color: var(--text-color-light);
+            text-align: center;
+            padding: var(--spacing-md);
+            margin-top: var(--spacing-xxl);
+            font-size: 0.9em;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Responsive Anpassungen */
+        @media (max-width: 768px) {
+            main {
+                margin: var(--spacing-xl) auto;
+                padding: 0 var(--spacing-md);
+            }
+
+            section {
+                padding: var(--spacing-xl);
+                margin-bottom: var(--spacing-lg);
+            }
+
+            header h1 {
+                font-size: 2.2em;
+            }
+            header p {
+                font-size: 1.1em;
+            }
+
+            nav ul {
+                flex-direction: column;
+                align-items: stretch; /* Stretch items to fill width */
+                gap: 0; /* No gap when stacked */
+            }
+
+            nav li a {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Subtle separator */
+                border-radius: 0;
+                padding: var(--spacing-md) var(--spacing-lg);
+                text-align: center;
+            }
+            nav li:last-child a {
+                border-bottom: none;
+            }
+
+            h1 { font-size: 2em; }
+            h2 { font-size: 1.8em; }
+            h3 { font-size: 1.5em; }
+
+            button, .button-style {
+                width: 100%;
+                margin-right: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+            header p {
+                font-size: 1em;
+            }
+            section {
+                padding: var(--spacing-lg);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Musterseite für HTML-Designelemente</h1>
+        <p>Eine Demonstration verschiedener HTML-Elemente im Stil von Google AI Studio.</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#typografie">Typografie</a></li>
+            <li><a href="#listen">Listen</a></li>
+            <li><a href="#links">Links</a></li>
+            <li><a href="#bilder">Bilder</a></li>
+            <li><a href="#tabellen">Tabellen</a></li>
+            <li><a href="#formulare">Formulare</a></li>
+            <li><a href="#buttons">Buttons</a></li>
+            <li><a href="#zusatz">Zusätzliche Elemente</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="typografie">
+            <h2>1. Typografie</h2>
+
+            <h3>Überschriften (H1-H6)</h3>
+            <h1>Dies ist eine H1-Überschrift</h1>
+            <h2>Dies ist eine H2-Überschrift</h2>
+            <h3>Dies ist eine H3-Überschrift</h3>
+            <h4>Dies ist eine H4-Überschrift</h4>
+            <h5>Dies ist eine H5-Überschrift</h5>
+            <h6>Dies ist eine H6-Überschrift</h6>
+
+            <h3>Absätze und Textformatierung</h3>
+            <p>Dies ist ein ganz normaler Absatz Text. Hier können Sie sehen, wie Standardtext aussieht. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            <p>Ein weiterer Absatz mit <strong>fettem Text (strong)</strong> und <em>kursiv geschriebenem Text (em)</em>. Sie können auch Text <u>unterstreichen (u)</u> oder <strike>durchstreichen (strike/s)</strike>. Manchmal möchte man <mark>Text hervorheben (mark)</mark> oder <sub>tiefgestellt (sub)</sub> und <sup>hochgestellt (sup)</sup> Text verwenden.</p>
+
+            <h3>Zitate</h3>
+            <blockquote>
+                <p>"Das ist ein Blockzitat. Es wird oft verwendet, um längere Zitate hervorzuheben und visuell vom umgebenden Text abzugrenzen."</p>
+                <cite>– Ein bekannter Autor</cite>
+            </blockquote>
+
+            <h3>Code-Beispiele</h3>
+            <p>Inline-Code kann mit dem <code>&lt;code&gt;</code>-Tag dargestellt werden, z.B. <code>console.log("Hallo Welt!");</code></p>
+            <p>Längere Code-Blöcke können in einem <code>&lt;pre&gt;</code>-Tag mit einem <code>&lt;code&gt;</code>-Tag darin formatiert werden:</p>
+            <pre><code>
+function greet(name) {
+    return "Hallo, " + name + "!";
+}
+console.log(greet("Muster"));
+            </code></pre>
+        </section>
+
+        <section id="listen">
+            <h2>2. Listen</h2>
+
+            <h3>Ungeordnete Liste (ul)</h3>
+            <ul>
+                <li>Erstes Listenelement</li>
+                <li>Zweites Listenelement
+                    <ul>
+                        <li>Verschachteltes Element 1</li>
+                        <li>Verschachteltes Element 2</li>
+                    </ul>
+                </li>
+                <li>Drittes Listenelement</li>
+            </ul>
+
+            <h3>Geordnete Liste (ol)</h3>
+            <ol>
+                <li>Erster Schritt</li>
+                <li>Zweiter Schritt</li>
+                <li>Dritter Schritt</li>
+            </ol>
+
+            <h3>Definitionsliste (dl)</h3>
+            <dl>
+                <dt>HTML</dt>
+                <dd>HyperText Markup Language – Die Standard-Auszeichnungssprache für die Erstellung von Webseiten.</dd>
+                <dt>CSS</dt>
+                <dd>Cascading Style Sheets – Eine Stylesheet-Sprache zur Beschreibung des Erscheinungsbildes eines Dokuments, das in einer Auszeichnungssprache wie HTML geschrieben ist.</dd>
+            </dl>
+        </section>
+
+        <section id="links">
+            <h2>3. Links</h2>
+            <p>Hier ist ein <a href="https://www.google.com" target="_blank">externer Link zu Google</a> (öffnet in neuem Tab).</p>
+            <p>Und ein <a href="#top">interner Link zurück zum Seitenanfang</a>.</p>
+        </section>
+
+        <section id="bilder">
+            <h2>4. Bilder</h2>
+            <img src="https://via.placeholder.com/600x300/1a73e8/ffffff?text=Platzhalterbild" alt="Beschreibung des Platzhalterbildes">
+            <p>Ein Bild mit einer kurzen Beschreibung.</p>
+        </section>
+
+        <section id="tabellen">
+            <h2>5. Tabellen</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produkt</th>
+                        <th>Preis</th>
+                        <th>Verfügbarkeit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Produkt A</td>
+                        <td>19,99 €</td>
+                        <td>Auf Lager</td>
+                    </tr>
+                    <tr>
+                        <td>Produkt B</td>
+                        <td>29,50 €</td>
+                        <td>Nicht auf Lager</td>
+                    </tr>
+                    <tr>
+                        <td>Produkt C</td>
+                        <td>5,00 €</td>
+                        <td>Wenige verfügbar</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3">Daten vom 05. September 2025</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </section>
+
+        <section id="formulare">
+            <h2>6. Formulare</h2>
+            <form action="#" method="post">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" placeholder="Ihr Name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">E-Mail:</label>
+                    <input type="email" id="email" name="email" placeholder="ihre.email@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Passwort:</label>
+                    <input type="password" id="password" name="password" placeholder="Passwort" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="number">Anzahl:</label>
+                    <input type="number" id="number" name="number" min="1" max="10" value="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Datum:</label>
+                    <input type="date" id="date" name="date">
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Nachricht:</label>
+                    <textarea id="message" name="message" rows="5" placeholder="Ihre Nachricht..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="country">Land:</label>
+                    <select id="country" name="country">
+                        <option value="de">Deutschland</option>
+                        <option value="at">Österreich</option>
+                        <option value="ch">Schweiz</option>
+                        <option value="other">Andere</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Lieblingsfarbe:</label><br>
+                    <input type="radio" id="red" name="fav_color" value="rot">
+                    <label for="red">Rot</label><br>
+                    <input type="radio" id="blue" name="fav_color" value="blau" checked>
+                    <label for="blue">Blau</label><br>
+                    <input type="radio" id="green" name="fav_color" value="grün">
+                    <label for="green">Grün</label>
+                </div>
+
+                <div class="form-group">
+                    <input type="checkbox" id="newsletter" name="newsletter" value="yes">
+                    <label for="newsletter">Ich möchte den Newsletter erhalten</label><br>
+                    <input type="checkbox" id="agb" name="agb" value="accepted" required>
+                    <label for="agb">Ich akzeptiere die <a href="#">Allgemeinen Geschäftsbedingungen</a></label>
+                </div>
+
+                <div class="form-group">
+                    <label for="file_upload">Datei hochladen:</label>
+                    <input type="file" id="file_upload" name="file_upload">
+                </div>
+
+                <button type="submit" class="button-primary">Formular absenden</button>
+                <button type="reset" class="button-secondary">Zurücksetzen</button>
+            </form>
+        </section>
+
+        <section id="buttons">
+            <h2>7. Buttons</h2>
+            <button type="button" class="button-primary">Primärer Button</button>
+            <button type="button" class="button-secondary">Sekundärer Button</button>
+            <a href="#" class="button-style">Text Button (Link)</a>
+            <button type="button" disabled>Deaktivierter Button</button>
+        </section>
+
+        <section id="zusatz">
+            <h2>8. Zusätzliche Elemente</h2>
+            <h3>Horizontale Trennlinie (hr)</h3>
+            <p>Text vor der Trennlinie.</p>
+            <hr>
+            <p>Text nach der Trennlinie.</p>
+
+            <h3>Info- und Alert-Boxen (mit CSS)</h3>
+            <div class="info-box">
+                <p><strong>Info:</strong> Dies ist eine Informationsbox. Sie kann wichtige Hinweise enthalten.</p>
+            </div>
+            <div class="alert-box">
+                <p><strong>Achtung:</strong> Dies ist eine Alert-Box. Sie wird für Warnungen oder Fehler verwendet.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Musterseite. Alle Rechte vorbehalten.</p>
+    </footer>
+
+</body>
+</html>

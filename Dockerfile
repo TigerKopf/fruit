@@ -18,11 +18,11 @@ COPY my-custom.conf /etc/apache2/conf-available/my-custom.conf
 RUN a2enconf my-custom
 
 # Kopieren Sie alle Webseiten-Dateien in den DocumentRoot
-COPY ./src_meins /var/www/html/
+COPY ./src /var/www/html/
 
 # Stellen Sie sicher, dass Ihre 404.html-Seite ebenfalls kopiert wird
-# (Gehe davon aus, dass sie sich in ./src_meins befindet)
-COPY ./src_meins/404.html /var/www/html/404.html
+# (Gehe davon aus, dass sie sich in ./src befindet)
+COPY ./src/404.html /var/www/html/404.html
 
 # Konfigurieren Sie Apache, um auf Port 801 zu lauschen
 EXPOSE 801
