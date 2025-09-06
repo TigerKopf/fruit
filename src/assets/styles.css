@@ -35,13 +35,17 @@
 
     /* Header Höhe */
     --header-height: 80px; /* Leichte Anpassung für einen kompakteren Header */
+    --header-height-mobile-collapsed: 60px; /* Höhe des mobilen Warenkorb-Headers, wenn zusammengeklappt */
+
+    /* Warenkorb Höhe (2/3 der Viewport-Höhe) */
+    --cart-max-height-ratio: 0.66;
 }
 
 /* Grundlegende Stile & Sticky Footer Layout */
 html, body {
     height: 100%;
     margin: 0;
-    padding: 0; /* Geändert: 0, da die Content-Container jetzt den Abstand regeln */
+    padding: 0;
     display: flex;
     flex-direction: column;
     font-family: var(--font-family-base);
@@ -56,67 +60,59 @@ html, body {
 /* Header-Bereich (Sticky Navigation Bar) */
 header {
     width: 100%;
-    height: var(--header-height); /* Feste Höhe für bessere Konsistenz */
-    padding: 0 var(--spacing-md); /* Vertikaler Padding entfernt, da Höhe fest ist */
-    background-color: var(--color-background-white); /* Feste Hintergrundfarbe für den Header */
+    height: var(--header-height);
+    padding: 0 var(--spacing-md);
+    background-color: var(--color-background-white); /* Immer solide */
     display: flex;
     justify-content: center;
-    align-items: center; /* Zentriert vertikal */
-    box-shadow: 0 2px 10px var(--color-shadow-light); /* Subtilerer Startschatten */
+    align-items: center;
+    box-shadow: 0 2px 10px var(--color-shadow-light);
     position: fixed;
     top: 0;
     left: 0;
     z-index: 1000;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease;
-    -webkit-backdrop-filter: blur(0px);
-    backdrop-filter: blur(0px);
-    box-sizing: border-box; /* Sicherstellen, dass Padding in der Breite enthalten ist */
+    transition: box-shadow 0.3s ease; /* Nur Box-Shadow Übergang */
+    box-sizing: border-box;
 }
 
 header.header-scrolled {
-    background-color: rgba(255, 255, 255, 0.95); /* Leicht erhöhte Deckkraft */
-    -webkit-backdrop-filter: blur(8px); /* Etwas stärkerer Blur */
-    backdrop-filter: blur(8px);
     box-shadow: 0 4px 15px var(--color-shadow-medium); /* Deutlicherer Schatten beim Scrollen */
 }
 
-.google-search-like-nav { /* Kann auch in "main-navigation" umbenannt werden, wenn es weniger Google-spezifisch sein soll */
+.google-search-like-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    max-width: 1200px; /* Max-Breite für den Inhalt im Header */
+    max-width: 1200px;
     background-color: var(--color-background-white);
     border: 1px solid var(--color-border);
-    border-radius: var(--border-radius-lg); /* Einheitlicher, größerer Radius */
-    padding: var(--spacing-sm) var(--spacing-md); /* Anpassung der Polsterung */
-    box-shadow: 0 2px 8px var(--color-shadow-light); /* Subtilerer Schatten */
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-sm) var(--spacing-md);
+    box-shadow: 0 2px 8px var(--color-shadow-light);
     height: 48px;
-    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 header.header-scrolled .google-search-like-nav {
-    background-color: rgba(255, 255, 255, 0.9);
     border-color: var(--color-border);
     box-shadow: 0 1px 5px var(--color-shadow-light);
 }
 
 .google-header-wrapper {
-    /* Diese Klasse wird nun weniger benötigt, da .google-search-like-nav die max-width übernimmt.
-       Könnte für ein Logo links und Nav rechts noch nützlich sein, hier umbenannt und angepasst. */
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    max-width: 1200px; /* Konsistent mit .google-search-like-nav */
+    max-width: 1200px;
 }
 
-.logo { /* Beispiel für ein Logo, falls noch nicht vorhanden */
+.logo {
     font-size: 1.8em;
     font-weight: 700;
     color: var(--color-primary);
     text-decoration: none;
-    margin-right: var(--spacing-lg); /* Abstand zum Navigationsmenü */
+    margin-right: var(--spacing-lg);
 }
 
 .nav-options {
@@ -124,25 +120,25 @@ header.header-scrolled .google-search-like-nav {
     margin: 0;
     padding: 0;
     display: flex;
-    gap: var(--spacing-lg); /* Einheitlicherer Abstand */
+    gap: var(--spacing-lg);
 }
 
 .nav-options li a {
     text-decoration: none;
     color: var(--color-text-medium);
     font-size: var(--font-size-base);
-    padding: var(--spacing-xs) 0; /* Minimaler Padding für Klickbereich */
+    padding: var(--spacing-xs) 0;
     transition: color 0.3s ease;
-    font-weight: 500; /* Leichter fetter für bessere Sichtbarkeit */
+    font-weight: 500;
 }
 
 .nav-options li a:hover,
-.nav-options li a.active { /* 'active' Klasse für den aktuellen Navigationspunkt */
+.nav-options li a.active {
     color: var(--color-primary);
     position: relative;
 }
 
-.nav-options li a.active::after { /* Aktiven Link mit Unterstrich hervorheben */
+.nav-options li a.active::after {
     content: '';
     position: absolute;
     bottom: -5px;
@@ -165,15 +161,15 @@ header.header-scrolled .google-search-like-nav {
     cursor: pointer;
     transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
     white-space: nowrap;
-    display: inline-flex; /* Für Icon + Text, falls gewünscht */
+    display: inline-flex;
     align-items: center;
-    gap: var(--spacing-xs); /* Abstand zwischen Icon und Text */
+    gap: var(--spacing-xs);
 }
 
 .cart-button:hover {
-    background-color: #2F5AA9; /* Etwas dunklerer Blauton */
+    background-color: #2F5AA9;
     box-shadow: 0 4px 10px var(--color-shadow-light);
-    transform: translateY(-2px); /* Subtiler Hover-Effekt */
+    transform: translateY(-2px);
 }
 
 /* Haupt-Content-Wrapper für Shop-Seiten */
@@ -183,7 +179,7 @@ header.header-scrolled .google-search-like-nav {
     max-width: 1200px; /* Einheitliche maximale Breite */
     width: 100%;
     margin: 0 auto;
-    padding: 0 var(--spacing-md); /* Konsistenter horizontaler Padding */
+    padding: 0 var(--spacing-md);
     box-sizing: border-box;
     align-items: flex-start;
     margin-top: calc(var(--header-height) + var(--spacing-lg)); /* Header Höhe + Abstand */
@@ -191,7 +187,7 @@ header.header-scrolled .google-search-like-nav {
     gap: var(--spacing-lg); /* Abstand zwischen Main-Content und Sidebar */
 }
 
-/* Warenkorb-Seitenleiste (rechts, sticky) */
+/* Warenkorb-Seitenleiste (rechts, sticky) für Desktop */
 .cart-sidebar {
     position: sticky;
     top: calc(var(--header-height) + var(--spacing-lg)); /* Unter dem Header + Abstand */
@@ -203,15 +199,20 @@ header.header-scrolled .google-search-like-nav {
     border-radius: var(--border-radius-md);
     padding: var(--spacing-md);
     box-shadow: 0 4px 15px var(--color-shadow-light);
-    max-height: calc(100vh - var(--header-height) - (2 * var(--spacing-lg))); /* Maximale Höhe des Viewports minus Header, oberen/unteren Abstand */
-    overflow-y: auto; /* Scrollbar immer sichtbar, intuitiver als mask-image */
+    /* NEU: Max-Höhe basierend auf 66vh für Desktop */
+    max-height: calc(var(--cart-max-height-ratio) * 100vh - var(--spacing-xl)); /* 66vh minus Header-Offset */
+    overflow-y: hidden; /* Hauptcontainer scrollt nicht */
     z-index: 10;
     display: flex;
     flex-direction: column;
 }
 
-.cart-sidebar h2 {
-    font-size: 1.8em; /* Etwas größer */
+/* Titel für Desktop-Warenkorb */
+.cart-header-desktop {
+    display: block; /* Standardmäßig auf Desktop anzeigen */
+}
+.cart-header-desktop h2 {
+    font-size: 1.8em;
     margin-top: 0;
     margin-bottom: var(--spacing-lg);
     color: var(--color-text-dark);
@@ -219,11 +220,21 @@ header.header-scrolled .google-search-like-nav {
     font-weight: 600;
 }
 
-/* Scrollbarer Bereich für Warenkorb-Items (Eigentlich direkt im .cart-sidebar) */
-#cart-items-scrollable { /* Diese Klasse wird nun weniger benötigt, da overflow-y auf .cart-sidebar ist */
-    flex-grow: 1;
-    padding-right: var(--spacing-xs); /* Etwas Padding für die Scrollbar */
-    margin-right: calc(-1 * var(--spacing-xs)); /* Ausgleich für Padding */
+/* Mobiler Warenkorb Header standardmäßig verstecken, auf Mobile anzeigen */
+.cart-header-mobile {
+    display: none;
+}
+
+/* NEU: Scrollbarer Wrapper für Warenkorb-Items */
+.cart-items-scrollable-wrapper {
+    flex-grow: 1; /* Lässt diesen Bereich den verfügbaren Platz einnehmen */
+    overflow-y: auto; /* Nur dieser Bereich scrollt */
+    padding-right: var(--spacing-xs); /* Platz für Scrollbar */
+    margin-right: calc(-1 * var(--spacing-xs)); /* Ausgleich */
+    position: relative;
+    /* Scroll-Indikator (Verblassung) */
+    mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
 }
 
 #cart-items {
@@ -238,7 +249,7 @@ header.header-scrolled .google-search-like-nav {
     justify-content: space-between;
     margin-bottom: var(--spacing-md);
     padding-bottom: var(--spacing-md);
-    border-bottom: 1px solid var(--color-border); /* Solide, helle Linie */
+    border-bottom: 1px solid var(--color-border);
 }
 
 .cart-item:last-child {
@@ -248,13 +259,16 @@ header.header-scrolled .google-search-like-nav {
 }
 
 .cart-item-image {
-    width: 50px; /* Etwas größer */
+    width: 50px;
     height: 50px;
     object-fit: cover;
     border-radius: var(--border-radius-sm);
     margin-right: var(--spacing-sm);
     flex-shrink: 0;
-    border: 1px solid var(--color-border); /* Leichter Rand um Bilder */
+    /* NEU: Bilder ohne harten Rahmen, mit Verlauf */
+    mask-image: radial-gradient(circle at center, black 70%, transparent 100%);
+    -webkit-mask-image: radial-gradient(circle at center, black 70%, transparent 100%);
+    background-color: #FDFEFE; /* Hintergrund für Transparenz */
 }
 
 .cart-item-info {
@@ -264,15 +278,15 @@ header.header-scrolled .google-search-like-nav {
 
 .cart-item-info h4 {
     margin: 0;
-    font-size: 1.05em; /* Leichte Anpassung */
+    font-size: 1.05em;
     color: var(--color-text-dark);
     font-weight: 500;
 }
 
 .cart-item-info p {
-    margin: 4px 0 0; /* Leichter Abstand */
+    margin: 4px 0 0;
     font-size: 0.9em;
-    color: var(--color-accent); /* Akzentfarbe für den Preis */
+    color: var(--color-accent);
     font-weight: 600;
 }
 
@@ -284,58 +298,59 @@ header.header-scrolled .google-search-like-nav {
 }
 
 .cart-item-controls input[type="number"] {
-    width: 50px; /* Etwas breiter */
+    width: 50px;
     padding: var(--spacing-xs);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius-sm);
     text-align: center;
     font-size: 0.95em;
     color: var(--color-text-dark);
-    -moz-appearance: textfield; /* Versteckt Standard-Pfeile in Firefox */
+    -moz-appearance: textfield;
 }
 
 .cart-item-controls input[type="number"]::-webkit-outer-spin-button,
 .cart-item-controls input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none; /* Versteckt Standard-Pfeile in Chrome/Safari */
+    -webkit-appearance: none;
     margin: 0;
 }
 
 .cart-item-controls .remove-item-btn {
     background: none;
     border: none;
-    color: var(--color-text-light); /* Weicherer Grauton */
+    color: var(--color-text-light);
     cursor: pointer;
-    font-size: 1.4em; /* Etwas kleiner */
+    font-size: 1.4em;
     padding: 0 var(--spacing-xs);
     line-height: 1;
     transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .cart-item-controls .remove-item-btn:hover {
-    color: var(--color-accent); /* Akzentfarbe beim Hover */
+    color: var(--color-accent);
     transform: scale(1.1);
 }
 
 #cart-total-container {
-    border-top: 1px solid var(--color-border); /* Dünnere Linie */
+    border-top: 1px solid var(--color-border);
     padding-top: var(--spacing-md);
-    margin-top: var(--spacing-md);
+    margin-top: var(--spacing-md); /* NEU: Margin-Top bleibt hier, nicht im Scroll-Bereich */
     text-align: right;
     display: flex;
     justify-content: space-between;
     align-items: baseline;
+    flex-shrink: 0; /* Verhindert Schrumpfung, bleibt am Boden */
 }
 
-#cart-total-container span { /* Beschriftung für Total */
+#cart-total-container span {
     font-size: 1.2em;
     font-weight: 500;
     color: var(--color-text-dark);
 }
 
 #cart-total {
-    font-size: 1.8em; /* Deutlicher */
+    font-size: 1.8em;
     font-weight: 700;
-    color: var(--color-accent); /* Akzentfarbe */
+    color: var(--color-accent);
     margin-left: var(--spacing-sm);
 }
 
@@ -344,17 +359,18 @@ header.header-scrolled .google-search-like-nav {
     background-color: var(--color-secondary);
     color: var(--color-background-white);
     border: none;
-    padding: var(--spacing-sm) var(--spacing-md); /* Angepasster Padding */
+    padding: var(--spacing-sm) var(--spacing-md);
     border-radius: var(--border-radius-md);
     cursor: pointer;
-    font-size: 1.05em; /* Leichte Anpassung */
+    font-size: 1.05em;
     font-weight: 600;
     margin-top: var(--spacing-md);
     transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    flex-shrink: 0; /* Verhindert Schrumpfung, bleibt am Boden */
 }
 
 .checkout-button:hover {
-    background-color: #00A656; /* Etwas dunklerer Grünton */
+    background-color: #00A656;
     box-shadow: 0 4px 10px var(--color-shadow-light);
     transform: translateY(-2px);
 }
@@ -365,12 +381,12 @@ main {
     background-color: var(--color-background-white);
     border-radius: var(--border-radius-md);
     box-shadow: 0 4px 15px var(--color-shadow-light);
-    padding: var(--spacing-xl) var(--spacing-xl); /* Großzügiger Padding */
+    padding: var(--spacing-xl);
     box-sizing: border-box;
     position: relative;
     z-index: 1;
     min-height: 400px;
-    margin-right: var(--spacing-lg); /* Abstand zwischen Main-Content und Sidebar */
+    margin-right: var(--spacing-lg);
 }
 
 /* Spezifische Shop-Stile für Produktliste im Main */
@@ -379,17 +395,17 @@ main {
 }
 
 .category-section h2 {
-    border-bottom: 1px solid var(--color-border); /* Dünnere, hellere Linie */
+    border-bottom: 1px solid var(--color-border);
     padding-bottom: var(--spacing-sm);
     margin-bottom: var(--spacing-lg);
     color: var(--color-text-dark);
-    font-size: 2em; /* Größerer Titel */
+    font-size: 2em;
     font-weight: 600;
 }
 
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(3, 1fr); /* Immer 3 Spalten auf Desktop */
     gap: var(--spacing-lg);
 }
 
@@ -417,9 +433,11 @@ main {
     object-fit: contain;
     border-radius: var(--border-radius-sm);
     margin-bottom: var(--spacing-md);
-    background-color: #FDFEFE; /* Sehr helles Hintergrundbild */
+    background-color: #FDFEFE;
     padding: var(--spacing-sm);
-    border: 1px solid var(--color-border); /* Leichter Rahmen */
+    /* NEU: Bilder ohne harten Rahmen, mit Verlauf */
+    mask-image: radial-gradient(circle at center, black 70%, transparent 100%);
+    -webkit-mask-image: radial-gradient(circle at center, black 70%, transparent 100%);
 }
 
 .product-item h3 {
@@ -430,19 +448,13 @@ main {
     line-height: 1.3;
 }
 
-.product-item p.description {
-    font-size: 0.9em;
-    color: var(--color-text-medium);
-    flex-grow: 1;
-    margin-bottom: var(--spacing-md);
-    line-height: 1.4;
-}
-
-.product-item .price {
-    font-size: 1.6em; /* Deutlicher */
+.product-quantity-price-line {
+    font-size: 1.2em;
     color: var(--color-accent);
     font-weight: 700;
     margin-bottom: var(--spacing-md);
+    line-height: 1.4;
+    text-align: center;
 }
 
 .product-controls {
@@ -454,14 +466,14 @@ main {
 }
 
 .product-controls input[type="number"] {
-    width: 60px; /* Angepasste Breite */
+    width: 60px;
     padding: var(--spacing-xs) var(--spacing-sm);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius-sm);
     text-align: center;
     font-size: 1em;
     color: var(--color-text-dark);
-    -moz-appearance: textfield; /* Versteckt Standard-Pfeile in Firefox */
+    -moz-appearance: textfield;
 }
 
 .product-controls input[type="number"]::-webkit-outer-spin-button,
@@ -507,10 +519,10 @@ main {
     background-color: var(--color-background-white);
     max-width: 1200px; /* Konsistent mit Main-Content */
     width: 100%;
-    margin: 0 var(--spacing-md) var(--spacing-md) var(--spacing-md);
+    margin: 0 auto var(--spacing-md) auto;
     border-radius: var(--border-radius-md);
     box-shadow: 0 4px 15px var(--color-shadow-light);
-    padding: var(--spacing-xl) var(--spacing-xl);
+    padding: var(--spacing-xl);
     box-sizing: border-box;
     color: var(--color-text-dark);
     font-family: var(--font-family-base);
@@ -696,13 +708,13 @@ main {
 .form-group textarea:focus {
     outline: none;
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(52, 104, 192, 0.2); /* Weicher Fokus-Ring */
+    box-shadow: 0 0 0 3px rgba(52, 104, 192, 0.2);
 }
 
 .form-group input[type="radio"] {
     margin-right: var(--spacing-xs);
-    transform: scale(1.1); /* Leichte Skalierung */
-    accent-color: var(--color-primary); /* Akzentfarbe für Radio-Buttons */
+    transform: scale(1.1);
+    accent-color: var(--color-primary);
 }
 
 .form-group .radio-option {
@@ -759,11 +771,11 @@ main {
     display: flex;
     flex: 1;
     width: 100%;
-    max-width: 1200px; /* Konsistent mit Main-Content */
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 var(--spacing-md);
     box-sizing: border-box;
-    margin-top: calc(var(--header-height) + var(--spacing-lg)); /* Header Höhe + Abstand */
+    margin-top: calc(var(--header-height) + var(--spacing-lg));
     margin-bottom: var(--spacing-lg);
 
     background: var(--color-background-white);
@@ -837,9 +849,9 @@ main {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: var(--spacing-md);
-    box-shadow: 0 2px 5px var(--color-shadow-light); /* Leichter Schatten für Tabellen */
+    box-shadow: 0 2px 5px var(--color-shadow-light);
     border-radius: var(--border-radius-sm);
-    overflow: hidden; /* Für abgerundete Ecken */
+    overflow: hidden;
 }
 .admin-content th, .admin-content td {
     border: 1px solid var(--color-border);
@@ -848,7 +860,7 @@ main {
     font-size: 0.9em;
 }
 .admin-content th {
-    background-color: #F0F4F8; /* Hellerer Header-Hintergrund */
+    background-color: #F0F4F8;
     font-weight: 600;
     color: var(--color-text-dark);
 }
@@ -856,11 +868,11 @@ main {
     color: var(--color-text-medium);
 }
 .admin-content tr:nth-child(even) {
-    background-color: #FDFEFE; /* Sehr helles Grau für gerade Zeilen */
+    background-color: #FDFEFE;
 }
 .admin-content .action-buttons {
     margin-top: var(--spacing-md);
-    margin-bottom: var(--spacing-md); /* Abstand nach unten */
+    margin-bottom: var(--spacing-md);
 }
 .admin-content .action-buttons a, .admin-content .action-buttons button {
     display: inline-block;
@@ -876,13 +888,13 @@ main {
 }
 .admin-content .action-buttons .edit-btn { background-color: var(--color-primary); color: white; }
 .admin-content .action-buttons .edit-btn:hover { background-color: #2F5AA9; transform: translateY(-1px); }
-.admin-content .action-buttons .delete-btn { background-color: #EF4444; /* Rot für Löschen */ color: white; }
+.admin-content .action-buttons .delete-btn { background-color: #EF4444; color: white; }
 .admin-content .action-buttons .delete-btn:hover { background-color: #DC2626; transform: translateY(-1px); }
 .admin-content .action-buttons .add-btn { background-color: var(--color-secondary); color: white; }
 .admin-content .action-buttons .add-btn:hover { background-color: #00A656; transform: translateY(-1px); }
 
 .admin-form-container {
-    background-color: #FDFEFE; /* Hellerer Hintergrund für Formular */
+    background-color: #FDFEFE;
     padding: var(--spacing-lg);
     border-radius: var(--border-radius-md);
     margin-top: var(--spacing-lg);
@@ -967,8 +979,8 @@ main {
     color: var(--color-primary);
     margin: 0;
 }
-.stat-card.income-positive p { color: var(--color-secondary); } /* Grün für positiven Umsatz */
-.stat-card.income-negative p { color: #EF4444; } /* Rot für negativen/offenen Betrag */
+.stat-card.income-positive p { color: var(--color-secondary); }
+.stat-card.income-negative p { color: #EF4444; }
 
 
 /* Dashboard Chart Container */
@@ -1006,34 +1018,43 @@ main {
 }
 
 @media (max-width: 992px) { /* Tablet/Smaller Desktop */
-    .site-content-wrapper,
+    .site-content-wrapper {
+        flex-direction: column; /* Warenkorb und Main stapeln */
+        padding: 0 var(--spacing-sm);
+        margin-top: calc(var(--header-height) + var(--spacing-md));
+        margin-bottom: var(--spacing-md);
+    }
+    main {
+        margin-right: 0; /* Abstand zum Warenkorb entfernen */
+        margin-bottom: var(--spacing-md); /* Abstand nach unten, wenn gestapelt */
+        padding: var(--spacing-lg);
+        width: 100%;
+    }
+    .cart-sidebar {
+        position: static; /* Nicht mehr sticky */
+        width: 100%;
+        max-height: 400px; /* Begrenzte Höhe für Scrollbarkeit auf Tablets */
+        overflow-y: auto; /* Scrollbar für gesamten Sidebar-Inhalt */
+        padding: var(--spacing-md);
+        order: -1; /* Warenkorb über dem Content platzieren */
+        top: auto;
+        margin-bottom: var(--spacing-md); /* Abstand zum Main Content */
+    }
+    .cart-items-scrollable-wrapper { /* Auf static nicht mehr benötigt */
+        overflow-y: visible;
+        padding-right: 0;
+        margin-right: 0;
+        mask-image: none;
+        -webkit-mask-image: none;
+    }
+
+
     .admin-container {
         flex-direction: column;
         padding: 0 var(--spacing-sm);
         margin-top: calc(var(--header-height) + var(--spacing-md));
         margin-bottom: var(--spacing-md);
     }
-    main {
-        margin-right: 0;
-        margin-bottom: var(--spacing-md);
-        padding: var(--spacing-lg);
-        width: 100%;
-    }
-    .cart-sidebar {
-        position: static;
-        width: 100%;
-        max-height: 400px;
-        overflow-y: auto;
-        padding: var(--spacing-md);
-        order: -1;
-        top: auto;
-        margin-bottom: var(--spacing-md);
-    }
-    #cart-items-scrollable {
-        padding-right: var(--spacing-xs);
-        margin-right: calc(-1 * var(--spacing-xs));
-    }
-
     .admin-sidebar {
         width: 100%;
         order: -1;
@@ -1043,7 +1064,7 @@ main {
         padding: var(--spacing-lg);
     }
     .product-grid {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(2, 1fr); /* Geändert: 2 Spalten auf Tablets */
         gap: var(--spacing-md);
     }
     .product-item img {
@@ -1061,18 +1082,24 @@ main {
     }
 
     .dashboard-stats {
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Anpassung für kleinere Bildschirme */
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     }
 }
 
-@media (max-width: 768px) { /* Mobile Landscape */
+@media (max-width: 768px) { /* Mobile Landscape & Portrait */
     :root {
         --header-height: 100px;
+        --header-height-mobile-collapsed: 60px; /* Höhe des zusammengeklappten Warenkorbs auf Mobile */
     }
     header {
         height: auto;
         padding: var(--spacing-sm) var(--spacing-md);
+        box-shadow: 0 2px 10px var(--color-shadow-medium); /* Schatten auf Mobile Header immer sichtbar */
     }
+    header.header-scrolled { /* Keine zusätzliche Änderung beim Scrollen auf Mobile */
+        box-shadow: 0 2px 10px var(--color-shadow-medium);
+    }
+
     .google-search-like-nav {
         flex-wrap: wrap;
         height: auto;
@@ -1101,12 +1128,133 @@ main {
         margin-top: var(--spacing-sm);
         justify-content: center;
     }
-    .site-content-wrapper,
+    .site-content-wrapper {
+        flex-direction: column;
+        margin-top: calc(var(--header-height) + var(--spacing-sm)); /* Weniger Abstand, da Header höher ist */
+        padding: 0; /* Kein Padding, damit Warenkorb über die volle Breite geht */
+    }
+    main {
+        order: 1; /* Main kommt nach dem Warenkorb auf Mobile */
+        margin-bottom: var(--spacing-md);
+        border-radius: 0; /* Keine abgerundeten Ecken am unteren Rand des Main */
+        box-shadow: none; /* Kein Schatten am unteren Rand */
+        padding: var(--spacing-md); /* Standard Padding für Main-Content auf Mobile */
+    }
+
+    /* Mobiler Warenkorb unten fixiert und zusammenklappbar */
+    .cart-sidebar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        /* NEU: Max Höhe für Mobile ausgeklappt, 66vh */
+        max-height: calc(var(--cart-max-height-ratio) * 100vh);
+        top: auto; /* Wichtig: top auf auto setzen */
+        border-radius: var(--border-radius-md) var(--border-radius-md) 0 0; /* Nur oben abgerundet */
+        box-shadow: 0 -4px 15px var(--color-shadow-medium); /* Schatten nach oben */
+        transform: translateY(calc(100% - var(--header-height-mobile-collapsed))); /* Zusammengeklappt: nur die obere Leiste sichtbar */
+        transition: transform 0.3s ease-in-out;
+        z-index: 100; /* Sicherstellen, dass es über dem Main-Content liegt */
+        display: flex; /* Für Flexbox im inneren Header */
+        flex-direction: column;
+        padding: 0; /* Padding wird in den inneren Containern verwaltet */
+        background-color: var(--color-background-white); /* Sicherstellen, dass der Hintergrund des Bodys des Warenkorbs weiß ist */
+    }
+
+    .cart-sidebar.is-expanded {
+        transform: translateY(0); /* Ausgeklappt: volle Höhe */
+    }
+    .cart-sidebar.is-collapsed {
+        overflow-y: hidden; /* Verhindert Scrollbar im zusammengeklappten Zustand */
+    }
+
+    .cart-header-desktop { /* Desktop Titel auf Mobile verstecken */
+        display: none;
+    }
+    .cart-header-mobile { /* Mobiler Header auf Mobile anzeigen */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: var(--spacing-sm) var(--spacing-md);
+        background-color: var(--color-primary); /* Einheitliche Farbe */
+        color: white;
+        border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1.1em;
+        position: relative;
+        z-index: 101; /* Über dem Inhalt, wenn zusammengeklappt */
+    }
+    .cart-sidebar.is-expanded .cart-header-mobile {
+        background-color: var(--color-primary);
+    }
+
+    .cart-mobile-summary {
+        flex-grow: 1;
+        text-align: left;
+    }
+
+    .cart-toggle-button {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.2em;
+        cursor: pointer;
+        padding: 0 var(--spacing-xs);
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-xs);
+        margin-left: var(--spacing-sm);
+    }
+    .cart-toggle-button .toggle-icon {
+        transition: transform 0.3s ease-in-out;
+    }
+    .cart-sidebar.is-expanded .cart-toggle-button .toggle-icon {
+        transform: rotate(180deg); /* Pfeil nach oben drehen */
+    }
+
+    .cart-body-content {
+        /* NEU: Max Höhe des scrollbaren Inhalts für Mobile (66vh minus mobiler Header) */
+        max-height: calc(var(--cart-max-height-ratio) * 100vh - var(--header-height-mobile-collapsed));
+        overflow-y: auto; /* Nur der Inhalt scrollt */
+        flex-grow: 1;
+        display: flex; /* Für interne Flex-Anordnung */
+        flex-direction: column; /* Items und Button/Total untereinander */
+        padding: var(--spacing-md);
+    }
+    .cart-sidebar.is-collapsed .cart-body-content {
+        display: none;
+    }
+
+    /* Total und Button bleiben im cart-body-content und scrollen nicht MIT den Items */
+    .cart-items-scrollable-wrapper { /* Dieser Wrapper wird jetzt auch auf Mobile verwendet */
+        flex-grow: 1;
+        overflow-y: auto; /* Nur dieser Bereich scrollt */
+        padding-right: var(--spacing-xs);
+        margin-right: calc(-1 * var(--spacing-xs));
+        mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+    }
+
+    #cart-total-container { /* Bleibt wie gehabt direkt im cart-body-content */
+        flex-shrink: 0;
+    }
+    .checkout-button { /* Bleibt wie gehabt direkt im cart-body-content */
+        flex-shrink: 0;
+    }
+
+
+    /* Allgemeine Anpassungen für Mobile Admin-Panel */
     .admin-container {
         margin-top: calc(var(--header-height) + var(--spacing-md));
         padding: 0 var(--spacing-xs);
     }
-    main, .modal-content, .admin-content {
+    .admin-sidebar {
+        padding: var(--spacing-md);
+    }
+    .admin-content {
         padding: var(--spacing-md);
         border-radius: var(--border-radius-sm);
     }
@@ -1116,8 +1264,9 @@ main {
     .product-item h3 {
         font-size: 1.2em;
     }
-    .product-item .price {
-        font-size: 1.4em;
+    .product-quantity-price-line {
+        font-size: 1.1em;
+        margin-bottom: var(--spacing-sm);
     }
     .admin-sidebar h2 {
         font-size: 1.4em;
@@ -1143,6 +1292,15 @@ main {
     :root {
         --font-size-base: 15px;
     }
+    .cart-header-mobile {
+        font-size: 1em;
+    }
+    .cart-mobile-summary {
+        font-size: 0.9em;
+    }
+    .cart-toggle-button {
+        font-size: 1em;
+    }
     .site-content-wrapper,
     .admin-container {
         padding: 0 var(--spacing-xs);
@@ -1165,18 +1323,18 @@ main {
         max-width: 95%;
     }
     .cart-item-image {
-        width: 45px;
-        height: 45px;
+        width: 40px;
+        height: 40px;
     }
     .cart-item-info h4 {
-        font-size: 0.95em;
+        font-size: 0.9em;
     }
     .cart-item-info p {
-        font-size: 0.8em;
+        font-size: 0.75em;
     }
     .cart-item-controls input[type="number"] {
-        width: 40px;
-        padding: 4px;
+        width: 35px;
+        padding: 3px;
         font-size: 0.85em;
     }
 }

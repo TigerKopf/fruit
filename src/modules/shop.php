@@ -20,22 +20,7 @@ if (!isset($pdo)) {
     $pdo = getDbConnection();
 }
 
-/**
- * Formatiert einen Betrag in Euro mit spezifischen Regeln für Nachkommastellen.
- * Zeigt zwei Nachkommastellen nur an, wenn sie nicht .00 sind.
- *
- * @param float $amount Der zu formatierende Betrag.
- * @return string Der formatierte Betrag mit Euro-Symbol.
- */
-function formatEuroCurrency(float $amount): string {
-    // Überprüfen, ob der Betrag ganze Zahlen hat (keine Nachkommastellen oder .00)
-    if (fmod($amount, 1.0) == 0) {
-        return number_format($amount, 0, ',', '.') . ' €';
-    } else {
-        // Andernfalls mit zwei Nachkommastellen formatieren
-        return number_format($amount, 2, ',', '.') . ' €';
-    }
-}
+// HINWEIS: Die Funktion formatEuroCurrency() wird jetzt über include/helpers.php geladen und ist global verfügbar.
 
 $products_by_category = [];
 $pickup_dates = [];
@@ -63,11 +48,11 @@ try {
 
 // Gesamtbetrag des Warenkorbs berechnen
 $cart_total = 0;
+$cart_item_count = 0;
 foreach ($_SESSION['cart'] as $item_id => $item) {
     $cart_total += $item['price'] * $item['quantity'];
+    $cart_item_count += $item['quantity'];
 }
-
-// Der <style>-Block wurde entfernt, da alles in assets/styles.css ausgelagert wurde.
 ?>
 
 <!-- Begin site-content-wrapper, which now wraps both the main product content and the cart sidebar -->
@@ -93,10 +78,12 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
                         <div class="product-grid">
                             <?php foreach ($products as $product): ?>
                                 <div class="product-item">
-                                    <img src="<?php echo htmlspecialchars($product['image_url'] ?: '/_placeholder.png'); ?>" alt="Bild von <?php echo htmlspecialchars($product['name']); ?>: <?php echo htmlspecialchars($product['description']); ?>">
+                                    <img src="<?php echo htmlspecialchars($product['image_url'] ?: '/_placeholder.png'); ?>" alt="Bild von <?php echo htmlspecialchars($product['name']); ?> (<?php echo htmlspecialchars($product['description']); ?>)">
                                     <h3><?php echo htmlspecialchars($product['name']); ?></h3>
-                                    <p class="description"><?php echo htmlspecialchars($product['description']); ?></p>
-                                    <div class="price"><?php echo formatEuroCurrency($product['price']); ?></div>
+                                    <!-- Geänderte Zeile für Mengenangabe und Preis -->
+                                    <p class="product-quantity-price-line">
+                                        <?php echo htmlspecialchars($product['description']); ?> für <?php echo formatEuroCurrency($product['price']); ?>
+                                    </p>
                                     <div class="product-controls">
                                         <input type="number" class="quantity-input" value="1" min="1" max="<?php echo (int)$product['stock_quantity']; ?>" data-product-id="<?php echo (int)$product['product_id']; ?>">
                                         <button class="add-to-cart-btn" data-product-id="<?php echo (int)$product['product_id']; ?>"
@@ -119,32 +106,50 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
     </main>
 
     <aside class="cart-sidebar">
-        <h2>Ihr Warenkorb</h2>
-        <div id="cart-items-scrollable"> <!-- Added wrapper for scrollable items -->
-            <ul id="cart-items">
-                <?php if (empty($_SESSION['cart'])): ?>
-                    <li id="cart-empty-message">Ihr Warenkorb ist leer.</li>
-                <?php else: ?>
-                    <?php foreach ($_SESSION['cart'] as $productId => $item): ?>
-                        <li class="cart-item" data-product-id="<?php echo htmlspecialchars($productId); ?>">
-                            <img src="<?php echo htmlspecialchars($item['image_url'] ?: '/_placeholder.png'); ?>" alt="Bild von <?php echo htmlspecialchars($item['name']); ?>: <?php echo htmlspecialchars($item['description']); ?>" class="cart-item-image">
-                            <div class="cart-item-info">
-                                <h4><?php echo htmlspecialchars($item['name']); ?></h4>
-                                <p><?php echo formatEuroCurrency($item['price'] * $item['quantity']); ?></p>
-                            </div>
-                            <div class="cart-item-controls">
-                                <input type="number" class="cart-quantity-input" value="<?php echo (int)$item['quantity']; ?>" min="1" max="<?php echo (int)$item['stock']; ?>" data-product-id="<?php echo htmlspecialchars($productId); ?>">
-                                <button class="remove-item-btn" data-product-id="<?php echo htmlspecialchars($productId); ?>">&times;</button>
-                            </div>
-                        </li>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </ul>
+        <!-- Desktop Warenkorb Header -->
+        <div class="cart-header-desktop">
+            <h2>Ihr Warenkorb</h2>
         </div>
-        <div id="cart-total-container">
-            <strong>Gesamt: <span id="cart-total"><?php echo formatEuroCurrency($cart_total); ?></span></strong>
+
+        <!-- Mobiler Warenkorb Header (zusammenklappbar) -->
+        <div class="cart-header-mobile">
+            <span class="cart-mobile-summary">
+                Warenkorb (<span id="mobile-cart-item-count"><?php echo $cart_item_count; ?></span> Artikel) - <span id="mobile-cart-total-summary"><?php echo formatEuroCurrency($cart_total); ?></span>
+            </span>
+            <button id="cart-toggle-mobile" class="cart-toggle-button">
+                <span class="toggle-text">Details</span> <span class="toggle-icon">▼</span>
+            </button>
         </div>
-        <button class="checkout-button" id="open-checkout-modal" <?php echo empty($_SESSION['cart']) ? 'disabled' : ''; ?>>Weiter zur Kasse</button>
+
+        <!-- Warenkorb Inhalt (klappt auf Mobile ein/aus) -->
+        <div class="cart-body-content">
+            <!-- NEU: Wrapper für scrollbare Items -->
+            <div class="cart-items-scrollable-wrapper">
+                <ul id="cart-items">
+                    <?php if (empty($_SESSION['cart'])): ?>
+                        <li id="cart-empty-message">Ihr Warenkorb ist leer.</li>
+                    <?php else: ?>
+                        <?php foreach ($_SESSION['cart'] as $productId => $item): ?>
+                            <li class="cart-item" data-product-id="<?php echo htmlspecialchars($productId); ?>">
+                                <img src="<?php echo htmlspecialchars($item['image_url'] ?: '/_placeholder.png'); ?>" alt="Bild von <?php echo htmlspecialchars($item['name']); ?>: <?php echo htmlspecialchars($item['description']); ?>" class="cart-item-image">
+                                <div class="cart-item-info">
+                                    <h4><?php echo htmlspecialchars($item['name']); ?></h4>
+                                    <p><?php echo formatEuroCurrency($item['price'] * $item['quantity']); ?></p>
+                                </div>
+                                <div class="cart-item-controls">
+                                    <input type="number" class="cart-quantity-input" value="<?php echo (int)$item['quantity']; ?>" min="1" max="<?php echo (int)$item['stock']; ?>" data-product-id="<?php echo htmlspecialchars($productId); ?>">
+                                    <button class="remove-item-btn" data-product-id="<?php echo htmlspecialchars($productId); ?>">&times;</button>
+                                </div>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </ul>
+            </div>
+            <div id="cart-total-container">
+                <span>Gesamt:</span> <span id="cart-total"><?php echo formatEuroCurrency($cart_total); ?></span>
+            </div>
+            <button class="checkout-button" id="open-checkout-modal" <?php echo empty($_SESSION['cart']) ? 'disabled' : ''; ?>>Weiter zur Kasse</button>
+        </div>
     </aside>
 
     <!-- Checkout Modal remains here -->
@@ -217,20 +222,25 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
     };
 
     document.addEventListener('DOMContentLoaded', () => {
+        const cartSidebar = document.querySelector('.cart-sidebar');
         const cartItemsList = document.getElementById('cart-items');
         const cartTotalSpan = document.getElementById('cart-total');
         const checkoutButton = document.getElementById('open-checkout-modal');
+        const mobileCartItemCount = document.getElementById('mobile-cart-item-count');
+        const mobileCartTotalSummary = document.getElementById('mobile-cart-total-summary');
+        const cartToggleButton = document.getElementById('cart-toggle-mobile');
 
+        // Funktion zur Aktualisierung der Warenkorb-Anzeige
         const updateCartDisplay = (cart) => {
             cartItemsList.innerHTML = ''; // Warenkorb leeren
             let total = 0;
+            let itemCount = 0;
 
             if (Object.keys(cart).length === 0) {
                 cartItemsList.innerHTML = '<li id="cart-empty-message">Ihr Warenkorb ist leer.</li>';
                 checkoutButton.disabled = true;
             } else {
                 checkoutButton.disabled = false;
-                // Remove the empty message if it exists
                 const existingEmptyMessage = document.getElementById('cart-empty-message');
                 if (existingEmptyMessage) {
                     existingEmptyMessage.remove();
@@ -239,6 +249,7 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
                 for (const productId in cart) {
                     const item = cart[productId];
                     total += parseFloat(item.price) * parseInt(item.quantity);
+                    itemCount += parseInt(item.quantity);
 
                     const listItem = document.createElement('li');
                     listItem.classList.add('cart-item');
@@ -258,6 +269,15 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
                 }
             }
             cartTotalSpan.textContent = formatEuroCurrencyJS(total);
+            if (mobileCartItemCount) mobileCartItemCount.textContent = itemCount;
+            if (mobileCartTotalSummary) mobileCartTotalSummary.textContent = formatEuroCurrencyJS(total);
+
+            // Deaktiviere Checkout Button, wenn Warenkorb leer
+            if (itemCount === 0) {
+                checkoutButton.disabled = true;
+            } else {
+                checkoutButton.disabled = false;
+            }
         };
 
         const sendCartUpdateRequest = async (action, productId, quantity = 0) => {
@@ -348,15 +368,28 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
         const checkoutForm = document.getElementById('checkoutForm');
         const checkoutMessageDiv = document.getElementById('checkout-message');
 
-        checkoutButton.addEventListener('click', () => {
-            // Check if cart has items before opening modal
+        // Funktion, um das Modal zu öffnen
+        const openCheckoutModal = () => {
+            // Sicherstellen, dass der Warenkorb auf Mobile ausgeklappt ist, bevor das Modal geöffnet wird
+            if (window.innerWidth <= 768 && cartSidebar.classList.contains('is-collapsed')) {
+                cartSidebar.classList.remove('is-collapsed');
+                cartSidebar.classList.add('is-expanded');
+            }
             const currentCartItems = cartItemsList.querySelectorAll('.cart-item');
             if (currentCartItems.length > 0) {
                 checkoutModal.style.display = 'flex'; // Use flex to center
                 checkoutMessageDiv.style.display = 'none'; // Clear any previous messages
                 checkoutMessageDiv.className = 'alert'; // Reset alert classes
             }
-        });
+        };
+
+        // Event Listener für den Checkout-Button im Warenkorb
+        checkoutButton.addEventListener('click', openCheckoutModal);
+        // Event Listener für den mobilen Checkout-Button (falls vorhanden und sichtbar)
+        const mobileCheckoutButton = document.querySelector('.cart-header-mobile + .cart-body-content .checkout-button');
+        if (mobileCheckoutButton) {
+            mobileCheckoutButton.addEventListener('click', openCheckoutModal);
+        }
 
         closeButton.addEventListener('click', () => {
             checkoutModal.style.display = 'none';
@@ -412,6 +445,62 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
         // Initial cart display update on page load (if items exist in session)
         const initialCart = <?php echo json_encode($_SESSION['cart']); ?>;
         updateCartDisplay(initialCart);
+
+        // --- Mobiler Warenkorb Toggle Logik ---
+        const isMobile = () => window.innerWidth <= 768; // Definiere deine Mobile-Breakpoint
+
+        const applyMobileCartState = () => {
+            // Zeige/verstecke Desktop/Mobile Warenkorb Header basierend auf Bildschirmgröße
+            const desktopHeader = cartSidebar.querySelector('.cart-header-desktop');
+            const mobileHeader = cartSidebar.querySelector('.cart-header-mobile');
+
+            // Lese die CSS-Variable für die Höhe aus dem Root-Element
+            const rootStyles = getComputedStyle(document.documentElement);
+            const mobileCollapsedHeight = parseFloat(rootStyles.getPropertyValue('--header-height-mobile-collapsed'));
+
+            if (isMobile()) {
+                if (desktopHeader) desktopHeader.style.display = 'none';
+                if (mobileHeader) mobileHeader.style.display = 'flex'; // Mobile Header anzeigen
+
+                // Sicherstellen, dass der Warenkorb zusammengeklappt ist, wenn Mobile-Modus aktiv wird
+                if (!cartSidebar.classList.contains('is-expanded')) { // Nur wenn er nicht explizit ausgeklappt wurde
+                    cartSidebar.classList.add('is-collapsed');
+                    // Setze den Transform-Wert basierend auf der CSS-Variablen
+                    cartSidebar.style.transform = `translateY(calc(100% - ${mobileCollapsedHeight}px))`;
+                }
+            } else {
+                if (desktopHeader) desktopHeader.style.display = 'block'; // Desktop Header anzeigen
+                if (mobileHeader) mobileHeader.style.display = 'none';
+
+                // Auf Desktop-Größe alle mobilen Klassen entfernen und den normalen Zustand wiederherstellen
+                cartSidebar.classList.remove('is-collapsed');
+                cartSidebar.classList.remove('is-expanded');
+                cartSidebar.style.transform = ''; // Reset transform
+            }
+        };
+
+        // Event Listener für den mobilen Toggle-Button
+        if (cartToggleButton) {
+            cartToggleButton.addEventListener('click', () => {
+                const rootStyles = getComputedStyle(document.documentElement);
+                const mobileCollapsedHeight = parseFloat(rootStyles.getPropertyValue('--header-height-mobile-collapsed'));
+
+                if (cartSidebar.classList.contains('is-collapsed')) {
+                    cartSidebar.classList.remove('is-collapsed');
+                    cartSidebar.classList.add('is-expanded');
+                    cartSidebar.style.transform = 'translateY(0)'; // Ausgeklappt
+                } else {
+                    cartSidebar.classList.remove('is-expanded');
+                    cartSidebar.classList.add('is-collapsed');
+                    cartSidebar.style.transform = `translateY(calc(100% - ${mobileCollapsedHeight}px))`; // Zusammengeklappt
+                }
+            });
+        }
+
+        // Zustand bei Seitenladung und Größenänderung anwenden
+        applyMobileCartState();
+        window.addEventListener('resize', applyMobileCartState);
+
 
         // Sticky Header Scroll-Effekt
         const header = document.querySelector('header');
