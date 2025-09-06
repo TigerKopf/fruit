@@ -3,7 +3,7 @@
         'name' => 'tigerkopf/portugal-fruits',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '8ae2c3e7e57d684c2dae7806514d5d2cb3e74337',
+        'reference' => '5df14d2e38e17dfe184657e954d760dbe418119d',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -40,7 +40,7 @@
         'tigerkopf/portugal-fruits' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '8ae2c3e7e57d684c2dae7806514d5d2cb3e74337',
+            'reference' => '5df14d2e38e17dfe184657e954d760dbe418119d',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

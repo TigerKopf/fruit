@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit8d838141cf224a63fafe999d22007548
+class ComposerStaticInit995c43d7a476f6c24daa080dd3c49569
 {
     public static $files = array (
         'a4ecaeafb8cfb009ad0e052c90355e98' => __DIR__ . '/..' . '/beberlei/assert/lib/Assert/functions.php',
@@ -207,9 +207,9 @@ class ComposerStaticInit8d838141cf224a63fafe999d22007548
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit8d838141cf224a63fafe999d22007548::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit8d838141cf224a63fafe999d22007548::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit8d838141cf224a63fafe999d22007548::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit995c43d7a476f6c24daa080dd3c49569::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit995c43d7a476f6c24daa080dd3c49569::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit995c43d7a476f6c24daa080dd3c49569::$classMap;
 
         }, null, ClassLoader::class);
     }
