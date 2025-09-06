@@ -1,0 +1,13 @@
+RewriteEngine On
+RewriteBase "/"
+
+# Wenn die Anfrage für eine existierende Datei ist, bearbeite sie direkt
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# Wenn die Anfrage für ein existierendes Verzeichnis ist, bearbeite es direkt
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Alle anderen Anfragen werden an index.php weitergeleitet
+RewriteRule ^(.*)$ index.php [QSA,L]

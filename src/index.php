@@ -1,62 +1,98 @@
 <?php
-// index.php
 
-// 1. Konfiguration oder globale Einstellungen (optional, aber nützlich)
-//    Hier könnten z.B. Datenbankverbindungen, Konstanten oder Pfade definiert werden.
-define('BASE_PATH', __DIR__); // Definiert den Basispfad des Projekts
-define('APP_NAME', 'Meine Awesome Website');
+/**
+ * Kern-Datei der Anwendung
+ * Diese Datei verarbeitet alle Anfragen dank .htaccess
+ */
 
-// 2. Fehlerreporting (hilfreich während der Entwicklung)
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// --- SETUP PHASE ---
+// Konfigurationsdatei einbinden (Bleibt hier, da sie grundlegende Konstanten wie ROOT_PATH definiert)
+require_once __DIR__ . '/config/config.php';
 
-// 3. Autoloading (wenn du Klassen verwendest)
-//    Für einfache Projekte kannst du dies weglassen.
-//    Für komplexere Projekte mit vielen Klassen ist ein Autoloader sehr empfehlenswert.
-//    Beispiel für einen PSR-4 Autoloader (benötigt Composer):
-/*
-require_once 'vendor/autoload.php';
-*/
+// Alle Hilfsdateien und Initialisierungen aus dem 'include'-Ordner laden
+// Dies bindet startup.php, asset_handler.php, db.php, email.php und alle anderen hinzugefügten Dateien ein.
+require_once __DIR__ . '/include/loader.php'; // Stellen Sie sicher, dass loader.php db.php und email.php lädt
 
-// --- Start der HTML-Ausgabe ---
+// Composer Autoload einbinden. Dies ist essenziell für PHPMailer.
+// Stelle sicher, dass der 'vendor'-Ordner direkt unter deinem ROOT_PATH liegt.
+require_once __DIR__  . '/vendor/autoload.php';
 
-// 4. Header einbinden
-//    Hier kommen Dinge wie <head>-Tags, CSS-Links, Meta-Tags und der obere Teil der Navigation
-include_once BASE_PATH . '/includes/header.php';
-
-// 5. Navigation/Menü einbinden
-//    Die Hauptnavigation der Website
-include_once BASE_PATH . '/includes/navigation.php';
-
-// 6. Hauptinhaltsbereich
-echo '<main id="content" class="container mt-4">';
-
-// 7. Dynamisches Laden von Seiteninhalten
-//    Über den GET-Parameter 'page' wird gesteuert, welche Inhaltsdatei geladen wird.
-$page = isset($_GET['page']) ? $_GET['page'] : 'home'; // Standardseite ist 'home'
-
-// Verhindert Directory Traversal und erlaubt nur definierte Seiten
-$allowed_pages = [
-    'home'      => 'pages/home.php',
-    'about'     => 'pages/about.php',
-    'contact'   => 'pages/contact.php',
-    'products'  => 'pages/products.php',
-    // Füge hier weitere erlaubte Seiten hinzu
-];
-
-if (array_key_exists($page, $allowed_pages)) {
-    // Wenn die Seite erlaubt ist, binde sie ein
-    include_once BASE_PATH . '/' . $allowed_pages[$page];
-} else {
-    // Wenn die Seite nicht existiert oder nicht erlaubt ist, lade eine 404-Seite
-    include_once BASE_PATH . '/pages/404.php';
+// Session starten (wichtig für den Warenkorb)
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
 }
 
-echo '</main>'; // Ende des Hauptinhaltsbereichs
 
-// 8. Footer einbinden
-//    Hier kommen Dinge wie Copyright-Informationen, Skripte, etc.
-include_once BASE_PATH . '/includes/footer.php';
+// --- REQUEST PARSING PHASE ---
+// Angeforderte URI extrahieren
+// Beispiel: /ueber-uns -> ueber-uns
+$request_uri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+
+// Segmente der URI aufteilen
+$segments = explode('/', $request_uri);
+
+// Das erste Segment als Modul-/Seitennamen verwenden, Standard ist 'home'
+$page = !empty($segments[0]) ? $segments[0] : 'home';
+
+
+// --- ASSET HANDLING PHASE ---
+// Prüfen, ob eine Asset-Anfrage vorliegt und diese behandeln
+// Die Funktion handleAssetRequest() ist in include/asset_handler.php definiert.
+// Sie wird nur aktiv, wenn $page_name mit '_' beginnt (z.B. /_favicon.ico).
+// Eine Anfrage wie /api/cart_process.php wird hier nicht behandelt.
+handleAssetRequest($page);
+
+
+// --- API ROUTING PHASE ---
+// Wenn das erste Segment 'api' ist, versuchen wir, die entsprechende API-Datei zu laden.
+if ($page === 'api' && isset($segments[1])) {
+    // Annahme: Die API-Dateien sind direkt im 'api'-Ordner.
+    // Beispiel: /api/cart_process.php -> ROOT_PATH . 'api/cart_process.php'
+    $api_file = ROOT_PATH . 'api/' . $segments[1];
+
+    // Optional: Dateiendung hinzufügen, wenn der Segmentname ohne Endung kommt
+    // if (!str_contains($api_file, '.php')) {
+    //     $api_file .= '.php';
+    // }
+
+    if (file_exists($api_file)) {
+        require_once $api_file;
+        exit(); // Wichtig: Beende das Skript nach dem Ausführen der API-Datei
+    } else {
+        // API-Endpunkt nicht gefunden
+        header("HTTP/1.0 404 Not Found");
+        require_once ROOT_PATH . 'modules/404.php';
+        exit();
+    }
+}
+
+
+// --- PAGE / MODULE LOADING PHASE ---
+// Seitennamen bereinigen, um nur alphanumerische Zeichen, Bindestriche, Unterstriche UND PUNKT (für Dateierweiterungen) zu erlauben
+// Dies ist wichtig, um zu verhindern, dass Pfade wie 'api' als Modulname verwendet werden,
+// nachdem sie bereits von der API-Routing-Phase behandelt wurden.
+$page = preg_replace('/[^a-zA-Z0-9\-_.]/', '', $page);
+
+// Pfad zum Modul
+$module_path = ROOT_PATH . 'modules/' . $page . '.php';
+
+// Header der Seite einbinden
+require_once ROOT_PATH . 'templates/header.php';
+
+// Modul laden oder 404-Fehler anzeigen
+if (file_exists($module_path)) {
+    require_once $module_path;
+} else {
+    // Wenn das Modul nicht existiert, 404-Status senden
+    header("HTTP/1.0 404 Not Found");
+    require_once ROOT_PATH . 'modules/404.php';
+}
+
+// Footer der Seite einbinden
+require_once ROOT_PATH . 'templates/footer.php';
 
 ?>
+
+<link rel="icon" type="image/x-icon" href="/_favicon.ico">
+<link rel="icon" type="image/png" href="/_logo.png">
+<link rel="apple-touch-icon" href="/_apple-touch-icon.png">
