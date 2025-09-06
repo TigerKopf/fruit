@@ -9,7 +9,7 @@ if (session_status() == PHP_SESSION_NONE) {
 // Benötigte Konfiguration und Funktionen laden
 require_once ROOT_PATH . 'config/sensitive_config.php';
 require_once ROOT_PATH . 'include/db.php'; // Für getDbConnection() und $pdo
-require_once ROOT_PATH . 'include/email.php'; // Für formatEuroCurrency (oder besser in Helpers auslagern)
+require_once ROOT_PATH . 'include/email.php'; // Für sendAppEmail() und formatEuroCurrency (oder besser in Helpers auslagern)
 
 // Helper-Funktion für Euro-Formatierung (muss hier verfügbar sein)
 if (!function_exists('formatEuroCurrency')) {
@@ -32,7 +32,7 @@ $isAdminLoggedIn = (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logg
 $loginError = '';
 $currentSection = $_GET['section'] ?? 'dashboard';
 $actionStatus = $_GET['status'] ?? ''; // Für Erfolgs-/Fehlermeldungen nach Aktionen
-$actionMessage = $_GET['msg'] ?? ''; // Zusätzliche Nachricht bei Fehlern (URL-encoded)
+$actionMessage = $_GET['msg'] ?? ''; // Zusätzliche Nachricht bei Fehlern
 
 // --- VORVERARBEITUNG VON POST- UND GET-ANFRAGEN (VOR JEDER HTML-AUSGABE) ---
 
@@ -65,9 +65,34 @@ if ($isAdminLoggedIn && $_SERVER['REQUEST_METHOD'] === 'POST') {
             case 'orders':
                 if (isset($_POST['update_order']) && $id > 0) {
                     $newStatus = $_POST['status'];
-                    $stmtUpdate = $pdo->prepare("UPDATE orders SET status = :status WHERE order_id = :id");
-                    $stmtUpdate->execute([':status' => $newStatus, ':id' => $id]);
-                    header('Location: ?section=orders&status=success');
+
+                    // Alten Status abrufen
+                    $stmtOldStatus = $pdo->prepare("SELECT o.status, u.email, u.first_name, u.last_name FROM orders o JOIN users u ON o.user_id = u.user_id WHERE o.order_id = :id");
+                    $stmtOldStatus->execute([':id' => $id]);
+                    $oldOrderInfo = $stmtOldStatus->fetch();
+
+                    if ($oldOrderInfo && $oldOrderInfo['status'] !== $newStatus) { // Nur senden, wenn Status sich wirklich ändert
+                        $stmtUpdate = $pdo->prepare("UPDATE orders SET status = :status WHERE order_id = :id");
+                        $stmtUpdate->execute([':status' => $newStatus, ':id' => $id]);
+
+                        // E-Mail an den Kunden senden
+                        $customerEmail = $oldOrderInfo['email'];
+                        $customerName = $oldOrderInfo['first_name'] . ' ' . $oldOrderInfo['last_name'];
+                        $emailSubject = "Status Ihrer Bestellung #{$id} bei " . MAIL_FROM_NAME . " aktualisiert";
+                        $emailBody = "
+                            <p>Hallo {$customerName},</p>
+                            <p>der Status Ihrer Bestellung mit der Nummer <strong>#{$id}</strong> wurde aktualisiert.</p>
+                            <p>Alter Status: <strong>" . htmlspecialchars(ucfirst($oldOrderInfo['status'])) . "</strong></p>
+                            <p>Neuer Status: <strong>" . htmlspecialchars(ucfirst($newStatus)) . "</strong></p>
+                            <p>Sie können den aktuellen Status Ihrer Bestellungen jederzeit in Ihrem Kundenkonto einsehen.</p>
+                            <p>Vielen Dank für Ihr Vertrauen!</p>
+                            <p>Mit freundlichen Grüssen,<br>Ihr Team von " . MAIL_FROM_NAME . "</p>";
+
+                        sendAppEmail($customerEmail, $emailSubject, $emailBody, $id);
+                        header('Location: ?section=orders&status=success&msg=' . urlencode('Bestellstatus erfolgreich aktualisiert.'));
+                    } else {
+                        header('Location: ?section=orders&status=success&msg=' . urlencode('Bestellstatus war bereits aktuell. Keine Änderung vorgenommen.'));
+                    }
                     exit();
                 }
                 break;
@@ -97,15 +122,15 @@ if ($isAdminLoggedIn && $_SERVER['REQUEST_METHOD'] === 'POST') {
                     $payment_date = $_POST['payment_date'];
                     $amount = (float)$_POST['amount'];
                     $payment_method = $_POST['payment_method'];
-                    $transaction_id = trim($_POST['transaction_id']) ?: null;
+                    $transaction_id = $_POST['transaction_id'] ?: null;
                     $status = $_POST['status'];
-                    $notes = trim($_POST['notes']) ?: null;
+                    $notes = $_POST['notes'] ?: null;
 
                     // Überprüfen, ob die Bestell-ID existiert
                     $stmtOrderCheck = $pdo->prepare("SELECT COUNT(*) FROM orders WHERE order_id = :order_id");
                     $stmtOrderCheck->execute([':order_id' => $order_id]);
                     if ($stmtOrderCheck->fetchColumn() == 0) {
-                        throw new Exception("Bestell-ID existiert nicht. Zahlung konnte nicht hinzugefügt werden.");
+                        throw new Exception("Bestell-ID existiert nicht.");
                     }
 
                     $stmt = $pdo->prepare("INSERT INTO payments (order_id, payment_date, amount, payment_method, transaction_id, status, notes) VALUES (:order_id, :payment_date, :amount, :payment_method, :transaction_id, :status, :notes)");
@@ -118,15 +143,47 @@ if ($isAdminLoggedIn && $_SERVER['REQUEST_METHOD'] === 'POST') {
                         ':status' => $status,
                         ':notes' => $notes
                     ]);
-                    header('Location: ?section=payments&status=success');
+
+                    // E-Mail an den Kunden senden, wenn Zahlung abgeschlossen
+                    if ($status === 'completed') {
+                        $stmtOrderUser = $pdo->prepare("SELECT u.email, u.first_name, u.last_name, o.total_amount FROM orders o JOIN users u ON o.user_id = u.user_id WHERE o.order_id = :order_id");
+                        $stmtOrderUser->execute([':order_id' => $order_id]);
+                        $orderUserInfo = $stmtOrderUser->fetch();
+
+                        if ($orderUserInfo) {
+                            $customerEmail = $orderUserInfo['email'];
+                            $customerName = $orderUserInfo['first_name'] . ' ' . $orderUserInfo['last_name'];
+                            $emailSubject = "Zahlung für Bestellung #{$order_id} bei " . MAIL_FROM_NAME . " eingegangen";
+                            $emailBody = "
+                                <p>Hallo {$customerName},</p>
+                                <p>wir freuen uns, Ihnen mitteilen zu können, dass Ihre Zahlung von <strong>" . formatEuroCurrency($amount) . "</strong> für die Bestellung <strong>#{$order_id}</strong> erfolgreich bearbeitet und als 'Abgeschlossen' markiert wurde.</p>
+                                <p>Gesamtbetrag der Bestellung: <strong>" . formatEuroCurrency($orderUserInfo['total_amount']) . "</strong></p>
+                                <p>Wir bedanken uns für Ihre Bestellung!</p>
+                                <p>Mit freundlichen Grüssen,<br>Ihr Team von " . MAIL_FROM_NAME . "</p>";
+
+                            sendAppEmail($customerEmail, $emailSubject, $emailBody, $order_id);
+                        }
+                    }
+
+                    // Redirect zurück zur Zahlungsliste oder zur Bestelldetailseite, wenn von dort gekommen
+                    if (isset($_POST['return_to_order_id']) && (int)$_POST['return_to_order_id'] === $order_id) {
+                         header('Location: ?section=orders&action=edit&id=' . $order_id . '&status=success&msg=' . urlencode('Zahlung erfolgreich hinzugefügt.'));
+                    } else {
+                        header('Location: ?section=payments&status=success');
+                    }
                     exit();
                 } elseif (isset($_POST['update_payment']) && $id > 0) {
+                    // Alten Zahlungsstatus abrufen und User-Info holen
+                    $stmtOldPayment = $pdo->prepare("SELECT p.status, p.order_id, u.email, u.first_name, u.last_name, o.total_amount FROM payments p JOIN orders o ON p.order_id = o.order_id JOIN users u ON o.user_id = u.user_id WHERE p.payment_id = :id");
+                    $stmtOldPayment->execute([':id' => $id]);
+                    $oldPaymentInfo = $stmtOldPayment->fetch();
+
                     $payment_date = $_POST['payment_date'];
                     $amount = (float)$_POST['amount'];
                     $payment_method = $_POST['payment_method'];
-                    $transaction_id = trim($_POST['transaction_id']) ?: null;
+                    $transaction_id = $_POST['transaction_id'] ?: null;
                     $status = $_POST['status'];
-                    $notes = trim($_POST['notes']) ?: null;
+                    $notes = $_POST['notes'] ?: null;
 
                     $stmtUpdate = $pdo->prepare("UPDATE payments SET payment_date = :payment_date, amount = :amount, payment_method = :payment_method, transaction_id = :transaction_id, status = :status, notes = :notes WHERE payment_id = :id");
                     $stmtUpdate->execute([
@@ -138,11 +195,31 @@ if ($isAdminLoggedIn && $_SERVER['REQUEST_METHOD'] === 'POST') {
                         ':notes' => $notes,
                         ':id' => $id
                     ]);
+
+                    // E-Mail an den Kunden senden, wenn der Status sich geändert hat (besonders wichtig bei 'completed')
+                    if ($oldPaymentInfo && $oldPaymentInfo['status'] !== $status) {
+                        $customerEmail = $oldPaymentInfo['email'];
+                        $customerName = $oldPaymentInfo['first_name'] . ' ' . $oldPaymentInfo['last_name'];
+                        $orderId = $oldPaymentInfo['order_id'];
+                        $emailSubject = "Status Ihrer Zahlung #{$id} für Bestellung #{$orderId} bei " . MAIL_FROM_NAME . " aktualisiert";
+                        $emailBody = "
+                            <p>Hallo {$customerName},</p>
+                            <p>der Status Ihrer Zahlung mit der ID <strong>#{$id}</strong> für die Bestellung <strong>#{$orderId}</strong> wurde aktualisiert.</p>
+                            <p>Alter Status: <strong>" . htmlspecialchars(ucfirst($oldPaymentInfo['status'])) . "</strong></p>
+                            <p>Neuer Status: <strong>" . htmlspecialchars(ucfirst($status)) . "</strong></p>
+                            <p>Betrag der Zahlung: <strong>" . formatEuroCurrency($amount) . "</strong></p>
+                            <p>Bei Rückfragen stehen wir Ihnen gerne zur Verfügung.</p>
+                            <p>Mit freundlichen Grüssen,<br>Ihr Team von " . MAIL_FROM_NAME . "</p>";
+
+                        sendAppEmail($customerEmail, $emailSubject, $emailBody, $orderId);
+                    }
+
                     header('Location: ?section=payments&status=success');
                     exit();
                 } elseif (isset($_POST['delete_payment']) && $id > 0) {
                      $stmt = $pdo->prepare("DELETE FROM payments WHERE payment_id = :id");
                      $stmt->execute([':id' => $id]);
+                     // Optional: E-Mail senden, dass Zahlung storniert/gelöscht wurde.
                      header('Location: ?section=payments&status=success');
                      exit();
                 }
@@ -281,256 +358,9 @@ if (!$isAdminLoggedIn) {
 }
 
 // CSS für die Admin-Seite (nur anzeigen, wenn eingeloggt)
+// Dieses CSS wird durch index.php oder template/header.php über assets/styles.css geladen
+// HINWEIS: Bei der Umstellung auf Variablen in styles.css könnte dieser inline-style Block entfernt werden.
 ?>
-<style>
-    /* Admin Panel Styling - Moved from inline to here for better management */
-    body { background-color: #f4f7f6; font-family: 'Roboto', sans-serif; margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; }
-    .admin-container {
-        display: flex;
-        flex: 1;
-        width: 100%;
-        max-width: 1400px;
-        margin: 0 auto; /* Zentrierung */
-        padding: 0 20px; /* Seitlicher Abstand */
-        box-sizing: border-box;
-        /* Angepasster oberer Margin, um den festen Header zu umgehen + Abstand */
-        margin-top: calc(104px + 20px); /* Höhe des Headers + 20px Abstand */
-        margin-bottom: 20px; /* Abstand zum Footer */
-
-        background: #fff;
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        overflow: hidden; /* Verhindert, dass interne Inhalte herausragen */
-    }
-
-    .admin-sidebar { width: 200px; background-color: #343a40; color: #fff; padding: 20px; flex-shrink: 0; }
-    .admin-sidebar h2 { color: #fff; text-align: center; margin-bottom: 30px; }
-    .admin-sidebar ul { list-style: none; padding: 0; margin: 0; }
-    .admin-sidebar li { margin-bottom: 10px; }
-    .admin-sidebar a { color: #adb5bd; text-decoration: none; display: block; padding: 10px 15px; border-radius: 4px; transition: background-color 0.2s ease, color 0.2s ease; }
-    .admin-sidebar a:hover, .admin-sidebar a.active { background-color: #495057; color: #fff; }
-    .admin-content { flex-grow: 1; padding: 30px; }
-    .admin-content h1 { color: #333; margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
-    .admin-content h4 { margin-top: 25px; margin-bottom: 15px; color: #555; font-size: 1.2em; }
-    .admin-content table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-    .admin-content th, .admin-content td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-    .admin-content th { background-color: #f2f2f2; font-weight: bold; }
-    .admin-content tr:nth-child(even) { background-color: #f9f9f9; }
-    .admin-content .action-buttons a, .admin-content .action-buttons button {
-        display: inline-block;
-        padding: 6px 12px;
-        margin-right: 5px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        text-decoration: none;
-        font-size: 0.9em;
-        transition: background-color 0.2s ease;
-    }
-    .admin-content .action-buttons .edit-btn { background-color: #007bff; color: white; }
-    .admin-content .action-buttons .edit-btn:hover { background-color: #0056b3; }
-    .admin-content .action-buttons .delete-btn { background-color: #dc3545; color: white; }
-    .admin-content .action-buttons .delete-btn:hover { background-color: #c82333; }
-    .admin-content .action-buttons .add-btn { background-color: #28a745; color: white; margin-bottom: 20px;}
-    .admin-content .action-buttons .add-btn:hover { background-color: #218838; }
-
-    .admin-form-container { background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin-top: 20px; }
-    .admin-form-container label { display: block; margin-bottom: 8px; font-weight: bold; color: #555; }
-    .admin-form-container input[type="text"],
-    .admin-form-container input[type="number"],
-    .admin-form-container input[type="email"],
-    .admin-form-container textarea,
-    .admin-form-container select,
-    .admin-form-container input[type="datetime-local"] {
-        width: calc(100% - 24px);
-        padding: 12px;
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 1em;
-    }
-    .admin-form-container button[type="submit"] {
-        background-color: #007bff;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 1em;
-        transition: background-color 0.2s ease;
-    }
-    .admin-form-container button[type="submit"]:hover { background-color: #0056b3; }
-
-    .alert { padding: 15px; margin-top: 15px; /* Added margin for alert messages in admin */
-    margin-bottom: 20px; border-radius: 4px; }
-    .alert.success { background-color: #d4edda; color: #155724; border-color: #c3e6cb; }
-    .alert.error { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; }
-    .dashboard-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
-    .stat-card { background-color: #e9ecef; padding: 20px; border-radius: 8px; text-align: center; }
-    .stat-card h3 { margin: 0 0 10px 0; color: #555; font-size: 1.1em; }
-    .stat-card p { font-size: 2em; font-weight: bold; color: #333; margin: 0; }
-
-    /* Responsive Anpassungen (für Admin-Panel spezifisch anpassen, falls nötig) */
-    @media (max-width: 1400px) {
-        .site-content-wrapper,
-        .admin-container {
-            max-width: 100%;
-        }
-    }
-
-    @media (max-width: 992px) { /* Tablet/Smaller Desktop */
-        .site-content-wrapper,
-        .admin-container {
-            flex-direction: column;
-            padding: 0 10px;
-            margin-top: calc(104px + 10px); /* Angepasst für kleinere Bildschirme */
-            margin-bottom: 10px;
-        }
-        main {
-            margin-right: 0;
-            margin-bottom: 20px;
-            padding: 20px;
-            width: 100%;
-        }
-        .cart-sidebar {
-            position: static;
-            width: 100%;
-            max-height: none;
-            overflow-y: visible;
-            padding: 15px;
-            order: -1;
-            top: auto; /* Remove sticky behavior */
-            max-height: 300px; /* Fixed height for scrollable items on smaller screens */
-            overflow-y: auto; /* Allow scrolling for items */
-            mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-        }
-        #cart-items-scrollable {
-            padding-right: 5px;
-            margin-right: -5px;
-        }
-        .admin-sidebar {
-            width: 100%;
-            order: -1; /* Sidebar über dem Content platzieren */
-            margin-bottom: 20px;
-        }
-        .admin-content {
-            padding: 20px;
-        }
-        .product-grid {
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-        .product-item img {
-            height: 150px;
-        }
-        .footer-content-wrapper {
-            padding: 20px 30px;
-        }
-        .footer-container {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-        .footer-section {
-            margin-bottom: 15px;
-        }
-        .footer-container > div:nth-last-child(-n+2) {
-            margin-bottom: 0;
-        }
-    }
-
-    @media (max-width: 768px) { /* Mobile Landscape */
-        .google-search-like-nav {
-            flex-wrap: wrap;
-            height: auto;
-            padding: 10px 15px;
-        }
-        .nav-options {
-            gap: 15px;
-            width: 100%;
-            justify-content: center;
-            margin-bottom: 10px;
-        }
-        .cart-button {
-            width: 100%;
-            text-align: center;
-            margin-top: 5px;
-        }
-        .site-content-wrapper,
-        .admin-container {
-            margin-top: calc(150px + 10px); /* Berücksichtigt höheren Header auf Mobile */
-        }
-        main, .modal-content, .admin-content {
-            padding: 15px;
-            border-radius: 10px;
-        }
-        .category-section h2 {
-            font-size: 1.5em;
-        }
-        .product-item h3 {
-            font-size: 1.1em;
-        }
-        .product-item .price {
-            font-size: 1.2em;
-        }
-        .admin-sidebar h2 {
-            font-size: 1.4em;
-        }
-        .admin-sidebar a {
-            padding: 8px 10px;
-            font-size: 0.9em;
-        }
-        .dashboard-stats {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    @media (max-width: 500px) { /* Small Mobile */
-        .site-content-wrapper,
-        .admin-container {
-            padding: 0 5px;
-        }
-        main, .admin-content {
-            border-radius: 15px;
-        }
-        .footer-content-wrapper {
-            margin: 0 10px 10px 10px;
-            width: calc(100% - 20px);
-            padding: 15px;
-            border-radius: 15px;
-        }
-        .footer-container {
-            grid-template-columns: 1fr;
-            gap: 15px;
-        }
-        .footer-section {
-            margin-bottom: 15px;
-        }
-        .footer-container > div:last-child {
-            margin-bottom: 0;
-        }
-        .footer-section h3 {
-            font-size: 1em;
-        }
-        .footer-section p, .footer-section ul li a {
-            font-size: 0.85em;
-        }
-        .social-icons img {
-            width: 20px;
-            height: 20px;
-        }
-        .footer-bottom {
-            font-size: 0.75em;
-        }
-        .modal-content {
-            padding: 15px;
-            max-width: 95%;
-        }
-        .product-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-</style>
 
 <div class="admin-container">
     <div class="admin-sidebar">
@@ -564,6 +394,13 @@ if (!$isAdminLoggedIn) {
                 $pendingOrders = $pdo->query("SELECT COUNT(*) FROM orders WHERE status = 'pending'")->fetchColumn();
                 $totalCustomers = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
                 $totalProducts = $pdo->query("SELECT COUNT(*) FROM products")->fetchColumn();
+
+                // Umsatzstatistiken
+                $totalExpectedIncome = $pdo->query("SELECT SUM(total_amount) FROM orders")->fetchColumn();
+                // Summe aller abgeschlossenen Zahlungen
+                $totalReceivedIncome = $pdo->query("SELECT SUM(amount) FROM payments WHERE status = 'completed'")->fetchColumn();
+                $totalOutstanding = $totalExpectedIncome - $totalReceivedIncome;
+
                 ?>
                 <div class="dashboard-stats">
                     <div class="stat-card">
@@ -582,6 +419,160 @@ if (!$isAdminLoggedIn) {
                         <h3>Verfügbare Produkte</h3>
                         <p><?php echo $totalProducts; ?></p>
                     </div>
+                </div>
+
+                <h3>Finanzübersicht</h3>
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <h3>Erwarteter Umsatz</h3>
+                        <p><?php echo formatEuroCurrency($totalExpectedIncome); ?></p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Eingegangener Umsatz</h3>
+                        <p><?php echo formatEuroCurrency($totalReceivedIncome); ?></p>
+                    </div>
+                    <div class="stat-card <?php echo ($totalOutstanding > 0 ? 'income-negative' : 'income-positive'); ?>">
+                        <h3>Offener Betrag</h3>
+                        <p><?php echo formatEuroCurrency($totalOutstanding); ?></p>
+                    </div>
+                </div>
+
+                <h3>Umsatzentwicklung (Platzhalter für Grafik)</h3>
+                <div class="chart-container">
+                    <canvas id="incomeChart" style="display: none;"></canvas>
+                    <p id="chartFallback">Lade Grafik...</p>
+                    <pre style="display: none;" id="chartData">
+                        <?php
+                        // Beispiel-Daten für eine Grafik (würden normalerweise komplexer abgefragt)
+                        $monthlySales = $pdo->query("
+                            SELECT
+                                DATE_FORMAT(order_date, '%Y-%m') as month,
+                                SUM(total_amount) as total_ordered
+                            FROM orders
+                            GROUP BY month
+                            ORDER BY month ASC
+                            LIMIT 12 -- Letzte 12 Monate
+                        ")->fetchAll();
+
+                        $monthlyPayments = $pdo->query("
+                            SELECT
+                                DATE_FORMAT(payment_date, '%Y-%m') as month,
+                                SUM(amount) as total_paid
+                            FROM payments
+                            WHERE status = 'completed'
+                            GROUP BY month
+                            ORDER BY month ASC
+                            LIMIT 12
+                        ")->fetchAll();
+
+                        $chartLabels = [];
+                        $chartOrderedData = [];
+                        $chartPaidData = [];
+
+                        // Monate der letzten 12 Monate generieren
+                        $period = new DatePeriod(
+                            new DateTime('-11 months first day of this month'),
+                            new DateInterval('P1M'),
+                            new DateTime('first day of next month')
+                        );
+
+                        $allMonths = [];
+                        foreach ($period as $dt) {
+                            $allMonths[$dt->format('Y-m')] = 0;
+                        }
+
+                        // Daten zusammenführen
+                        $mergedSales = $allMonths;
+                        foreach ($monthlySales as $sale) {
+                            $mergedSales[$sale['month']] = (float)$sale['total_ordered'];
+                        }
+                        $mergedPayments = $allMonths;
+                        foreach ($monthlyPayments as $payment) {
+                            $mergedPayments[$payment['month']] = (float)$payment['total_paid'];
+                        }
+
+                        foreach ($mergedSales as $month => $total) {
+                            $chartLabels[] = (new DateTime($month . '-01'))->format('M Y');
+                            $chartOrderedData[] = $total;
+                            $chartPaidData[] = $mergedPayments[$month] ?? 0; // Sicherstellen, dass ein Wert existiert
+                        }
+
+                        echo json_encode([
+                            'labels' => $chartLabels,
+                            'ordered' => $chartOrderedData,
+                            'paid' => $chartPaidData
+                        ]);
+                        ?>
+                    </pre>
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const chartDataElement = document.getElementById('chartData');
+                            const chartFallback = document.getElementById('chartFallback');
+                            const canvas = document.getElementById('incomeChart');
+
+                            if (chartDataElement && canvas) {
+                                try {
+                                    const chartConfig = JSON.parse(chartDataElement.textContent);
+
+                                    if (chartConfig.labels && chartConfig.labels.length > 0) {
+                                        chartFallback.style.display = 'none';
+                                        canvas.style.display = 'block';
+
+                                        const ctx = canvas.getContext('2d');
+                                        new Chart(ctx, {
+                                            type: 'bar',
+                                            data: {
+                                                labels: chartConfig.labels,
+                                                datasets: [
+                                                    {
+                                                        label: 'Erwarteter Umsatz',
+                                                        data: chartConfig.ordered,
+                                                        backgroundColor: 'rgba(52, 104, 192, 0.7)', // var(--color-primary)
+                                                        borderColor: 'rgba(52, 104, 192, 1)',
+                                                        borderWidth: 1
+                                                    },
+                                                    {
+                                                        label: 'Eingegangener Umsatz',
+                                                        data: chartConfig.paid,
+                                                        backgroundColor: 'rgba(0, 191, 99, 0.7)', // var(--color-secondary)
+                                                        borderColor: 'rgba(0, 191, 99, 1)',
+                                                        borderWidth: 1
+                                                    }
+                                                ]
+                                            },
+                                            options: {
+                                                responsive: true,
+                                                maintainAspectRatio: false,
+                                                scales: {
+                                                    y: {
+                                                        beginAtZero: true,
+                                                        title: {
+                                                            display: true,
+                                                            text: 'Betrag (€)'
+                                                        }
+                                                    },
+                                                    x: {
+                                                        title: {
+                                                            display: true,
+                                                            text: 'Monat'
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                        chartFallback.textContent = 'Keine Umsatzdaten für die Darstellung verfügbar.';
+                                    }
+                                } catch (e) {
+                                    console.error("Fehler beim Parsen der Chart-Daten oder Initialisieren von Chart.js:", e);
+                                    chartFallback.textContent = 'Fehler beim Laden der Grafikdaten.';
+                                }
+                            } else {
+                                chartFallback.textContent = 'Chart-Container oder Daten nicht gefunden.';
+                            }
+                        });
+                    </script>
                 </div>
                 <?php
                 break;
@@ -677,7 +668,7 @@ if (!$isAdminLoggedIn) {
                                             <td><?php echo htmlspecialchars(ucfirst($payment['status'])); ?></td>
                                             <td class="action-buttons">
                                                 <a href="?section=payments&action=edit&id=<?php echo $payment['payment_id']; ?>" class="edit-btn">Bearbeiten</a>
-                                                <form method="POST" action="?section=payments&action=delete&id=<?php echo $payment['payment_id']; ?>" onsubmit="return confirm('Sicher? Diese Zahlung löschen?');" style="display:inline;">
+                                                <form method="POST" action="?section=payments&action=delete&id=<?php echo $payment['payment_id']; ?>&return_to_order_id=<?php echo $orderToEdit['order_id']; ?>" onsubmit="return confirm('Sicher? Diese Zahlung löschen?');" style="display:inline;">
                                                     <button type="submit" name="delete_payment" class="delete-btn">Löschen</button>
                                                 </form>
                                             </td>
@@ -687,7 +678,7 @@ if (!$isAdminLoggedIn) {
                             </table>
                         <?php endif; ?>
                         <div class="action-buttons" style="margin-top: 15px;">
-                            <a href="?section=payments&action=add&order_id=<?php echo $orderToEdit['order_id']; ?>" class="add-btn">Neue Zahlung hinzufügen für diese Bestellung</a>
+                            <a href="?section=payments&action=add&order_id=<?php echo $orderToEdit['order_id']; ?>" class="add-btn">Neue Zahlung hinzufügen</a>
                         </div>
 
 
@@ -846,8 +837,10 @@ if (!$isAdminLoggedIn) {
                         <h3><?php echo ($action === 'add' ? 'Neue Zahlung hinzufügen' : 'Zahlung #' . htmlspecialchars($paymentIdToEdit) . ' bearbeiten'); ?></h3>
                         <?php if ($orderInfo): ?>
                             <p><strong>Bestellung:</strong> #<?php echo htmlspecialchars($orderInfo['order_id']); ?> (Kunde: <?php echo htmlspecialchars($orderInfo['first_name'] . ' ' . $orderInfo['last_name']); ?>, Gesamt: <?php echo formatEuroCurrency($orderInfo['total_amount']); ?>)</p>
+                            <!-- Hidden field to pass order_id back for redirect after successful add -->
                             <input type="hidden" name="order_id" value="<?php echo htmlspecialchars($orderInfo['order_id']); ?>">
-                        <?php elseif ($action === 'add'): ?>
+                            <input type="hidden" name="return_to_order_id" value="<?php echo htmlspecialchars($orderInfo['order_id']); ?>">
+                        <?php elseif ($action === 'add'): // Wenn direkt auf Payments-Seite hinzugefügt wird ?>
                             <div class="form-group">
                                 <label for="order_id">Bestell-ID:</label>
                                 <input type="number" id="order_id" name="order_id" value="<?php echo htmlspecialchars($orderIdFromGet); ?>" required min="1">
@@ -855,6 +848,16 @@ if (!$isAdminLoggedIn) {
                         <?php endif; ?>
 
                         <form method="POST" action="?section=payments&action=<?php echo $action; ?><?php echo ($action === 'edit' ? '&id=' . $paymentIdToEdit : ''); ?>">
+                            <?php if ($orderInfo): // Wenn von Bestellung aus hinzugefügt wird, die Order-ID übergeben ?>
+                                <input type="hidden" name="order_id" value="<?php echo htmlspecialchars($orderInfo['order_id']); ?>">
+                                <input type="hidden" name="return_to_order_id" value="<?php echo htmlspecialchars($orderInfo['order_id']); ?>">
+                            <?php elseif ($action === 'add'): // Wenn direkt auf Payments-Seite hinzugefügt wird ?>
+                                <div class="form-group">
+                                    <label for="order_id">Bestell-ID:</label>
+                                    <input type="number" id="order_id" name="order_id" value="<?php echo htmlspecialchars($orderIdFromGet); ?>" required min="1">
+                                </div>
+                            <?php endif; ?>
+
                             <div class="form-group">
                                 <label for="payment_date">Zahlungsdatum & Uhrzeit:</label>
                                 <input type="datetime-local" id="payment_date" name="payment_date" value="<?php echo (new DateTime($paymentToEdit['payment_date'] ?? 'now'))->format('Y-m-d\TH:i'); ?>" required>
@@ -1091,7 +1094,7 @@ if (!$isAdminLoggedIn) {
                                 <tr>
                                     <td><?php echo htmlspecialchars($category['category_id']); ?></td>
                                     <td><?php echo htmlspecialchars($category['name']); ?></td>
-                                    <td><?php htmlspecialchars(substr($category['description'], 0, 100)); ?><?php echo (strlen($category['description']) > 100 ? '...' : ''); ?></td>
+                                    <td><?php echo htmlspecialchars(substr($category['description'], 0, 100)); ?><?php echo (strlen($category['description']) > 100 ? '...' : ''); ?></td>
                                     <td class="action-buttons">
                                         <a href="?section=categories&action=edit&id=<?php echo $category['category_id']; ?>" class="edit-btn">Bearbeiten</a>
                                         <form method="POST" action="?section=categories&action=delete&id=<?php echo $category['category_id']; ?>" onsubmit="return confirm('Sicher? Dies löscht die Kategorie nur, wenn keine Produkte mehr zugeordnet sind!');" style="display:inline;">

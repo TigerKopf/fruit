@@ -10,14 +10,14 @@
 require_once __DIR__ . '/config/config.php';
 
 // Alle Hilfsdateien und Initialisierungen aus dem 'include'-Ordner laden
-// Dies bindet startup.php, asset_handler.php, db.php, email.php und alle anderen hinzugefügten Dateien ein.
-require_once __DIR__ . '/include/loader.php'; // Stellen Sie sicher, dass loader.php db.php und email.php lädt
+// Dies bindet startup.php, asset_handler.php, db.php, email.php, helpers.php und alle anderen hinzugefügten Dateien ein.
+require_once __DIR__ . '/include/loader.php';
 
 // Composer Autoload einbinden. Dies ist essenziell für PHPMailer.
 // Stelle sicher, dass der 'vendor'-Ordner direkt unter deinem ROOT_PATH liegt.
 require_once __DIR__  . '/vendor/autoload.php';
 
-// Session starten (wichtig für den Warenkorb)
+// Session starten (wichtig für den Warenkorb und Admin-Login)
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
@@ -39,38 +39,36 @@ $page = !empty($segments[0]) ? $segments[0] : 'home';
 // Prüfen, ob eine Asset-Anfrage vorliegt und diese behandeln
 // Die Funktion handleAssetRequest() ist in include/asset_handler.php definiert.
 // Sie wird nur aktiv, wenn $page_name mit '_' beginnt (z.B. /_favicon.ico).
-// Eine Anfrage wie /api/cart_process.php wird hier nicht behandelt.
+// Eine Anfrage wie /api/cart_process.php oder /admin wird hier nicht behandelt.
 handleAssetRequest($page);
 
 
 // --- API ROUTING PHASE ---
 // Wenn das erste Segment 'api' ist, versuchen wir, die entsprechende API-Datei zu laden.
 if ($page === 'api' && isset($segments[1])) {
-    // Annahme: Die API-Dateien sind direkt im 'api'-Ordner.
-    // Beispiel: /api/cart_process.php -> ROOT_PATH . 'api/cart_process.php'
     $api_file = ROOT_PATH . 'api/' . $segments[1];
-
-    // Optional: Dateiendung hinzufügen, wenn der Segmentname ohne Endung kommt
-    // if (!str_contains($api_file, '.php')) {
-    //     $api_file .= '.php';
-    // }
-
     if (file_exists($api_file)) {
         require_once $api_file;
         exit(); // Wichtig: Beende das Skript nach dem Ausführen der API-Datei
     } else {
-        // API-Endpunkt nicht gefunden
         header("HTTP/1.0 404 Not Found");
         require_once ROOT_PATH . 'modules/404.php';
         exit();
     }
 }
 
+// --- ADMIN ROUTING PHASE (NEU) ---
+// Wenn das erste Segment 'admin' ist, laden wir den Admin-Einstiegspunkt.
+if ($page === 'admin') {
+    require_once ROOT_PATH . 'modules/admin/index.php';
+    exit(); // Wichtig: Beende das Skript nach dem Ausführen der Admin-Seite
+}
+
 
 // --- PAGE / MODULE LOADING PHASE ---
 // Seitennamen bereinigen, um nur alphanumerische Zeichen, Bindestriche, Unterstriche UND PUNKT (für Dateierweiterungen) zu erlauben
-// Dies ist wichtig, um zu verhindern, dass Pfade wie 'api' als Modulname verwendet werden,
-// nachdem sie bereits von der API-Routing-Phase behandelt wurden.
+// Dies ist wichtig, um zu verhindern, dass Pfade wie 'api' oder 'admin' als Modulname verwendet werden,
+// nachdem sie bereits von den spezifischen Routing-Phasen behandelt wurden.
 $page = preg_replace('/[^a-zA-Z0-9\-_.]/', '', $page);
 
 // Pfad zum Modul
