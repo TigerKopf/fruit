@@ -103,7 +103,7 @@ try {
     $productsToUpdateStock = [];
 
     foreach ($_SESSION['cart'] as $productId => $item) {
-        $stmtProduct = $pdo->prepare("SELECT product_id, name, price, stock_quantity FROM products WHERE product_id = :product_id AND is_active = TRUE");
+        $stmtProduct = $pdo->prepare("SELECT product_id, name, description, price, stock_quantity FROM products WHERE product_id = :product_id AND is_active = TRUE");
         $stmtProduct->execute([':product_id' => $productId]);
         $dbProduct = $stmtProduct->fetch();
 
@@ -164,7 +164,14 @@ try {
 
     // 6. Zahlungsinformationen in 'payments' einfügen
     $paymentStatus = ($paymentMethod === 'cash') ? 'pending' : 'pending'; // Für Überweisung auch 'pending' bis zum Geldeingang
-    $transactionId = ($paymentMethod === 'bank_transfer') ? 'REF-' . $orderId . '-' . uniqid() : null; // Generiere Referenz für Überweisung
+    $transactionId = null;
+
+    if ($paymentMethod === 'bank_transfer') {
+        // Generiere Transaktions-ID: Nachname + 4-stellige Zufallszahl
+        $randomNumber = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
+        $transactionId = strtoupper(substr($lastName, 0, 5)) . '-' . $randomNumber; // Erste 5 Buchstaben des Nachnamens + Zufallszahl
+    }
+
 
     $stmtPayment = $pdo->prepare("INSERT INTO payments (order_id, amount, payment_method, transaction_id, status, notes) VALUES (:order_id, :amount, :payment_method, :transaction_id, :status, :notes)");
     $stmtPayment->execute([
@@ -231,7 +238,7 @@ try {
         <p>Wir freuen uns auf Sie!</p>
         <p>Mit freundlichen Grüssen,<br>Ihr Team von " . MAIL_FROM_NAME . "</p>";
 
-    $emailSent = sendAppEmail($email, $emailSubject, $emailBody);
+    $emailSent = sendAppEmail($email, $emailSubject, $emailBody, $orderId); // orderId an E-Mail-Log weitergeben
 
     if ($emailSent !== true) {
         // E-Mail-Fehler loggen, aber die Bestellung als erfolgreich markieren

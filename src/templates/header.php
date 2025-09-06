@@ -21,7 +21,7 @@
                     <li><a href="/geschichte">Geschichte</a></li>
                     <li><a href="/kontakt">Kontakt</a></li>
                 </ul>
-                <a href="/warenkorb" class="cart-button">Warenkorb ansehen</a>
+                <a href="/spenden" class="cart-button">Spenden</a>
             </nav>
         </div>
     </header>
