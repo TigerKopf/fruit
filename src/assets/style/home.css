@@ -1,0 +1,467 @@
+/* src/assets/style/home.css */
+
+/* Allgemeine Stile für Home-Sektionen */
+.home-section {
+    padding: var(--spacing-xl) 0;
+    margin-bottom: var(--spacing-lg);
+    opacity: 0; /* Standardmäßig unsichtbar für Animation */
+    transform: translateY(20px); /* Leicht nach unten verschoben für Slide-Up */
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    position: relative;
+    z-index: 1; /* Sicherstellen, dass Inhalte über Hintergrund liegen */
+}
+
+.home-section.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.home-section:nth-of-type(even) {
+    background-color: var(--color-background-light); /* Abwechselnder Hintergrund */
+}
+
+.home-section-content {
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.home-section h2 {
+    font-size: 2.8em;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-lg);
+    font-weight: 700;
+    text-shadow: 1px 1px 2px var(--color-shadow-light);
+}
+
+.home-section h3 {
+    font-size: 2em;
+    color: var(--color-text-dark);
+    margin-bottom: var(--spacing-md);
+    font-weight: 600;
+}
+
+.home-section p {
+    font-size: 1.1em;
+    color: var(--color-text-medium);
+    line-height: var(--line-height-base);
+    max-width: 800px;
+    margin: 0 auto var(--spacing-md) auto;
+}
+
+/* Hero Sektion */
+.hero-section {
+    /* WICHTIGE ANPASSUNG: Bildpfad von .jpg zu .png und underscore zu hyphen */
+    background: url('/-hero-banner.jpeg') no-repeat center bottom; /* Hintergrundbild, Fokus auf den unteren Bereich */
+    background-size: 120%; /* Leicht reingezoomt */
+    background-attachment: fixed; /* Parallax-Effekt: Bild bleibt beim Scrollen "oben" */
+    position: relative; /* Wichtig für Z-Index und ::before */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* Füllt den gesamten Bildschirm aus */
+    /* Padding für den Inhalt, damit er nicht unter dem Header verschwindet */
+    padding-top: calc(var(--header-height) + var(--spacing-xl));
+    padding-bottom: var(--spacing-xl);
+    margin-bottom: 0;
+    overflow: hidden; /* Verhindert sichtbaren Overflow des gezoomten Bildes */
+    
+    /* NEU: Um den "Rand um den Banner" zu entfernen und volle Viewport-Breite zu erzwingen */
+    width: 100vw; /* Erzwingt volle Viewport-Breite, auch wenn ein Eltern-Element dies einschränkt */
+    margin-left: calc(50% - 50vw); /* Zentriert das Element, wenn es breiter als sein Eltern-Element ist */
+
+    /* NEU: Übergang zum Inhalt darunter (Linear-Gradient Maske) */
+    mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
+}
+
+/* Semi-transparenter Overlay für bessere Lesbarkeit der Schrift */
+.hero-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.25); /* Dunkler, leicht transparenter Schleier */
+    z-index: 1;
+}
+
+.hero-content {
+    max-width: 900px;
+    text-align: center;
+    position: relative; /* Stellt sicher, dass der Inhalt über dem Overlay liegt */
+    z-index: 2;
+    color: var(--color-background-white); /* Textfarbe */
+    /* Internes Padding für den Inhalt im Vollbild-Banner, um ihn auf kleineren Bildschirmen einzurücken */
+    padding: 0 var(--spacing-md);
+}
+
+.hero-content h1 {
+    font-size: 4.5em; /* Etwas größere Schrift für den Vollbildmodus */
+    margin-bottom: var(--spacing-md);
+    font-weight: 800;
+    line-height: 1.1;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.8); /* Stärkerer Textschatten für bessere Lesbarkeit */
+    animation: fadeInUp 1s ease-out forwards 0.5s;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.hero-content p {
+    font-size: 1.6em; /* Etwas größere Schrift */
+    margin-bottom: var(--spacing-lg);
+    font-weight: 400;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7); /* Stärkerer Textschatten */
+    animation: fadeInUp 1s ease-out forwards 0.8s;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.hero-button {
+    display: inline-block;
+    background-color: var(--color-secondary);
+    color: var(--color-background-white);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--border-radius-lg);
+    text-decoration: none;
+    font-size: 1.2em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    animation: fadeInUp 1s ease-out forwards 1.1s;
+    opacity: 0;
+    transform: translateY(30px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); /* Stärkerer Schatten für Pop-Effekt */
+}
+
+.hero-button:hover {
+    background-color: #00A656;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5); /* Noch stärkerer Schatten beim Hover */
+}
+
+/* Stil für den Missions-Hinweis */
+.mission-highlight {
+    color: var(--color-secondary); /* Ein auffälliges Grün */
+    font-weight: 700;
+    font-size: 1.2em;
+    margin-top: var(--spacing-md);
+    display: block; /* Macht es zu einem Blockelement, für mehr Platz */
+    text-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.hero-content .mission-highlight {
+    color: var(--color-accent); /* Im Hero-Banner eine kräftigere Akzentfarbe für besseren Kontrast */
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8); /* Sehr starker Textschatten */
+    animation: fadeInUp 1s ease-out forwards 1.4s; /* Später als Button einblenden */
+    opacity: 0;
+    transform: translateY(30px);
+    font-size: 1.6em; /* Im Hero-Banner etwas größer und prominenter */
+}
+
+
+/* Feature Sektion */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
+}
+
+.feature-item {
+    background-color: var(--color-background-white);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 4px 12px var(--color-shadow-light);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+    border: 1px solid var(--color-border);
+}
+
+.feature-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px var(--color-shadow-medium);
+}
+
+.feature-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: var(--spacing-md);
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+}
+
+.feature-item h3 {
+    color: var(--color-primary);
+    font-size: 1.5em;
+    margin-bottom: var(--spacing-sm);
+}
+
+.feature-item p {
+    font-size: 0.95em;
+    color: var(--color-text-medium);
+}
+
+/* Testimonial Sektion */
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
+}
+
+.testimonial-card {
+    background-color: var(--color-background-white);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 4px 12px var(--color-shadow-light);
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 200px;
+    border: 1px solid var(--color-border);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px var(--color-shadow-medium);
+}
+
+.testimonial-quote {
+    font-style: italic;
+    color: var(--color-text-dark);
+    margin-bottom: var(--spacing-md);
+    font-size: 1.05em;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    margin-top: auto; /* Sorgt dafür, dass es unten klebt */
+}
+
+.testimonial-author img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: var(--spacing-sm);
+    border: 2px solid var(--color-primary);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.author-info strong {
+    display: block;
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.author-info span {
+    font-size: 0.9em;
+    color: var(--color-text-medium);
+}
+
+/* Produkt Teaser Sektion */
+.product-teaser-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
+}
+
+.product-teaser-item {
+    background-color: var(--color-background-white);
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 4px 12px var(--color-shadow-light);
+    text-align: center;
+    border: 1px solid var(--color-border);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none; /* Für den Link */
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.product-teaser-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px var(--color-shadow-medium);
+}
+
+.product-teaser-item img {
+    max-width: 100%;
+    height: 150px;
+    object-fit: contain;
+    margin-bottom: var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    background-color: #FDFEFE;
+    padding: var(--spacing-xs);
+    mask-image: radial-gradient(circle at center, black 70%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%); /* Changed to linear for teaser as well */
+}
+
+
+.product-teaser-item h3 {
+    color: var(--color-text-dark);
+    font-size: 1.3em;
+    margin: 0 0 var(--spacing-xs) 0;
+    font-weight: 600;
+}
+
+.product-teaser-item p {
+    font-size: 1.1em;
+    color: var(--color-accent);
+    font-weight: 700;
+    margin-top: 0;
+}
+
+/* Call to Action Sektion */
+.cta-section {
+    background-color: var(--color-primary);
+    color: var(--color-background-white);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    padding: var(--spacing-xl) 0;
+    text-align: center;
+}
+
+.cta-section h2 {
+    color: var(--color-background-white);
+}
+
+.cta-section p {
+    color: #e0e0e0;
+}
+
+.cta-button {
+    display: inline-block;
+    background-color: var(--color-accent);
+    color: var(--color-background-white);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--border-radius-lg);
+    text-decoration: none;
+    font-size: 1.2em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    margin-top: var(--spacing-md);
+}
+
+.cta-button:hover {
+    background-color: #e67e22; /* Dunklerer Akzent-Farbton */
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Animation Keyframes (wenn nicht von Scroll-JS gesteuert) */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* Responsive Anpassungen für die Home-Seite */
+@media (max-width: 992px) {
+    .hero-section {
+        background-size: 150%; /* Zoom anpassen für Tablets */
+        background-position: center bottom;
+        min-height: 90vh; /* Etwas weniger als 100vh auf kleineren Desktops/Tablets */
+    }
+    .hero-content h1 {
+        font-size: 3.5em;
+    }
+    .hero-content p {
+        font-size: 1.4em;
+    }
+    .hero-content .mission-highlight {
+        font-size: 1.4em;
+    }
+    .features-grid, .testimonials-grid, .product-teaser-grid {
+        grid-template-columns: 1fr; /* Eine Spalte auf Tablets */
+        padding: 0 var(--spacing-sm);
+    }
+    .home-section-content {
+        padding: 0 var(--spacing-sm);
+    }
+    .hero-button {
+        padding: var(--spacing-sm) var(--spacing-lg); /* Gleiches Padding wie Desktop */
+        font-size: 1.2em;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        background-size: 180%; /* Stärkerer Zoom für mobile Querformate */
+        background-position: center bottom;
+        min-height: 80vh; /* Anpassung für mobile Geräte */
+        padding-top: calc(var(--header-height) + var(--spacing-lg));
+        padding-bottom: var(--spacing-lg);
+    }
+    .hero-content h1 {
+        font-size: 2.8em;
+    }
+    .hero-content p {
+        font-size: 1.2em;
+    }
+    .hero-content .mission-highlight {
+        font-size: 1.2em;
+    }
+    .home-section {
+        padding: var(--spacing-lg) 0;
+    }
+    .home-section h2 {
+        font-size: 1.8em;
+    }
+    .home-section p {
+        font-size: 1em;
+    }
+    .feature-item img {
+        width: 60px;
+        height: 60px;
+    }
+    .feature-item h3 {
+        font-size: 1.3em;
+    }
+}
+
+@media (max-width: 500px) { /* Small Mobile */
+    .hero-section {
+        background-size: 220%; /* Noch stärkerer Zoom für sehr kleine Bildschirme */
+        background-position: center bottom;
+        min-height: 70vh;
+        padding-top: calc(var(--header-height) + var(--spacing-md));
+        padding-bottom: var(--spacing-md);
+    }
+    .hero-content h1 {
+        font-size: 2.2em;
+    }
+    .hero-content p {
+        font-size: 1em;
+    }
+    .hero-content .mission-highlight {
+        font-size: 1.1em;
+    }
+    .hero-button {
+        padding: var(--spacing-xs) var(--spacing-md);
+        font-size: 1em;
+    }
+    .home-section h2 {
+        font-size: 1.6em;
+    }
+    .feature-item, .testimonial-card, .product-teaser-item {
+        padding: var(--spacing-sm);
+    }
+    .product-teaser-item img {
+        height: 120px;
+    }
+}
