@@ -10,6 +10,7 @@ DATEINAME: src/assets/style/admin.css
     margin: 0 auto;
     padding: 0 var(--spacing-md);
     box-sizing: border-box;
+    /* GEÄNDERT: Abstand oben angepasst */
     margin-top: calc(var(--header-height) + var(--spacing-lg));
     margin-bottom: var(--spacing-lg);
 
@@ -286,6 +287,13 @@ html, body {
     -moz-osx-font-smoothing: grayscale; /* Für glattere Schrift auf Firefox */
 }
 
+/* NEU: Dieser Wrapper nimmt den gesamten verfügbaren Platz ein */
+#page-content-wrapper {
+    flex-grow: 1; /* Sorgt dafür, dass dieser Bereich den gesamten freien Platz im Flex-Container (body) einnimmt */
+    display: flex; /* Auch als Flex-Container, um inneren Content zu kontrollieren */
+    flex-direction: column; /* Sicherstellen, dass die inneren Elemente untereinander liegen */
+}
+
 ==================================================
 DATEINAME: src/assets/style/cart.css
 --------------------------------------------------
@@ -541,17 +549,17 @@ DATEINAME: src/assets/style/footer.css
 
 .footer-content-wrapper {
     background-color: var(--color-background-white);
-    max-width: var(--content-max-width); /* GEÄNDERT: Konsistent mit Main-Content */
+    max-width: var(--content-max-width); /* KONSISTENT mit Main-Content */
     width: 100%;
     margin: 0 auto var(--spacing-md) auto;
     border-radius: var(--border-radius-md);
     box-shadow: 0 4px 15px var(--color-shadow-light);
     padding: var(--spacing-xl);
-    box-sizing: border-box; /* NEU: Stellt sicher, dass max-width padding beinhaltet */
+    box-sizing: border-box;
     color: var(--color-text-dark);
     font-family: var(--font-family-base);
     /* GEÄNDERT: Verschiebung um 20px nach links entfernt */
-    /* transform: translateX(-20px); */
+    transform: translateX(0);
 }
 
 /* Inhaltliche Gliederung des Footers mit CSS Grid für Symmetrie */
@@ -653,6 +661,7 @@ header {
     z-index: 1000;
     transition: box-shadow 0.3s ease, background-color 0.3s ease; /* Übergang für Hintergrundfarbe hinzugefügt */
     box-sizing: border-box;
+    margin-top: 10px;
 }
 
 header.header-scrolled {
@@ -671,7 +680,7 @@ header.header-scrolled {
     border-radius: var(--border-radius-lg);
     padding: var(--spacing-sm) var(--spacing-md);
     box-shadow: 0 2px 8px var(--color-shadow-light);
-    height: 48px;
+    height: 52px; /* GEÄNDERT: Leicht erhöhte Höhe für bessere Optik */
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -686,7 +695,7 @@ header.header-scrolled .google-search-like-nav {
     align-items: center;
     width: 100%;
     max-width: var(--content-max-width); /* Angepasst an die Inhaltsbreite */
-    transform: translateX(-20px); /* Verschiebung um 20px nach links */
+    transform: translateX(0); /* GEÄNDERT: Verschiebung um 20px nach links entfernt */
 }
 
 .logo {
@@ -699,7 +708,7 @@ header.header-scrolled .google-search-like-nav {
 
 .nav-options {
     list-style: none;
-    margin: 0;
+    margin: 0; /* GEÄNDERT: Margin auf 0 gesetzt */
     padding: 0;
     display: flex;
     gap: var(--spacing-lg);
@@ -1137,11 +1146,11 @@ DATEINAME: src/assets/style/home.css
     .hero-content p { font-size: 1.4em; }
     .hero-content .mission-highlight { font-size: 1.4em; }
     .home-section-content { padding: 0 var(--spacing-sm); }
-    .home-page-content-wrapper {
+    .home-page-content-wrapper { /* Dieser Wrapper wird nicht mehr direkt in index.php verwendet */
         padding: 0 var(--spacing-sm);
         transform: translateX(0); /* Entferne Verschiebung auf Tablets */
         /* NEU: Setze margin-top auf einen Standardwert, wenn es im flex-grow-Container ist */
-        margin-top: var(--spacing-lg);
+        margin-top: var(--spacing-lg); /* Angepasst */
     }
 }
 
@@ -1174,8 +1183,8 @@ DATEINAME: src/assets/style/home.css
     .hero-content .mission-highlight { font-size: 1.1em; }
     .hero-button { padding: var(--spacing-xs) var(--spacing-md); font-size: 1em; }
     .home-section h2 { font-size: 1.6em; }
-    .home-page-content-wrapper {
-        margin: var(--spacing-lg) auto var(--spacing-md) auto;
+    .home-page-content-wrapper { /* Dieser Wrapper wird nicht mehr direkt in index.php verwendet */
+        margin: var(--spacing-lg) auto var(--spacing-md) auto; /* Angepasst */
         padding: 0 var(--spacing-xs);
     }
 }
@@ -1191,11 +1200,12 @@ DATEINAME: src/assets/style/layout.css
     max-width: var(--content-max-width); /* Verwende die Variable */
     margin: 0 auto; /* Zentriert den Inhalts-Wrapper */
     padding: 0 var(--spacing-md);
-    box-sizing: border-box; /* NEU: Stellt sicher, dass max-width padding beinhaltet */
-    margin-top: calc(var(--header-height) + var(--spacing-sm) - 50px); /* GEÄNDERT: Abstand oben reduziert (von spacing-md auf spacing-sm) */
+    box-sizing: border-box; /* Stellt sicher, dass max-width padding beinhaltet */
+    /* GEÄNDERT: Abstand oben nur noch var(--spacing-lg) nach dem Header */
+    margin-top: var(--spacing-lg); 
     margin-bottom: var(--spacing-lg);
 
-    transform: translateX(60px); /* KONSISTENT: Verschiebung um 20px nach links */
+    transform: translateX(0); /* Verschiebung entfernt für Bündigkeit */
 }
 
 /* Hauptinhaltsbereich für Shop-Produkte */
@@ -1205,12 +1215,14 @@ main {
     border-radius: 0; /* Kein abgerundeter Rahmen */
     box-shadow: none; /* Kein Schatten */
     border: none; /* Kein Rahmen */
-    padding: var(--spacing-xl);
+    padding: var(--spacing-xl); /* Padding hier, da .site-content-wrapper nur äußeres Padding hat */
     box-sizing: border-box;
     position: relative;
     z-index: 1;
     min-height: 400px;
     margin-right: var(--spacing-lg); /* Behält den Abstand zum Warenkorb bei */
+    display: flex; /* Macht main auch zu einem Flex-Container, um Inhalte zu kontrollieren */
+    flex-direction: column; /* Inhalte in Spalte anordnen */
 }
 
 ==================================================
@@ -1228,6 +1240,7 @@ DATEINAME: src/assets/style/main.css
 @import '/.alerts.css';
 @import '/.admin.css';
 @import '/.home.css';
+@import '/.success.css';
 @import '/.responsive.css';
 
 ==================================================
@@ -1258,9 +1271,15 @@ DATEINAME: src/assets/style/modal.css
     width: 90%;
     max-width: 650px;
     box-shadow: 0 10px 30px var(--color-shadow-medium);
-    position: relative;
+    position: relative; /* Wichtig für die Positionierung des Loaders */
     animation-name: animatetop;
     animation-duration: 0.4s;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: flex; /* NEU: Um den Inhalt bei Überlagerung richtig zu verwalten */
+    flex-direction: column; /* NEU: Um den Inhalt bei Überlagerung richtig zu verwalten */
+    justify-content: flex-start; /* NEU */
+    align-items: stretch; /* NEU */
 }
 
 @keyframes fadeIn {
@@ -1269,13 +1288,12 @@ DATEINAME: src/assets/style/modal.css
 }
 
 @keyframes animatetop {
-    from {top: -50px; opacity: 0}
+    from {top: -70px; opacity: 0}
     to {top: 0; opacity: 1}
 }
 
 .close-button {
     color: var(--color-text-light);
-    float: right;
     font-size: 32px;
     font-weight: normal;
     position: absolute;
@@ -1283,6 +1301,7 @@ DATEINAME: src/assets/style/modal.css
     right: var(--spacing-md);
     line-height: 1;
     transition: color 0.2s ease;
+    z-index: 1002; /* Über dem Loader */
 }
 
 .close-button:hover,
@@ -1318,7 +1337,7 @@ DATEINAME: src/assets/style/modal.css
 .form-group select,
 .form-group textarea,
 .form-group input[type="datetime-local"] {
-    width: 100%; /* Berechnung vereinfacht */
+    width: 100%;
     padding: var(--spacing-sm);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius-sm);
@@ -1336,18 +1355,95 @@ DATEINAME: src/assets/style/modal.css
     box-shadow: 0 0 0 3px rgba(52, 104, 192, 0.2);
 }
 
-.form-group input[type="radio"] {
+.form-group .payment-options-wrapper {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+/* Wichtig: label-Wrapper für Radio-Button */
+.form-group .radio-option {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    transition: all 0.2s ease, transform 0.1s ease; /* transition für Klick-Animation erweitert */
+    font-size: 1em;
+    background-color: var(--color-background-white);
+    color: var(--color-text-medium);
+    flex-grow: 1;
+}
+/* Klick-Animation */
+.form-group .radio-option:active {
+    transform: scale(0.98);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.form-group .radio-option input[type="radio"] {
     margin-right: var(--spacing-xs);
     transform: scale(1.1);
     accent-color: var(--color-primary);
+    flex-shrink: 0;
+    pointer-events: none; /* Klick-Event geht an das Eltern-Label */
 }
 
-.form-group .radio-option {
-    display: inline-block;
-    margin-right: var(--spacing-md);
-    color: var(--color-text-medium);
-    font-size: 0.95em;
+.form-group .radio-option.prefer-payment {
+    border-color: var(--color-primary);
+    box-shadow: 0 2px 5px var(--color-shadow-light);
+    font-weight: 600;
+    color: var(--color-primary);
 }
+.form-group .radio-option.prefer-payment input[type="radio"] {
+    accent-color: var(--color-primary);
+}
+.form-group .radio-option.prefer-payment:hover {
+    background-color: var(--color-background-light);
+    box-shadow: 0 4px 8px var(--color-shadow-medium);
+    transform: translateY(-1px);
+}
+.form-group .radio-option.prefer-payment input[type="radio"]:checked + label {
+    color: var(--color-primary);
+}
+
+
+.form-group .radio-option.discourage-payment {
+    border-color: var(--color-border);
+    opacity: 0.8;
+    font-weight: 400;
+    color: var(--color-text-medium);
+}
+.form-group .radio-option.discourage-payment input[type="radio"] {
+    accent-color: var(--color-text-light);
+}
+.form-group .radio-option.discourage-payment:hover {
+    background-color: #f7f7f7;
+}
+.form-group .radio-option.discourage-payment input[type="radio"]:checked + label {
+    color: var(--color-text-dark);
+}
+
+.payment-info-text {
+    font-size: 0.85em;
+    color: var(--color-text-medium);
+    margin-top: calc(-1 * var(--spacing-md) / 2);
+    margin-bottom: var(--spacing-md);
+    line-height: 1.4;
+    text-align: left;
+    border-left: 3px solid var(--color-primary);
+    padding-left: var(--spacing-sm);
+    background-color: var(--color-background-light);
+    border-radius: var(--border-radius-sm);
+    padding-top: var(--spacing-xs);
+    padding-bottom: var(--spacing-xs);
+}
+.payment-info-text strong {
+    color: var(--color-primary);
+}
+
 
 #checkout-submit-button {
     background-color: var(--color-primary);
@@ -1367,6 +1463,46 @@ DATEINAME: src/assets/style/modal.css
     background-color: #2F5AA9;
     box-shadow: 0 4px 10px var(--color-shadow-light);
     transform: translateY(-2px);
+}
+
+/* NEU: Stile für die Ladeanimation */
+.loading-overlay {
+    position: absolute; /* Überlagert das Formular innerhalb des Modals */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9); /* Weißer, leicht transparenter Hintergrund */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-md);
+    border-radius: var(--border-radius-md); /* Passt zum Modal-Content-Radius */
+    z-index: 10; /* Liegt über dem Formularinhalt, unter dem Close-Button */
+    color: var(--color-primary);
+    font-weight: 500;
+}
+
+.spinner {
+    border: 4px solid var(--color-border);
+    border-top: 4px solid var(--color-primary); /* Farbe für die drehende Kante */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite; /* Animationsdefinition */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive Anpassungen für kleine Bildschirme */
+@media (max-width: 500px) {
+    .form-group .payment-options-wrapper {
+        flex-direction: column;
+    }
 }
 
 ==================================================
@@ -1398,7 +1534,8 @@ DATEINAME: src/assets/style/responsive.css
     .site-content-wrapper {
         flex-direction: column;
         padding: 0 var(--spacing-sm);
-        margin-top: calc(var(--header-height) + var(--spacing-md));
+        /* GEÄNDERT: Abstand oben angepasst */
+        margin-top: var(--spacing-md);
         margin-bottom: var(--spacing-md);
         transform: translateX(0); /* Verschiebung auf Tablets und Mobile entfernen */
     }
@@ -1535,7 +1672,8 @@ DATEINAME: src/assets/style/responsive.css
     }
     .site-content-wrapper {
         flex-direction: column;
-        margin-top: calc(var(--header-height) + var(--spacing-sm));
+        /* GEÄNDERT: Abstand oben angepasst */
+        margin-top: var(--spacing-md);
         padding: 0;
         transform: translateX(0);
     }
@@ -1742,7 +1880,7 @@ DATEINAME: src/assets/style/shop.css
     background: var(--color-background-white);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius-md);
-    padding: var(--spacing-sm); /* GEÄNDERT: padding reduziert (von md auf sm) */
+    padding: var(--spacing-sm);
     text-align: center;
     box-shadow: 0 4px 12px var(--color-shadow-light);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -1758,13 +1896,12 @@ DATEINAME: src/assets/style/shop.css
 
 .product-item img {
     max-width: 100%;
-    height: 110px; /* GEÄNDERT: Höhe des Bildes weiter reduziert */
+    height: 110px;
     object-fit: contain;
     border-radius: var(--border-radius-sm);
     margin-bottom: var(--spacing-md);
     background-color: #FDFEFE;
     padding: var(--spacing-sm);
-    /* NEU: Bilder ohne harten Rahmen, mit Verlauf */
     mask-image: radial-gradient(circle at center, black 70%, transparent 100%);
     -webkit-mask-image: radial-gradient(circle at center, black 70%, transparent 100%);
 }
@@ -1778,8 +1915,7 @@ DATEINAME: src/assets/style/shop.css
 }
 
 .product-quantity-price-line {
-    /* Grundlegendes Styling für die Zeile */
-    margin-bottom: var(--spacing-sm); /* GEÄNDERT: margin-bottom reduziert (von md auf sm) */
+    margin-bottom: var(--spacing-sm);
     line-height: 1.4;
     text-align: center;
     color: var(--color-text-medium);
@@ -1801,7 +1937,7 @@ DATEINAME: src/assets/style/shop.css
     justify-content: center;
     align-items: center;
     gap: var(--spacing-sm);
-    margin-top: var(--spacing-sm); /* GEÄNDERT: margin-top reduziert (von md auf sm) */
+    margin-top: var(--spacing-sm);
 }
 
 .product-controls input[type="number"] {
@@ -1824,7 +1960,7 @@ DATEINAME: src/assets/style/shop.css
 .product-controls .add-to-cart-btn {
     background-color: var(--color-primary);
     color: var(--color-background-white);
-    border: none;
+    border: none; /* Standardmäßig keine Border */
     padding: var(--spacing-sm) var(--spacing-md);
     border-radius: var(--border-radius-lg);
     cursor: pointer;
@@ -1842,17 +1978,639 @@ DATEINAME: src/assets/style/shop.css
     transform: translateY(-2px);
 }
 
+/* NEU: Stile für den deaktivierten "Ausverkauft"-Button */
+.product-controls .add-to-cart-btn[disabled] {
+    background-color: var(--color-background-white); /* Weißer Hintergrund */
+    color: var(--color-text-light); /* Grauer Text */
+    border: 1px solid var(--color-border); /* Graue Border */
+    box-shadow: none; /* Kein Schatten */
+    cursor: not-allowed; /* Zeigt an, dass nicht geklickt werden kann */
+    transform: translateY(0); /* Keine Animation */
+    pointer-events: none; /* Verhindert Interaktion auf dem Button */
+}
+
+/* Hover-Effekt für deaktivierten Button, um sicherzustellen, dass er nicht reagiert */
+.product-controls .add-to-cart-btn[disabled]:hover {
+    background-color: var(--color-background-white); /* Bleibt weiß */
+    color: var(--color-text-light); /* Bleibt grau */
+    box-shadow: none; /* Bleibt ohne Schatten */
+    transform: translateY(0); /* Keine Animation */
+}
+
+==================================================
+DATEINAME: src/assets/style/success.css
+--------------------------------------------------
+/* src/assets/style/success.css */
+
+.success-page-wrapper {
+    /* Main-Wrapper, der die globalen Layout-Regeln beibehält */
+}
+
+/* Header des Erfolgsseite */
+.success-header {
+    text-align: center;
+    padding: var(--spacing-xl) var(--spacing-md) var(--spacing-lg) var(--spacing-md);
+    background-color: var(--color-background-white);
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: var(--spacing-xl);
+    box-shadow: 0 2px 10px var(--color-shadow-light);
+    border-radius: var(--border-radius-md);
+    width: 100%;
+    max-width: var(--content-max-width);
+    margin: var(--spacing-lg) auto 0 auto;
+    box-sizing: border-box;
+    margin-bottom: var(--spacing-xl);
+}
+
+.success-header h1 {
+    font-size: 3.5em;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-sm);
+    font-weight: 800;
+    line-height: 1.1;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.05);
+}
+
+.success-header .alert {
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: var(--border-radius-sm);
+    padding: var(--spacing-md);
+    border: none;
+    font-size: 1.05em;
+    font-weight: 500;
+}
+.success-header .alert.success {
+    background-color: var(--color-secondary-light);
+    color: var(--color-secondary-dark);
+    border: 1px solid var(--color-secondary);
+}
+.success-header .alert.error {
+    background-color: #FEEBEB;
+    color: #CC0000;
+    border: 1px solid #FF5050;
+}
+
+
+/* Container für die flexiblen Sektionen */
+.success-sections-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    width: 100%;
+    max-width: var(--content-max-width);
+    margin: 0 auto var(--spacing-xl) auto;
+    padding: 0 var(--spacing-md);
+    box-sizing: border-box;
+}
+
+/* Basis-Karten-Stil für alle Informationsboxen */
+.success-info-card,
+.success-order-details-card,
+.success-mission-card {
+    background-color: var(--color-background-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 6px 18px var(--color-shadow-light);
+    padding: var(--spacing-xl);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    transition: all 0.3s ease-out;
+}
+
+/* Überschriften-Stile innerhalb der Karten */
+.success-sections-container h2 {
+    font-size: 2.2em;
+    color: var(--color-primary);
+    margin-top: 0;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-sm);
+    font-weight: 700;
+    line-height: 1.2;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.02);
+    border-bottom: 1px solid var(--color-border); /* hinzugefügt */
+}
+
+.success-sections-container h3 {
+    font-size: 1.6em;
+    color: var(--color-text-dark);
+    margin-top: var(--spacing-xl);
+    margin-bottom: var(--spacing-sm);
+    font-weight: 600;
+}
+
+.success-sections-container p {
+    font-size: 1.05em;
+    color: var(--color-text-medium);
+    line-height: 1.7;
+    margin-bottom: var(--spacing-sm);
+}
+
+.success-sections-container strong {
+    font-weight: 700;
+    color: var(--color-text-dark);
+}
+
+/* Erster Block: Zahlung & Kontakt / QR-Code (2 Spalten auf Desktop) */
+.success-info-card-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: var(--spacing-lg);
+    box-shadow: 0 8px 20px var(--color-shadow-medium);
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+}
+/* Einzelne Karten im Gruppen-Grid */
+.success-info-card {
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+/* Visuelle Trennung im Grid */
+.success-info-card:first-child {
+    border-top-left-radius: var(--border-radius-md);
+    border-bottom-left-radius: var(--border-radius-md);
+}
+.success-info-card:last-child {
+    border-top-right-radius: var(--border-radius-md);
+    border-bottom-right-radius: var(--border-radius-md);
+}
+
+/* Spezifische Hintergründe */
+.success-info-card.payment-info {
+    background-color: var(--color-background-light);
+    color: var(--color-text-dark);
+}
+.success-info-card.whatsapp-qr {
+    background-color: #E0FFEE;
+    color: var(--color-text-dark);
+}
+
+/* Details Zahlungsinformationen (BANK TRANSFER) */
+/* NEU: Neue Klasse für das Intro des Überweisungsbereichs */
+.payment-details .details-intro {
+    font-size: 1.05em;
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-text-dark);
+    line-height: 1.6;
+}
+.payment-details .highlight-total {
+    font-size: 1.2em; /* Größer für den Gesamtbetrag */
+    color: var(--color-accent);
+    font-weight: 700;
+}
+
+/* NEU: Liste für Bankdetails */
+.bank-details-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--spacing-lg) 0; /* Abstand nach unten */
+    background-color: var(--color-background-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    overflow: hidden; /* Für abgerundete Ecken */
+}
+
+.bank-details-list .detail-item {
+    display: flex;
+    justify-content: space-between; /* Label links, Wert rechts */
+    align-items: center;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-bottom: 1px solid var(--color-border);
+    font-size: 0.95em;
+    color: var(--color-text-medium);
+    transition: background-color 0.15s ease;
+    cursor: pointer; /* Signalisiert, dass es anklickbar/kopierbar ist */
+}
+.bank-details-list .detail-item:last-child {
+    border-bottom: none;
+}
+.bank-details-list .detail-item:hover {
+    background-color: var(--color-background-light);
+}
+
+.bank-details-list .detail-item .detail-label {
+    font-weight: 500;
+    color: var(--color-text-dark);
+    white-space: nowrap; /* Label bleibt in einer Zeile */
+    margin-right: var(--spacing-md); /* Abstand zum Wert */
+}
+
+.bank-details-list .detail-item .detail-value {
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; /* Monospace-Font für Nummern */
+    font-size: 1em;
+    color: var(--color-primary-dark);
+    font-weight: 600;
+    flex-grow: 1; /* Nimmt den restlichen Platz ein */
+    text-align: right; /* Rechtsbündig für Zahlen */
+    user-select: all; /* Macht es einfacher, den Text auszuwählen */
+    overflow-wrap: break-word; /* Lange IBANs brechen um */
+    word-break: break-all;
+}
+
+.bank-details-list .detail-item .detail-value.reference-number {
+    color: var(--color-accent); /* Akzentfarbe für Verwendungszweck */
+    font-size: 1.05em;
+    font-weight: 700;
+}
+
+/* Optional: Visuelles Feedback beim Kopieren */
+.bank-details-list .detail-item.copied {
+    background-color: var(--color-secondary-light); /* Leicht grüner Hintergrund */
+    box-shadow: inset 0 0 5px var(--color-secondary);
+}
+
+
+/* Cash On Pickup Details */
+.payment-details.cash-on-pickup .details-intro {
+    font-size: 1.05em;
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-text-dark);
+}
+.payment-details.cash-on-pickup .highlight-total {
+    font-size: 1.2em;
+    color: var(--color-accent);
+    font-weight: 700;
+}
+
+
+/* Verarbeitungshinweis am Ende des Payment Details Blocks */
+.payment-details .processing-note {
+    font-size: 0.9em;
+    color: var(--color-text-medium);
+    margin-top: var(--spacing-md);
+    line-height: 1.5;
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--spacing-md);
+}
+
+/* Abholung Details */
+.pickup-details {
+    margin-top: var(--spacing-xl); /* Startet mit gutem Abstand */
+}
+.pickup-details p {
+    margin-bottom: var(--spacing-xs);
+    font-size: 1.05em;
+}
+.pickup-details p strong {
+    color: var(--color-primary);
+}
+.pickup-datetime, .pickup-location {
+    font-size: 1.1em !important;
+    font-weight: 600;
+    color: var(--color-text-dark) !important;
+}
+
+/* WhatsApp QR-Code */
+.qr-code-container {
+    text-align: center;
+    margin-top: var(--spacing-xl);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 1;
+    justify-content: space-between;
+}
+.qr-code-img {
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+    margin-bottom: var(--spacing-xl);
+    border: 5px solid var(--color-background-white);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-xs);
+    background-color: var(--color-background-white);
+    box-shadow: 0 4px 10px var(--color-shadow-medium);
+}
+.whatsapp-button {
+    background-color: #25D366;
+    color: var(--color-background-white);
+    text-decoration: none;
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-radius: var(--border-radius-lg);
+    font-weight: 700;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    width: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-top: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.whatsapp-button:hover {
+    background-color: #1FAF59;
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+.whatsapp-icon { /* WhatsApp Icon für den Button */
+    margin-right: var(--spacing-xs);
+    display: inline-block;
+    vertical-align: middle;
+}
+
+
+/* Bestellzusammenfassungstabelle */
+.success-order-details-card {
+    position: relative;
+    padding: var(--spacing-xl) var(--spacing-lg);
+}
+.success-order-details-card h2 {
+    color: var(--color-text-dark);
+    border-bottom: 1px solid var(--color-border);
+    /* padding-right: var(--spacing-xl); Nicht mehr benötigt, da Link jetzt im Flex liegt */
+    display: flex;
+    justify-content: space-between; /* Für Platz zwischen H2 und Link */
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: var(--spacing-lg); /* Einheitlicher Abstand zum folgenden Inhalt */
+}
+
+
+.edit-order-link {
+    /* position: static; Ist schon korrekt so */
+    margin-left: var(--spacing-sm);
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+    color: var(--color-primary);
+    transition: color 0.2s ease, transform 0.2s ease;
+    cursor: pointer;
+    line-height: 1;
+    font-size: 0.9em; /* Leicht kleinerer Text im Link */
+    font-weight: 500;
+    text-decoration: none; /* Als Link getarnt */
+}
+.edit-order-link:hover {
+    color: var(--color-accent);
+    transform: scale(1.05); /* Leichtere Animation */
+}
+.edit-order-link .edit-icon {
+    width: 22px;
+    height: 22px;
+    margin-left: var(--spacing-xs);
+    stroke-width: 2px;
+    flex-shrink: 0; /* Verhindert das Schrumpfen des Icons */
+}
+
+.success-order-details-card table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: var(--spacing-lg);
+    box-shadow: 0 2px 5px var(--color-shadow-light);
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+}
+.success-order-details-card th, .success-order-details-card td {
+    padding: var(--spacing-sm) var(--spacing-md);
+    text-align: left;
+    font-size: 0.95em;
+    border-bottom: 1px solid var(--color-border);
+    border-right: 1px solid var(--color-border);
+}
+.success-order-details-card tr:last-child td {
+    border-bottom: none;
+}
+.success-order-details-card th:last-child,
+.success-order-details-card td:last-child {
+    border-right: none;
+}
+
+
+.success-order-details-card th {
+    background-color: var(--color-primary-lightest);
+    font-weight: 600;
+    color: var(--color-primary-dark);
+}
+.success-order-details-card td {
+    color: var(--color-text-dark);
+}
+.success-order-details-card tfoot td {
+    font-weight: 700;
+    color: var(--color-text-dark);
+    background-color: var(--color-background-light);
+    font-size: 1em;
+}
+.success-order-details-card tr:nth-child(even) {
+    background-color: #FDFEFE;
+}
+
+/* Missions-Karten-Styling */
+.success-mission-card {
+    text-align: center;
+    padding: var(--spacing-xl);
+    background-color: var(--color-background-light);
+    border-color: var(--color-secondary);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+.success-mission-card h2 {
+    color: var(--color-secondary);
+    border-bottom: 1px solid var(--color-secondary-light);
+    font-size: 2.5em;
+    margin-bottom: var(--spacing-lg);
+}
+.mission-links {
+    margin-top: var(--spacing-xl);
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.mission-links .hero-button {
+    margin: 0;
+    font-size: 1.1em;
+    padding: var(--spacing-md) var(--spacing-lg);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+.mission-links .hero-button:first-child {
+    background-color: var(--color-secondary);
+}
+.mission-links .hero-button:first-child:hover {
+    background-color: #00A656;
+}
+.mission-links .hero-button:last-child {
+    background-color: var(--color-primary);
+}
+.mission-links .hero-button:last-child:hover {
+    background-color: #2F5AA9;
+}
+
+
+/* Responsive Anpassungen */
+@media (max-width: 1024px) {
+    .success-info-card-group {
+        grid-template-columns: 1fr;
+        box-shadow: none;
+    }
+    .success-info-card {
+        border-radius: var(--border-radius-md);
+        margin-bottom: var(--spacing-lg);
+        border: 1px solid var(--color-border);
+        box-shadow: 0 4px 10px var(--color-shadow-light);
+    }
+    .success-info-card:first-child, .success-info-card:last-child {
+        border-radius: var(--border-radius-md);
+    }
+}
+
+
+@media (max-width: 768px) {
+    .success-header h1 {
+        font-size: 2.8em;
+    }
+    .success-sections-container h2 {
+        font-size: 1.8em;
+    }
+    .success-info-card,
+    .success-order-details-card,
+    .success-mission-card {
+        padding: var(--spacing-lg);
+    }
+    /* .edit-order-link Positionierung */
+    .edit-order-link {
+        font-size: 0.85em; /* Kleinerer Text im Link auf Mobilgeräten */
+        /* display: flex; Wird oft als Flexitem nebeneinander sein */
+    }
+    .edit-order-link .edit-icon {
+        width: 18px; /* Kleineres Icon auf Mobilgeräten */
+        height: 18px;
+    }
+    .mission-links {
+        flex-direction: column;
+        align-items: center;
+    }
+    .mission-links .hero-button {
+        width: 100%;
+        max-width: 280px;
+    }
+
+    .bank-details-list .detail-item {
+        flex-direction: column; /* Details untereinander stapeln */
+        align-items: flex-start;
+        padding: var(--spacing-sm);
+    }
+    .bank-details-list .detail-item .detail-label {
+        width: 100%; /* Label nimmt ganze Breite ein */
+        margin-bottom: var(--spacing-xs); /* Abstand nach unten */
+    }
+    .bank-details-list .detail-item .detail-value {
+        width: 100%; /* Wert nimmt ganze Breite ein */
+        text-align: left; /* Text linksbündig */
+    }
+
+}
+@media (max-width: 500px) {
+    .success-header {
+        padding: var(--spacing-lg) var(--spacing-sm);
+        margin-bottom: var(--spacing-md);
+    }
+    .success-header h1 {
+        font-size: 2em;
+    }
+    .success-header .alert {
+        padding: var(--spacing-sm);
+        font-size: 0.95em;
+    }
+
+    .success-sections-container {
+        padding: 0 var(--spacing-sm);
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-md);
+    }
+
+    .success-sections-container h2 {
+        font-size: 1.5em;
+        margin-bottom: var(--spacing-md);
+    }
+    .success-sections-container h3 {
+        font-size: 1.2em;
+        margin-top: var(--spacing-lg);
+        margin-bottom: var(--spacing-xs);
+    }
+    .success-sections-container p {
+        font-size: 0.95em;
+    }
+    .success-info-card,
+    .success-order-details-card,
+    .success-mission-card {
+        padding: var(--spacing-md);
+    }
+
+    .payment-amount {
+        font-size: 1.2em;
+    }
+    .payment-details {
+        padding: var(--spacing-xs);
+    }
+
+    .qr-code-img {
+        width: 120px;
+        height: 120px;
+        margin-bottom: var(--spacing-md);
+    }
+    .whatsapp-button {
+        font-size: 1em;
+        padding: var(--spacing-sm) var(--spacing-md);
+        gap: var(--spacing-xs);
+    }
+    .whatsapp-button .whatsapp-icon {
+        width: 16px;
+        height: 16px;
+        margin-right: 0;
+    }
+    .edit-order-link {
+        font-size: 0.8em; /* Noch kleinerer Text auf kleinen Mobilgeräten */
+    }
+    .edit-order-link .edit-icon {
+        width: 16px;
+        height: 16px;
+    }
+    .success-order-details-card th, .success-order-details-card td {
+        padding: var(--spacing-xs);
+        font-size: 0.8em;
+    }
+    .success-order-details-card tfoot td {
+        font-size: 0.9em;
+    }
+
+    .success-mission-card h2 {
+        font-size: 1.8em;
+        margin-bottom: var(--spacing-md);
+    }
+    .mission-links {
+        gap: var(--spacing-sm);
+    }
+    .mission-links .hero-button {
+        font-size: 0.95em;
+        padding: var(--spacing-sm) var(--spacing-md);
+        max-width: 200px;
+    }
+}
+
 ==================================================
 DATEINAME: src/assets/style/variables.css
 --------------------------------------------------
-/* Google Fonts Import */
+/* main.css */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 /* CSS Custom Properties (Variablen) für Konsistenz */
 :root {
     /* Farben */
     --color-primary: #3468C0; /* Ein modernes, etwas gedämpfteres Blau */
+    --color-primary-dark: #2F5AA9; /* Dunklerer Ton für Text */
+    --color-primary-lightest: #EDF3FB; /* Sehr helles Blau */
     --color-secondary: #00BF63; /* Ein frischeres Grün für Aktionen */
+    --color-secondary-light: #E0FFEE; /* Leichtes Grün für Hintergründe */
+    --color-secondary-dark: #00A656; /* Dunkleres Grün für Text */
     --color-accent: #FF8B13; /* Ein wärmerer, weniger aggressiver Akzent für Preise/Wichtiges */
     --color-background-light: #F8FAFC; /* Sehr helles Grau, moderner als #f0f2f5 */
     --color-background-white: #FFFFFF;
@@ -1881,14 +2639,14 @@ DATEINAME: src/assets/style/variables.css
     --border-radius-lg: 24px;
 
     /* Header Höhe */
-    --header-height: 80px; /* Leichte Anpassung für einen kompakteren Header */
-    --header-height-mobile-collapsed: 60px; /* Höhe des mobilen Warenkorb-Headers, wenn zusammengeklappt */
+    --header-height: 70px;
+    --header-height-mobile-collapsed: 60px;
 
     /* Warenkorb Höhe (2/3 der Viewport-Höhe) */
     --cart-max-height-ratio: 0.66;
 
     /* NEU: Maximale Breite für Hauptinhalts-Wrapper und Header/Footer */
-    --content-max-width: 1240px;
+    --content-max-width: 1300px;
 }
 
 ==================================================
@@ -2114,7 +2872,10 @@ try {
     $orderItems = [];
     $productsToUpdateStock = [];
 
-    foreach ($_SESSION['cart'] as $productId => $item) {
+    // Kopie des Warenkorbs für die Success-Seite, da $_SESSION['cart'] gleich geleert wird
+    $cart_snapshot_for_success_page = $_SESSION['cart'];
+
+    foreach ($cart_snapshot_for_success_page as $productId => $item) {
         $stmtProduct = $pdo->prepare("SELECT product_id, name, description, price, stock_quantity FROM products WHERE product_id = :product_id AND is_active = TRUE");
         $stmtProduct->execute([':product_id' => $productId]);
         $dbProduct = $stmtProduct->fetch();
@@ -2198,14 +2959,41 @@ try {
     // Transaktion committen
     $pdo->commit();
 
-    // Warenkorb leeren
+    // WARNUNG: $_SESSION['cart'] MUSS nach dem Committen der DB und VOR dem setzen der Success-Seite Daten geleert werden!
+    // Andernfalls würde die Success-Seite den Warenkorb wieder befüllen, wenn die Session vor dem Redirect leert.
+    // Aber für unser Frontend wird der Warenkorb ja per reload gelehrt. Wichtig ist, DASS er geleert wird.
     $_SESSION['cart'] = [];
+
+
+    // --- Daten für die Success-Seite in der Session speichern (NEU) ---
+    $_SESSION['last_order_id'] = $orderId;
+    $_SESSION['last_order_details'] = [
+        'order_id' => $orderId,
+        'user_id' => $userId,
+        'total_amount' => $calculatedTotalAmount,
+        'order_date' => date('Y-m-d H:i:s'), // Aktuelles Datum und Uhrzeit
+        'payment_method' => $paymentMethod, // Muss aus dem Formular kommen
+        'items' => $orderItems, // Bereits definierte Items
+    ];
+    $_SESSION['last_pickup_info'] = $pickupDateInfo; // Aus der Datenbank abgerufen
+    $_SESSION['last_payment_info'] = [
+        'payment_method' => $paymentMethod,
+        'transaction_id' => $transactionId,
+        'amount' => $calculatedTotalAmount, // Hier die Gesamtsumme der Bestellung verwenden
+    ];
+    $_SESSION['customer_info'] = [
+        'first_name' => $firstName,
+        'last_name' => $lastName,
+        'email' => $email,
+        'phone' => $phone
+    ];
+    // --- Ende der Success-Seiten-Daten (NEU) ---
 
     // 7. Bestätigungs-E-Mail senden
     $emailSubject = "Ihre Bestellung Nr. {$orderId} bei " . MAIL_FROM_NAME;
     $emailBody = "
         <p>Hallo {$firstName} {$lastName},</p>
-        <p>Vielen Dank für Ihre Bestellung! Ihre Bestellung mit der Nummer <strong>{$orderId}</strong> wurde erfolgreich aufgenommen.</p>
+        <p>Vielen Dank für Ihre Bestellung! Ihre Bestellung mit der Nummer <strong>" . htmlspecialchars($orderId) . "</strong> wurde erfolgreich aufgenommen.</p>
         <p><strong>Bestelldetails:</strong></p>
         <table style='width: 100%; border-collapse: collapse; margin-bottom: 20px;'>
             <thead>
@@ -2238,7 +3026,7 @@ try {
         <p><strong>Zahlungsmethode:</strong> ";
     if ($paymentMethod === 'bank_transfer') {
         $emailBody .= "Überweisung. Bitte überweisen Sie den Betrag von <strong>" . formatEuroCurrency($calculatedTotalAmount) . "</strong> auf unser Konto. <br>
-                       Verwendungszweck: <strong>{$transactionId}</strong>.<br>
+                       Verwendungszweck: <strong>" . htmlspecialchars($transactionId) . "</strong>.<br>
                        Kontoinhaber: [Ihr Name/Firmenname]<br>
                        IBAN: [Ihre IBAN]<br>
                        BIC: [Ihre BIC]";
@@ -2250,21 +3038,21 @@ try {
         <p>Wir freuen uns auf Sie!</p>
         <p>Mit freundlichen Grüssen,<br>Ihr Team von " . MAIL_FROM_NAME . "</p>";
 
-    $emailSent = sendAppEmail($email, $emailSubject, $emailBody, $orderId); // orderId an E-Mail-Log weitergeben
+    $emailSent = sendAppEmail($email, $emailSubject, $emailBody, $orderId);
 
+    // $_SESSION['checkout_success_message'] = "Ihre Bestellung Nr. {$orderId} wurde erfolgreich aufgegeben. Eine Bestätigungs-E-Mail wurde an Ihre Adresse gesendet."; // Diese Meldung ist redundant wenn der Success-Inhalt alle Infos hat
+    $_SESSION['checkout_email_status_message'] = "";
     if ($emailSent !== true) {
-        // E-Mail-Fehler loggen, aber die Bestellung als erfolgreich markieren
         error_log("Fehler beim Senden der Bestätigungs-E-Mail für Bestellung {$orderId} an {$email}: " . $emailSent);
-        $response['message'] = "Ihre Bestellung wurde erfolgreich aufgegeben, aber die Bestätigungs-E-Mail konnte nicht gesendet werden. Bitte überprüfen Sie Ihren Spam-Ordner oder kontaktieren Sie uns.";
-        $response['success'] = true; // Bestellung war erfolgreich
-    } else {
-        $response['success'] = true;
-        $response['message'] = "Ihre Bestellung wurde erfolgreich aufgegeben. Eine Bestätigungs-E-Mail wurde an Ihre Adresse gesendet.";
+        $_SESSION['checkout_email_status_message'] = "ACHTUNG: Die Bestätigungs-E-Mail konnte jedoch nicht gesendet werden. Bitte überprüfen Sie Ihren Spam-Ordner oder kontaktieren Sie uns unter info@früch.de.";
     }
+
+
+    $response['success'] = true;
 
 } catch (Exception $e) {
     if ($pdo->inTransaction()) {
-        $pdo->rollBack(); // Bei Fehler Transaktion rückgängig machen
+        $pdo->rollBack();
     }
     error_log("Bestellfehler: " . $e->getMessage());
     $response['message'] = "Fehler bei der Bestellabwicklung: " . $e->getMessage();
@@ -2345,6 +3133,9 @@ function handleAssetRequest(string $page_name): void
             break;
         case 'webp': // Häufig für optimierte Bilder
             header('Content-Type: image/webp');
+            break;
+        case 'avif': // NEU: Modernes AVIF-Format
+            header('Content-Type: image/avif');
             break;
         default:
             // Standardmäßig als Binärdaten senden oder Fehlerbehandlung
@@ -3931,7 +4722,7 @@ if (!function_exists('formatEuroCurrency')) {
         <div class="home-section-content">
             <h2>Unsere Mission: Guter Geschmack, Gutes tun</h2>
             <p>Bei Früchte aus Portugal glauben wir an Authentizität und Qualität. Wir bringen dir handverlesene, sonnengereifte Früchte direkt von kleinen Bauernhöfen in Portugal. Ohne Umwege, ohne unnötige Zusätze – einfach purer Genuss.</p>
-            <p>Doch wir sind mehr als nur ein ein gutes Geschäft. Unser Projekt verfolgt ein höheres Ziel: <strong>100% des Gewinnes aus jedem Verkauf fließen direkt in die Missionsarbeit des BSB.</strong> Mit jedem Bissen einer saftigen Orange oder einer süßen Kiwi unterstützt du wichtige Projekte, die Menschen in Not helfen und Hoffnung schenken. Dein Einkauf hat eine doppelte Wirkung!</p>
+            <p>Doch wir sind mehr als nur ein ein gutes Geschäft. Unser Projekt verfolgt ein höheres Ziel: <strong>100% des Gewinnes aus jedem Verkauf fließen direkt in die Missionsarbeit.</strong> Mit jedem Bissen einer saftigen Orange oder einer süßen Kiwi unterstützt du wichtige Projekte, die Menschen in Not helfen und Hoffnung schenken. Dein Einkauf hat eine doppelte Wirkung!</p>
             <p>Jede Frucht erzählt eine Geschichte von Sonne, Leidenschaft und traditionellem Anbau, und trägt gleichzeitig dazu bei, die Welt ein kleines Stück besser zu machen. Entdecke den Unterschied, den echte Qualität und ein gutes Herz machen.</p>
         </div>
     </section>
@@ -4067,7 +4858,6 @@ if (!isset($pdo)) {
 // HINWEIS: Die Funktion formatEuroCurrency() wird jetzt über include/helpers.php geladen und ist global verfügbar.
 
 $products_by_category = [];
-$pickup_dates = [];
 $error_message = '';
 $success_message = '';
 
@@ -4079,14 +4869,8 @@ try {
     $all_products = $stmt->fetchAll();
 
     foreach ($all_products as $product) {
-        // Hier wird die Kategorie nach category_name gruppiert, aber die Reihenfolge der Kategorien
-        // in der Ausgabe wird durch die ORDER BY Klausel der SQL-Abfrage beeinflusst.
         $products_by_category[$product['category_name']][] = $product;
     }
-
-    // Aktive Abholtermine abrufen
-    $stmt_dates = $pdo->query("SELECT * FROM pickup_dates WHERE is_active = TRUE AND pickup_datetime >= NOW() ORDER BY pickup_datetime ASC");
-    $pickup_dates = $stmt_dates->fetchAll();
 
 } catch (PDOException $e) {
     error_log("Datenbankfehler auf Shop-Seite: " . $e->getMessage());
@@ -4117,41 +4901,36 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
         <div class="product-list">
             <?php if (empty($products_by_category)): ?>
                 <p>Derzeit sind keine Produkte verfügbar.</p>
+            <?辍>
             <?php else: ?>
-                <?php
-                // Um die Kategorien tatsächlich nach ID (oder einer impliziten Reihenfolge aus der DB) zu sortieren,
-                // und nicht alphabetisch durch den PHP-Schlüssel 'category_name',
-                // müsste die $products_by_category Struktur anders aufgebaut werden, z.B.
-                // $products_by_category[$product['category_id']]['name'] = $product['category_name'];
-                // $products_by_category[$product['category_id']]['products'][] = $product;
-                // Dann würde man über die Keys von $products_by_category iterieren, die die IDs wären.
-                // Für diese Anfrage belassen wir die Gruppierung nach Name und vertrauen darauf,
-                // dass die ursprüngliche Abfrage mit "ORDER BY c.category_id" die Kategorien korrekt einliest.
-                // Wenn die Kategorien im Array $products_by_category alphabetisch nach Name sortiert sind,
-                // weil PHP-Assoziative Arrays dies tun könnten, dann müsste man das Array explizit neu sortieren.
-                // Da die DB-Abfrage nach c.category_id sortiert, sollten die Kategorien in der richtigen Reihenfolge auftauchen.
-                ?>
                 <?php foreach ($products_by_category as $category_name => $products): ?>
                     <section class="category-section">
                         <h2><?php echo htmlspecialchars($category_name); ?></h2>
                         <div class="product-grid">
-                            <?php foreach ($products as $product): ?>
+                            <?php foreach ($products as $product):
+                                // Prüfen, ob das Produkt ausverkauft ist
+                                $is_sold_out = ((int)$product['stock_quantity'] <= 0);
+                                $button_text = $is_sold_out ? 'Ausverkauft' : 'In den Warenkorb';
+                                $disabled_attr = $is_sold_out ? 'disabled' : '';
+                                $input_value = $is_sold_out ? '0' : '1';
+                                $input_disabled_attr = $is_sold_out ? 'disabled' : '';
+                            ?>
                                 <div class="product-item">
-                                    <img src="<?php echo htmlspecialchars($product['image_url'] ?: '/_placeholder.png'); ?>" alt="Bild von <?php echo htmlspecialchars($product['name']); ?> (<?php echo htmlspecialchars($product['description']); ?>)">
+                                    <img src="<?php echo htmlspecialchars($product['image_url'] ?: '/_placeholder.png'); ?>" alt="Bild von <?php echo htmlspecialchars($product['name']); ?> (<?php echo htmlspecialchars($product['description']); ?>)" loading="lazy" decoding="async">
                                     <h3><?php echo htmlspecialchars($product['name']); ?></h3>
                                     <p class="product-quantity-price-line">
                                         <span class="product-unit"><?php echo htmlspecialchars($product['description']); ?> für</span> <span class="product-price-value"><?php echo formatEuroCurrency($product['price']); ?></span>
                                     </p>
                                     <div class="product-controls">
-                                        <input type="number" class="quantity-input" value="1" min="1" max="<?php echo (int)$product['stock_quantity']; ?>" data-product-id="<?php echo (int)$product['product_id']; ?>">
+                                        <input type="number" class="quantity-input" value="<?php echo $input_value; ?>" min="0" max="<?php echo (int)$product['stock_quantity']; ?>" data-product-id="<?php echo (int)$product['product_id']; ?>" <?php echo $input_disabled_attr; ?>>
                                         <button class="add-to-cart-btn" data-product-id="<?php echo (int)$product['product_id']; ?>"
                                                 data-product-name="<?php echo htmlspecialchars($product['name']); ?>"
                                                 data-product-price="<?php echo htmlspecialchars($product['price']); ?>"
                                                 data-product-stock="<?php echo (int)$product['stock_quantity']; ?>"
                                                 data-product-image="<?php echo htmlspecialchars($product['image_url'] ?: '/_placeholder.png'); ?>"
                                                 data-product-description="<?php echo htmlspecialchars($product['description']); ?>"
-                                                <?php echo ($product['stock_quantity'] <= 0) ? 'disabled' : ''; ?>>
-                                            <?php echo ($product['stock_quantity'] <= 0) ? 'Ausverkauft' : 'In den Warenkorb'; ?>
+                                                <?php echo $disabled_attr; ?>>
+                                            <?php echo $button_text; ?>
                                         </button>
                                     </div>
                                 </div>
@@ -4189,10 +4968,10 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
                     <?php else: ?>
                         <?php foreach ($_SESSION['cart'] as $productId => $item): ?>
                             <li class="cart-item" data-product-id="<?php echo htmlspecialchars($productId); ?>">
-                                <img src="<?php echo htmlspecialchars($item['image_url'] ?: '/_placeholder.png'); ?>" alt="Bild von <?php echo htmlspecialchars($item['name']); ?>: <?php echo htmlspecialchars($item['description']); ?>" class="cart-item-image">
+                                <img src="<?php echo htmlspecialchars($item['image_url'] ?: '/_placeholder.png'); ?>" alt="Bild von <?php echo htmlspecialchars($item['name']); ?>: <?php echo htmlspecialchars($item['description']); ?>" class="cart-item-image" loading="lazy" decoding="async">
                                 <div class="cart-item-info">
                                     <h4><?php echo htmlspecialchars($item['name']); ?></h4>
-                                    <p><?php echo formatEuroCurrency(parseFloat($item.price) * parseInt($item.quantity)); ?></p>
+                                    <p><?php echo formatEuroCurrency(floatval($item['price']) * intval($item['quantity'])); ?></p>
                                 </div>
                                 <div class="cart-item-controls">
                                     <input type="number" class="cart-quantity-input" value="<?php echo htmlspecialchars($item['quantity']); ?>" min="1" max="<?php echo htmlspecialchars($item['stock']); ?>" data-product-id="<?php echo htmlspecialchars($productId); ?>">
@@ -4210,364 +4989,244 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
         </div>
     </aside>
 
-    <!-- Checkout Modal remains here -->
-    <div id="checkoutModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">×</span>
-            <h3>Bestellung abschliessen</h3>
-            <div id="checkout-message" class="alert" style="display:none;"></div>
-            <form id="checkoutForm">
-                <div class="form-group">
-                    <label for="firstName">Vorname:</label>
-                    <input type="text" id="firstName" name="firstName" required>
-                </div>
-                <div class="form-group">
-                    <label for="lastName">Nachname:</label>
-                    <input type="text" id="lastName" name="lastName" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">E-Mail:</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="phone">Telefon (optional):</label>
-                    <input type="text" id="phone" name="phone">
-                </div>
+</div>
 
-                <div class="form-group">
-                    <label>Zahlungsmethode:</label>
-                    <div class="radio-option">
-                        <input type="radio" id="paymentBankTransfer" name="paymentMethod" value="bank_transfer" required checked>
-                        <label for="paymentBankTransfer">Überweisung</label>
-                    </div>
-                    <div class="radio-option">
-                        <input type="radio" id="paymentCash" name="paymentMethod" value="cash" required>
-                        <label for="paymentCash">Barzahlung bei Abholung</label>
-                    </div>
-                </div>
+==================================================
+DATEINAME: src/modules/success.php
+--------------------------------------------------
+<?php
+// modules/success.php
 
-                <div class="form-group">
-                    <label for="pickupDate">Abholtermin:</label>
-                    <select id="pickupDate" name="pickupDate" required>
-                        <option value="">Bitte wählen</option>
-                        <?php foreach ($pickup_dates as $date): ?>
-                            <option value="<?php echo htmlspecialchars($date['pickup_date_id']); ?>">
-                                <?php echo (new DateTime($date['pickup_datetime']))->format('d.m.Y H:i') . ' Uhr'; ?> - <?php echo htmlspecialchars($date['location']); ?>
-                            </option>
-                        <?php endforeach; ?>
-                        <?php if (empty($pickup_dates)): ?>
-                            <option value="" disabled>Keine Abholtermine verfügbar</option>
-                        <?php endif; ?>
-                    </select>
-                </div>
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
-                <button type="submit" id="checkout-submit-button">Bestellung abschicken</button>
-            </form>
+// Holen der Session-Nachricht, falls vorhanden
+$success_message = $_SESSION['checkout_success_message'] ?? '';
+unset($_SESSION['checkout_success_message']); // Nachricht nur einmal anzeigen
+
+// Hier holen wir die Bestelldetails aus der Session, die von checkout_process.php
+// gesetzt wurden (dies müssen wir eventuell anpassen, falls sie nicht im checkout_process.php gesetzt wurden,
+// siehe Abschnitt "Hinweis: Bestelldetails in der Session").
+$orderId = $_SESSION['last_order_id'] ?? null;
+$orderDetails = $_SESSION['last_order_details'] ?? null;
+$pickupInfo = $_SESSION['last_pickup_info'] ?? null;
+$paymentInfo = $_SESSION['last_payment_info'] ?? null;
+$customerInfo = $_SESSION['customer_info'] ?? null; // Auch Kundeninfo abrufen
+
+unset($_SESSION['last_order_id']);
+unset($_SESSION['last_order_details']);
+unset($_SESSION['last_pickup_info']);
+unset($_SESSION['last_payment_info']);
+unset($_SESSION['customer_info']);
+
+
+// Fallback falls Session-Daten fehlen
+if (!$orderId || !$orderDetails || !$pickupInfo || !$paymentInfo || !$customerInfo) {
+    error_log("FEHLER: Session-Daten für Bestellbestätigungsseite fehlen.");
+    $error_fallback_message = "Bestelldetails konnten leider nicht geladen werden. Bitte kontaktieren Sie uns umgehend unter <a href='mailto:info@früch.de'>info@früch.de</a> mit dem Betreff 'Fehlende Bestellbestätigung'.";
+}
+
+// Hilfsfunktion zur Formatierung
+if (!function_exists('formatEuroCurrency')) {
+    function formatEuroCurrency(float $amount): string {
+        if (fmod($amount, 1.0) == 0) {
+            return number_format($amount, 0, ',', '.') . ' €';
+        } else {
+            return number_format($amount, 2, ',', '.') . ' €';
+        }
+    }
+}
+
+// Konfigurationsdetails für die Überweisung (idealerweise aus einer Konfigurationsdatei oder DB)
+// Für dieses Beispiel als feste Strings, aber in Realität dynamisch holen
+$bank_account_holder = "Früchte aus Portugal"; // Oder dein richtiger Name
+$bank_iban = "DE12 3456 7890 1234 5678 90"; // Dummy-IBAN, ANPASSEN!
+$bank_bic = "DUMMYBICXXX"; // Dummy-BIC, ANPASSEN!
+?>
+
+<div class="site-content-wrapper success-page-wrapper">
+    <main>
+        <div class="success-header">
+            <h1>Ihre Bestellung ist unterwegs!</h1>
+            <?php if (!empty($success_message)): ?>
+                <div class="alert success" style="margin-top: var(--spacing-md);">
+                    <?php echo htmlspecialchars($success_message); ?>
+                </div>
+            <?php elseif (isset($error_fallback_message)): ?>
+                 <div class="alert error" style="margin-top: var(--spacing-md);">
+                    <?php echo $error_fallback_message; // HTML-Tags hier erlaubt ?>
+                </div>
+            <?php endif; ?>
         </div>
-    </div>
 
-</div><!-- End site-content-wrapper -->
+        <div class="success-sections-container">
+
+            <!-- Erster Block: Zahlung & Kontakt / QR-Code -->
+            <section class="success-info-card-group">
+                <div class="success-info-card payment-info">
+                    <h2>Zahlung & Abholung</h2>
+                    <?php if (isset($paymentInfo) && isset($orderDetails) && isset($pickupInfo) && isset($customerInfo)): ?>
+                        <h3>Zahlung: <?php echo htmlspecialchars(ucfirst(str_replace('_', ' ', $paymentInfo['payment_method']))); ?></h3>
+                        <p class="payment-amount">Gesamtbetrag: <strong><?php echo formatEuroCurrency($orderDetails['total_amount']); ?></strong></p>
+
+                        <?php if ($paymentInfo['payment_method'] === 'bank_transfer'): ?>
+                            <div class="payment-details bank-transfer">
+                                <p class="details-intro">Bitte überweisen Sie den Betrag von <strong class="highlight-total"><?php echo formatEuroCurrency($orderDetails['total_amount']); ?></strong> unter Angabe des Verwendungszwecks:</p>
+                                <ul class="bank-details-list">
+                                    <li class="detail-item">
+                                        <span class="detail-label">Empfänger:</span>
+                                        <span class="detail-value"><?php echo htmlspecialchars($bank_account_holder); ?></span>
+                                    </li>
+                                    <li class="detail-item">
+                                        <span class="detail-label">Verwendungszweck:</span>
+                                        <strong class="detail-value reference-number"><?php echo htmlspecialchars($paymentInfo['transaction_id']); ?></strong>
+                                    </li>
+                                    <li class="detail-item">
+                                        <span class="detail-label">IBAN:</span>
+                                        <strong class="detail-value iban-value"><?php echo htmlspecialchars($bank_iban); ?></strong>
+                                    </li>
+                                    <li class="detail-item">
+                                        <span class="detail-label">BIC:</span>
+                                        <span class="detail-value bic-value"><?php echo htmlspecialchars($bank_bic); ?></span>
+                                    </li>
+                                </ul>
+                                <p class="processing-note">Ihre Bestellung Nr. <strong><?php echo htmlspecialchars($orderDetails['order_id']); ?></strong> wird nach Zahlungseingang bearbeitet. Eine Versandbestätigung erhalten Sie separat.</p>
+                            </div>
+                        <?php else: // Barzahlung ?>
+                            <div class="payment-details cash-on-pickup">
+                                <p class="details-intro">Bezahlen Sie bequem <strong class="highlight-total"><?php echo formatEuroCurrency($orderDetails['total_amount']); ?></strong> bei Abholung Ihrer Bestellung Nr. <strong><?php echo htmlspecialchars($orderDetails['order_id']); ?></strong>.</p>
+                            </div>
+                        <?php endif; ?>
+
+                        <h3>Abholung</h3>
+                        <div class="pickup-details">
+                            <p>Bereit zur Abholung am:</p>
+                            <p class="pickup-datetime"><strong><?php echo (new DateTime($pickupInfo['pickup_datetime']))->format('d.m.Y H:i'); ?> Uhr</strong></p>
+                            <p class="pickup-location">Ort: <strong><?php echo htmlspecialchars($pickupInfo['location']); ?></strong></p>
+                            <?php if (!empty($_SESSION['checkout_email_status_message'])): ?>
+                                <div class="alert error" style="margin-top: var(--spacing-md);">
+                                    <?php echo htmlspecialchars($_SESSION['checkout_email_status_message']); unset($_SESSION['checkout_email_status_message']); ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    <?php else: ?>
+                        <p>Zahlungs- und Abholdetails konnten nicht vollständig geladen werden.</p>
+                        <p>Ihre Bestellnummer ist <strong><?php echo htmlspecialchars($orderId); ?></strong>. Bei Fragen kontaktieren Sie uns unter <a href="mailto:info@früch.de">info@früch.de</a>.</p>
+                    <?php endif; ?>
+                </div>
+
+                <div class="success-info-card whatsapp-qr">
+                    <h2>Immer auf dem Laufenden</h2>
+                    <p>Für Updates zu Ihrer Bestellung, neue Produkte und Abholtermine treten Sie unserer WhatsApp-Gruppe bei!</p>
+                    <div class="qr-code-container">
+                        <img src="/-whatsapp-qr.svg" alt="WhatsApp Gruppen QR Code" class="qr-code-img" loading="lazy" decoding="async">
+                        <a href="https://chat.whatsapp.com/BaBd04yeoGvDkcGZcRNkTI" target="_blank" class="whatsapp-button hero-button">
+                            WhatsApp Gruppe beitreten
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Zweiter Block: Bestellzusammenfassung -->
+            <section class="success-order-details-card">
+                <h2>Ihre Bestellung #<?php echo htmlspecialchars($orderId ?? 'N/A'); ?></h2>
+                <a href="mailto:info@früch.de?subject=Frage%20zu%20Bestellung%20%23<?php echo urlencode($orderId ?? 'N/A'); ?>" class="edit-order-link" aria-label="Bestellung ändern oder nachfragen">
+                    <span class="edit-order-text">Anfrage / Bearbeiten</span>
+                    <svg class="edit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                </a>
+                <?php if (isset($orderDetails) && !empty($orderDetails['items'])): ?>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Produkt</th>
+                                <th>Menge</th>
+                                <th>Einzelpreis</th>
+                                <th>Summe</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($orderDetails['items'] as $item): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($item['name']); ?></td>
+                                    <td><?php echo htmlspecialchars($item['quantity']); ?></td>
+                                    <td><?php echo formatEuroCurrency($item['price_at_order']); ?></td>
+                                    <td><?php echo formatEuroCurrency($item['quantity'] * $item['price_at_order']); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3"><strong>Gesamtsumme:</strong></td>
+                                <td><strong><?php echo formatEuroCurrency($orderDetails['total_amount']); ?></strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                <?php else: ?>
+                    <p>Bestellartikel konnten nicht geladen werden.</p>
+                <?php endif; ?>
+            </section>
+
+            <!-- Dritter Block: Mission / Projektinformationen -->
+            <section class="success-mission-card">
+                <h2>Ihre Hilfe macht einen Unterschied!</h2>
+                <p>Mit Ihrer Bestellung unterstützen Sie direkt unsere Missionsarbeit in Portugal. <strong>100% des Gewinnes</strong> aus dem Verkauf dieser Früchte fließt in Projekte, die Not lindern und Menschen eine Perspektive geben.</p>
+                <p>Jeder Bissen dieser sonnengereiften Früchte hilft, Gutes zu tun und positive Veränderungen in der Welt zu bewirken.</p>
+                <p>Vielen Dank für Ihre Großzügigkeit und Ihr Vertrauen in unser Projekt.</p>
+                <div class="mission-links">
+                    <a href="/geschichte" class="hero-button">Mehr über unsere Mission</a>
+                    <a href="/spenden" class="hero-button">Direkt spenden</a>
+                </div>
+            </section>
+        </div>
+
+    </main>
+</div>
 
 <script>
-    // Helper function for consistent currency formatting in JavaScript
-    const formatEuroCurrencyJS = (amount) => {
-        const floatAmount = parseFloat(amount);
-        let formatted = floatAmount.toFixed(2).replace('.', ','); // Always two decimals first for consistency
-        if (formatted.endsWith(',00')) {
-            formatted = formatted.slice(0, -3); // Remove ',00' if it ends with '.00'
-        }
-        return formatted + ' €';
-    };
-
     document.addEventListener('DOMContentLoaded', () => {
-        const cartSidebar = document.querySelector('.cart-sidebar');
-        const cartItemsList = document.getElementById('cart-items');
-        const cartTotalSpan = document.getElementById('cart-total');
-        const checkoutButton = document.getElementById('open-checkout-modal');
-        const mobileCartItemCount = document.getElementById('mobile-cart-item-count');
-        const mobileCartTotalSummary = document.getElementById('mobile-cart-total-summary');
-        const cartToggleButton = document.getElementById('cart-toggle-mobile');
-
-        // Funktion zur Aktualisierung der Warenkorb-Anzeige
-        const updateCartDisplay = (cart) => {
-            cartItemsList.innerHTML = ''; // Warenkorb leeren
-            let total = 0;
-            let itemCount = 0;
-
-            if (Object.keys(cart).length === 0) {
-                cartItemsList.innerHTML = '<li id="cart-empty-message">Ihr Warenkorb ist leer.</li>';
-                checkoutButton.disabled = true;
-            } else {
-                checkoutButton.disabled = false;
-                const existingEmptyMessage = document.getElementById('cart-empty-message');
-                if (existingEmptyMessage) {
-                    existingEmptyMessage.remove();
-                }
-
-                for (const productId in cart) {
-                    const item = cart[productId];
-                    total += parseFloat(item.price) * parseInt(item.quantity);
-                    itemCount += parseInt(item.quantity);
-
-                    const listItem = document.createElement('li');
-                    listItem.classList.add('cart-item');
-                    listItem.dataset.productId = productId;
-                    listItem.innerHTML = `
-                        <img src="${item.image_url || '/_placeholder.png'}" alt="Bild von ${item.name}: ${item.description}" class="cart-item-image">
-                        <div class="cart-item-info">
-                            <h4>${item.name}</h4>
-                            <p>${formatEuroCurrencyJS(parseFloat(item.price) * parseInt(item.quantity))}</p>
-                        </div>
-                        <div class="cart-item-controls">
-                            <input type="number" class="cart-quantity-input" value="${item.quantity}" min="1" max="${item.stock}" data-product-id="${productId}">
-                            <button class="remove-item-btn" data-product-id="${productId}">×</button>
-                        </div>
-                    `;
-                    cartItemsList.appendChild(listItem);
-                }
-            }
-            cartTotalSpan.textContent = formatEuroCurrencyJS(total);
-            if (mobileCartItemCount) mobileCartItemCount.textContent = itemCount;
-            if (mobileCartTotalSummary) mobileCartTotalSummary.textContent = formatEuroCurrencyJS(total);
-
-            // Deaktiviere Checkout Button, wenn Warenkorb leer
-            if (itemCount === 0) {
-                checkoutButton.disabled = true;
-            } else {
-                checkoutButton.disabled = false;
-            }
-        };
-
-        const sendCartUpdateRequest = async (action, productId, quantity = 0) => {
-            const formData = new FormData();
-            formData.append('action', action);
-            formData.append('product_id', productId);
-            if (quantity > 0) {
-                formData.append('quantity', quantity);
-            }
-
-            try {
-                const response = await fetch('api/cart_process.php', {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await response.json();
-                if (data.success) {
-                    updateCartDisplay(data.cart);
-                    // Optionally show a temporary success message
-                } else {
-                    alert('Fehler: ' + (data.message || 'Etwas ist schief gelaufen.'));
-                }
-            } catch (error) {
-                console.error('Fetch error:', error);
-                alert('Netzwerkfehler beim Aktualisieren des Warenkorbs.');
-            }
-        };
-
-        // Event Listener für "In den Warenkorb" Buttons
-        document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                const productId = button.dataset.productId;
-                const quantityInput = button.closest('.product-item').querySelector('.quantity-input');
-                const quantity = parseInt(quantityInput.value);
-
-                sendCartUpdateRequest('add', productId, quantity);
-            });
-        });
-
-        // Event Listener für Mengenänderungen im Produkt-Grid (falls direkt dort geändert wird)
-        document.querySelectorAll('.product-controls .quantity-input').forEach(input => {
-            input.addEventListener('change', (event) => {
-                let value = parseInt(event.target.value);
-                const max = parseInt(event.target.max);
-                const min = parseInt(event.target.min);
-
-                if (isNaN(value) || value < min) {
-                    value = min;
-                }
-                if (value > max) {
-                    value = max;
-                }
-                event.target.value = value;
-            });
-        });
-
-
-        // Event Listener für Mengenänderungen im Warenkorb (Delegation)
-        cartItemsList.addEventListener('change', (event) => {
-            if (event.target.classList.contains('cart-quantity-input')) {
-                const productId = event.target.dataset.productId;
-                let quantity = parseInt(event.target.value);
-                const max = parseInt(event.target.max);
-                const min = parseInt(event.target.min);
-
-                if (isNaN(quantity) || quantity < min) {
-                    quantity = min;
-                }
-                if (quantity > max) {
-                    quantity = max;
-                }
-                event.target.value = quantity; // Update input field with clamped value
-                sendCartUpdateRequest('update', productId, quantity);
-            }
-        });
-
-        // Event Listener für "Entfernen" Buttons im Warenkorb (Delegation)
-        cartItemsList.addEventListener('click', (event) => {
-            if (event.target.classList.contains('remove-item-btn')) {
-                const productId = event.target.dataset.productId;
-                sendCartUpdateRequest('remove', productId);
-            }
-        });
-
-        // --- Checkout Modal Logik ---
-        const checkoutModal = document.getElementById('checkoutModal');
-        const closeButton = document.querySelector('.close-button');
-        const checkoutForm = document.getElementById('checkoutForm');
-        const checkoutMessageDiv = document.getElementById('checkout-message');
-
-        // Funktion, um das Modal zu öffnen
-        const openCheckoutModal = () => {
-            // Sicherstellen, dass der Warenkorb auf Mobile ausgeklappt ist, bevor das Modal geöffnet wird
-            if (window.innerWidth <= 768 && cartSidebar.classList.contains('is-collapsed')) {
-                cartSidebar.classList.remove('is-collapsed');
-                cartSidebar.classList.add('is-expanded');
-            }
-            const currentCartItems = cartItemsList.querySelectorAll('.cart-item');
-            if (currentCartItems.length > 0) {
-                checkoutModal.style.display = 'flex'; // Use flex to center
-                checkoutMessageDiv.style.display = 'none'; // Clear any previous messages
-                checkoutMessageDiv.className = 'alert'; // Reset alert classes
-            }
-        };
-
-        // Event Listener für den Checkout-Button im Warenkorb
-        checkoutButton.addEventListener('click', openCheckoutModal);
-        // Event Listener für den mobilen Checkout-Button (falls vorhanden und sichtbar)
-        const mobileCheckoutButton = document.querySelector('.cart-header-mobile + .cart-body-content .checkout-button');
-        if (mobileCheckoutButton) {
-            mobileCheckoutButton.addEventListener('click', openCheckoutModal);
-        }
-
-        closeButton.addEventListener('click', () => {
-            checkoutModal.style.display = 'none';
-        });
-
-        window.addEventListener('click', (event) => {
-            if (event.target === checkoutModal) {
-                checkoutModal.style.display = 'none';
-            }
-        });
-
-        checkoutForm.addEventListener('submit', async (event) => {
-            event.preventDefault(); // Prevent default form submission
-
-            const formData = new FormData(checkoutForm);
-            // Append the calculated total amount to the form data
-            formData.append('cart_total', parseFloat(cartTotalSpan.textContent.replace(' €', '').replace(',', '.')));
-
-
-            try {
-                const response = await fetch('api/checkout_process.php', {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await response.json();
-
-                checkoutMessageDiv.style.display = 'block';
-                if (data.success) {
-                    checkoutMessageDiv.classList.add('success');
-                    checkoutMessageDiv.classList.remove('error');
-                    checkoutMessageDiv.textContent = data.message;
-                    checkoutForm.reset(); // Reset form
-                    updateCartDisplay({}); // Clear cart display
+        // Skript für "Copy to clipboard"
+        const copyToClipboardElements = document.querySelectorAll('.copy-to-clipboard');
+        copyToClipboardElements.forEach(element => {
+            element.addEventListener('click', function(event) {
+                event.preventDefault(); // Verhindert standardmäßiges Linkverhalten, falls es ein Link ist
+                const textToCopy = this.querySelector('.detail-value').innerText.trim();
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    const originalText = this.querySelector('.detail-value').innerText;
+                    this.querySelector('.detail-value').innerText = 'Kopiert!';
+                    this.classList.add('copied');
                     setTimeout(() => {
-                        checkoutModal.style.display = 'none';
-                        // Optionally reload the page or redirect after successful order
-                        // window.location.reload();
-                    }, 3000);
-                } else {
-                    checkoutMessageDiv.classList.add('error');
-                    checkoutMessageDiv.classList.remove('success');
-                    checkoutMessageDiv.textContent = data.message;
-                }
-            } catch (error) {
-                console.error('Fetch error:', error);
-                checkoutMessageDiv.style.display = 'block';
-                checkoutMessageDiv.classList.add('error');
-                checkoutMessageDiv.classList.remove('success');
-                checkoutMessageDiv.textContent = 'Netzwerkfehler: Die Bestellung konnte nicht verarbeitet werden.';
-            }
-        });
-
-        // Initial cart display update on page load (if items exist in session)
-        const initialCart = <?php echo json_encode($_SESSION['cart']); ?>;
-        updateCartDisplay(initialCart);
-
-        // --- Mobiler Warenkorb Toggle Logik ---
-        const isMobile = () => window.innerWidth <= 768; // Definiere deine Mobile-Breakpoint
-
-        const applyMobileCartState = () => {
-            // Zeige/verstecke Desktop/Mobile Warenkorb Header basierend auf Bildschirmgröße
-            const desktopHeader = cartSidebar.querySelector('.cart-header-desktop');
-            const mobileHeader = cartSidebar.querySelector('.cart-header-mobile');
-
-            // Lese die CSS-Variable für die Höhe aus dem Root-Element
-            const rootStyles = getComputedStyle(document.documentElement);
-            const mobileCollapsedHeight = parseFloat(rootStyles.getPropertyValue('--header-height-mobile-collapsed'));
-
-            if (isMobile()) {
-                if (desktopHeader) desktopHeader.style.display = 'none';
-                if (mobileHeader) mobileHeader.style.display = 'flex'; // Mobile Header anzeigen
-
-                // Sicherstellen, dass der Warenkorb zusammengeklappt ist, wenn Mobile-Modus aktiv wird
-                if (!cartSidebar.classList.contains('is-expanded')) { // Nur wenn er nicht explizit ausgeklappt wurde
-                    cartSidebar.classList.add('is-collapsed');
-                    // Setze den Transform-Wert basierend auf der CSS-Variablen
-                    cartSidebar.style.transform = `translateY(calc(100% - ${mobileCollapsedHeight}px))`;
-                }
-            } else {
-                if (desktopHeader) desktopHeader.style.display = 'block'; // Desktop Header anzeigen
-                if (mobileHeader) mobileHeader.style.display = 'none';
-
-                // Auf Desktop-Größe alle mobilen Klassen entfernen und den normalen Zustand wiederherstellen
-                cartSidebar.classList.remove('is-collapsed');
-                cartSidebar.classList.remove('is-expanded');
-                cartSidebar.style.transform = ''; // Reset transform
-            }
-        };
-
-        // Event Listener für den mobilen Toggle-Button
-        if (cartToggleButton) {
-            cartToggleButton.addEventListener('click', () => {
-                const rootStyles = getComputedStyle(document.documentElement);
-                const mobileCollapsedHeight = parseFloat(rootStyles.getPropertyValue('--header-height-mobile-collapsed'));
-
-                if (cartSidebar.classList.contains('is-collapsed')) {
-                    cartSidebar.classList.remove('is-collapsed');
-                    cartSidebar.classList.add('is-expanded');
-                    cartSidebar.style.transform = 'translateY(0)'; // Ausgeklappt
-                } else {
-                    cartSidebar.classList.remove('is-expanded');
-                    cartSidebar.classList.add('is-collapsed');
-                    cartSidebar.style.transform = `translateY(calc(100% - ${mobileCollapsedHeight}px))`; // Zusammengeklappt
-                }
+                        this.querySelector('.detail-value').innerText = originalText;
+                        this.classList.remove('copied');
+                    }, 1500);
+                }).catch(err => {
+                    console.error('Fehler beim Kopieren: ', err);
+                });
             });
-        }
+        });
+    });
+</script>
 
-        // Zustand bei Seitenladung und Größenänderung anwenden
-        applyMobileCartState();
-        window.addEventListener('resize', applyMobileCartState);
-
-
-        // Sticky Header Scroll-Effekt
-        const header = document.querySelector('header');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 0) {
-                header.classList.add('header-scrolled');
-            } else {
-                header.classList.remove('header-scrolled');
-            }
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Skript für "Copy to clipboard"
+        const copyToClipboardElements = document.querySelectorAll('.copy-to-clipboard');
+        copyToClipboardElements.forEach(element => {
+            element.addEventListener('click', function(event) {
+                event.preventDefault(); // Verhindert standardmäßiges Linkverhalten, falls es ein Link ist
+                const textToCopy = this.querySelector('.detail-value').innerText.trim();
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    const originalText = this.querySelector('.detail-value').innerText;
+                    this.querySelector('.detail-value').innerText = 'Kopiert!';
+                    this.classList.add('copied');
+                    setTimeout(() => {
+                        this.querySelector('.detail-value').innerText = originalText;
+                        this.classList.remove('copied');
+                    }, 1500);
+                }).catch(err => {
+                    console.error('Fehler beim Kopieren: ', err);
+                });
+            });
         });
     });
 </script>
@@ -4597,7 +5256,8 @@ $totalAmount = 0;
                 $totalAmount += $itemTotal;
             ?>
                 <li class="cart-item">
-                    <img src="<?= htmlspecialchars($item['image_url']) ?>" alt="<?= htmlspecialchars($item['name']) ?>" class="cart-item-img">
+                    <!-- GEÄNDERT: loading="lazy" und decoding="async" hinzugefügt -->
+                    <img src="<?= htmlspecialchars($item['image_url']) ?>" alt="<?= htmlspecialchars($item['name']) ?>: <?= htmlspecialchars($item['description']) ?>" class="cart-item-img" loading="lazy" decoding="async">
                     <div class="cart-item-details">
                         <h4><?= htmlspecialchars($item['name']) ?></h4>
                         <p><?= number_format($item['price'], 2, ',', '.') ?> € x</p>
@@ -4623,6 +5283,8 @@ DATEINAME: src/templates/footer.php
 // templates/footer.php
 // Dieser Footer wird durch index.php eingebunden
 ?>
+
+</div> <!-- Schließt den #page-content-wrapper -->
 
 <footer class="main-footer">
     <div class="footer-content-wrapper">
@@ -4655,11 +5317,10 @@ DATEINAME: src/templates/footer.php
             <div class="footer-section social">
                 <h3>Folge uns</h3>
                 <div class="social-icons">
-                    <!-- Annahme: Du hast diese Icons im assets-Ordner als _whatsapp.png und _instagram.png -->
-                    <a href="https://www.efbornheim.de/" target="_blank" aria-label="Webseite"><img src="/-webseite.png" alt="Webseite"></a>
-                    <a href="https://chat.whatsapp.com/BaBd04yeoGvDkcGZcRNkTI?mode=ac_t" target="_blank" aria-label="WhatsApp"><img src="/-WhatsApp.png" alt="WhatsApp"></a>
-                    <a href="https://www.youtube.com/@efbornheim" target="_blank" aria-label="Youtube"><img src="/-youtube.png" alt="Youtube"></a>
-                    <a href="https://www.instagram.com/efbornheim/" target="_blank" aria-label="Twitter"><img src="/-instagram.png" alt="Instagram"></a>
+                    <a href="https://www.efbornheim.de/" target="_blank" aria-label="Webseite"><img src="/-webseite.png" alt="Webseite" loading="lazy" decoding="async"></a>
+                    <a href="https://chat.whatsapp.com/BaBd04yeoGvDkcGZcRNkTI?mode=ac_t" target="_blank" aria-label="WhatsApp"><img src="/-WhatsApp.png" alt="WhatsApp" loading="lazy" decoding="async"></a>
+                    <a href="https://www.youtube.com/@efbornheim" target="_blank" aria-label="Youtube"><img src="/-youtube.png" alt="Youtube" loading="lazy" decoding="async"></a>
+                    <a href="https://www.instagram.com/efbornheim/" target="_blank" aria-label="Twitter"><img src="/-instagram.png" alt="Instagram" loading="lazy" decoding="async"></a>
                 </div>
             </div>
         </div>
@@ -4669,19 +5330,393 @@ DATEINAME: src/templates/footer.php
     </div>
 </footer>
 
-<!-- Include the main JavaScript for sticky header (if it's not in another common JS file) -->
+<div id="checkoutModal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">×</span>
+        <h3>Bestellung abschliessen</h3>
+        <div id="checkout-message" class="alert" style="display:none;"></div>
+        <form id="checkoutForm">
+            <div class="form-group">
+                <label for="firstName">Vorname:</label>
+                <input type="text" id="firstName" name="firstName" required>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Nachname:</label>
+                <input type="text" id="lastName" name="lastName" required>
+            </div>
+            <div class="form-group">
+                <label for="email">E-Mail:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Telefon (optional):</label>
+                <input type="text" id="phone" name="phone">
+            </div>
+
+            <div class="form-group">
+                <label>Zahlungsmethode:</label>
+                <div class="payment-options-wrapper">
+                    <label class="radio-option prefer-payment" for="paymentBankTransfer">
+                        <input type="radio" id="paymentBankTransfer" name="paymentMethod" value="bank_transfer" required checked>
+                        Überweisung
+                    </label>
+                    <label class="radio-option discourage-payment" for="paymentCash">
+                        <input type="radio" id="paymentCash" name="paymentMethod" value="cash" required>
+                        Barzahlung bei Abholung
+                    </label>
+                </div>
+                <p class="payment-info-text">
+                    <strong>Überweisung wird bevorzugt!</strong> Wir empfehlen die Überweisung, um einen reibungslosen und schnellen Bestellablauf zu gewährleisten und unsere ehrenamtliche Arbeit zu vereinfachen.
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label for="pickupDate">Abholtermin:</label>
+                <select id="pickupDate" name="pickupDate" required>
+                    <option value="">Bitte wählen</option>
+                    <?php
+                    global $pdo;
+                    if (!isset($pdo)) {
+                        require_once ROOT_PATH . 'include/db.php';
+                        $pdo = getDbConnection();
+                    }
+                    $pickup_dates_for_modal = [];
+                    try {
+                        $stmt_dates_modal = $pdo->query("SELECT * FROM pickup_dates WHERE is_active = TRUE AND pickup_datetime >= NOW() ORDER BY pickup_datetime ASC");
+                        $pickup_dates_for_modal = $stmt_dates_modal->fetchAll();
+                    } catch (PDOException $e) {
+                        error_log("Datenbankfehler beim Laden der Abholtermine im Modal: " . $e->getMessage());
+                    }
+                    foreach ($pickup_dates_for_modal as $date): ?>
+                        <option value="<?php echo htmlspecialchars($date['pickup_date_id']); ?>">
+                            <?php echo (new DateTime($date['pickup_datetime']))->format('d.m.Y H:i') . ' Uhr'; ?> - <?php echo htmlspecialchars($date['location']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                    <?php if (empty($pickup_dates_for_modal)): ?>
+                        <option value="" disabled>Keine Abholtermine verfügbar</option>
+                    <?php endif; ?>
+                </select>
+            </div>
+
+            <button type="submit" id="checkout-submit-button">Bestellung abschicken</button>
+        </form>
+
+        <div id="checkout-loading-overlay" class="loading-overlay" style="display: none;">
+            <div class="spinner"></div>
+            <p>Bestellung wird verarbeitet...</p>
+        </div>
+
+    </div>
+</div>
+
 <script>
+    const formatEuroCurrencyJS = (amount) => {
+        const floatAmount = parseFloat(amount);
+        let formatted = floatAmount.toFixed(2).replace('.', ',');
+        if (formatted.endsWith(',00')) {
+            formatted = formatted.slice(0, -3);
+        }
+        return formatted + ' €';
+    };
+
     document.addEventListener('DOMContentLoaded', () => {
-        const header = document.querySelector('header');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 0) {
-                header.classList.add('header-scrolled');
-            } else {
-                header.classList.remove('header-scrolled');
+        const cartSidebar = document.querySelector('.cart-sidebar');
+        const cartItemsList = document.getElementById('cart-items');
+        const cartTotalSpan = document.getElementById('cart-total');
+        const checkoutButton = document.getElementById('open-checkout-modal');
+        const mobileCartItemCount = document.getElementById('mobile-cart-item-count');
+        const mobileCartTotalSummary = document.getElementById('mobile-cart-total-summary');
+        const cartToggleButton = document.getElementById('cart-toggle-mobile');
+
+        const checkoutModal = document.getElementById('checkoutModal');
+        const closeButton = checkoutModal.querySelector('.close-button');
+        const checkoutForm = checkoutModal.querySelector('#checkoutForm');
+        const checkoutMessageDiv = checkoutModal.querySelector('#checkout-message');
+        const pickupDateSelect = checkoutModal.querySelector('#pickupDate');
+        const checkoutLoadingOverlay = checkoutModal.querySelector('#checkout-loading-overlay');
+
+
+        // --- Event Listener für das Modal (global, da Modal jetzt im Footer ist) ---
+        closeButton.addEventListener('click', () => {
+            checkoutModal.style.display = 'none';
+            document.body.style.overflow = '';
+            checkoutLoadingOverlay.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === checkoutModal) {
+                checkoutModal.style.display = 'none';
+                document.body.style.overflow = '';
+                checkoutLoadingOverlay.style.display = 'none';
             }
         });
+
+        window.openCheckoutModal = () => {
+            if (!checkoutButton.disabled) {
+                if (window.innerWidth <= 768 && cartSidebar && cartSidebar.classList.contains('is-collapsed')) {
+                    cartSidebar.classList.remove('is-collapsed');
+                    cartSidebar.classList.add('is-expanded');
+                }
+                const currentCartItems = cartItemsList.querySelectorAll('.cart-item');
+                if (currentCartItems.length > 0) {
+                    checkoutModal.style.display = 'flex';
+                    checkoutMessageDiv.style.display = 'none';
+                    checkoutMessageDiv.className = 'alert';
+                    document.body.style.overflow = 'hidden';
+                    checkoutLoadingOverlay.style.display = 'none'; // Immer versteckt beim Öffnen
+                } else {
+                    // NEU: Zeige eine Fehlermeldung, wenn der Warenkorb (im Frontend) leer ist, obwohl der Button aktiv ist
+                    // Dies kann passieren, wenn z.B. alle Items gelöscht wurden, bevor der Checkout geklickt wurde.
+                    checkoutModal.style.display = 'flex';
+                    checkoutLoadingOverlay.style.display = 'none';
+                    checkoutMessageDiv.classList.add('error');
+                    checkoutMessageDiv.classList.remove('success');
+                    checkoutMessageDiv.textContent = 'Ihr Warenkorb ist leer. Bitte fügen Sie Produkte hinzu.';
+                    checkoutMessageDiv.style.display = 'block';
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+        };
+
+        if (checkoutButton) {
+            checkoutButton.addEventListener('click', window.openCheckoutModal);
+        }
+        const mobileCheckoutButton = document.querySelector('.cart-header-mobile + .cart-body-content .checkout-button');
+        if (mobileCheckoutButton) {
+            mobileCheckoutButton.addEventListener('click', window.openCheckoutModal);
+        }
+
+        checkoutForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            // NEU: Client-seitige Warenkorb-Prüfung VOR dem Abschicken des Formulars.
+            // Der Warenkorb auf dem Client ist ein guter Indikator. Wenn der Warenkorb-Display
+            // 0 Artikel anzeigt, dann gar nicht erst abschicken.
+            if (cartItemsList.querySelectorAll('.cart-item').length === 0) {
+                 checkoutLoadingOverlay.style.display = 'none'; // Loader ausblenden, falls er fälschlicherweise gestartet wurde
+                 checkoutMessageDiv.style.display = 'block';
+                 checkoutMessageDiv.classList.add('error');
+                 checkoutMessageDiv.classList.remove('success');
+                 checkoutMessageDiv.textContent = 'Ihr Warenkorb ist leer. Bitte fügen Sie Produkte hinzu.';
+                 return; // Absenden verhindern
+            }
+
+            checkoutLoadingOverlay.style.display = 'flex';
+            checkoutMessageDiv.style.display = 'none';
+
+
+            const formData = new FormData(checkoutForm);
+            const cartTotalSpanInShop = document.getElementById('cart-total');
+            formData.append('cart_total', parseFloat(cartTotalSpanInShop.textContent.replace(' €', '').replace(',', '.')));
+
+
+            try {
+                const response = await fetch('api/checkout_process.php', {
+                    method: 'POST',
+                    body: formData,
+                    // NEU: Hinzufügen von credential-Handling, um Session-Cookies zuverlässiger zu senden
+                    credentials: 'include' 
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    window.location.href = '/success';
+                } else {
+                    checkoutLoadingOverlay.style.display = 'none';
+                    checkoutMessageDiv.style.display = 'block';
+                    checkoutMessageDiv.classList.add('error');
+                    checkoutMessageDiv.classList.remove('success');
+                    checkoutMessageDiv.textContent = data.message;
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                checkoutLoadingOverlay.style.display = 'none';
+                checkoutMessageDiv.style.display = 'block';
+                checkoutMessageDiv.classList.add('error');
+                checkoutMessageDiv.classList.remove('success');
+                checkoutMessageDiv.textContent = 'Netzwerkfehler: Die Bestellung konnte nicht verarbeitet werden.';
+            }
+        });
+
+        window.updateCartDisplay = (cart) => {
+            cartItemsList.innerHTML = '';
+            let total = 0;
+            let itemCount = 0;
+
+            if (Object.keys(cart).length === 0) {
+                cartItemsList.innerHTML = '<li id="cart-empty-message">Ihr Warenkorb ist leer.</li>';
+                checkoutButton.disabled = true;
+                // NEU: Hier auch den Warenkorb-Button aus dem Modal ggf. deaktivieren
+                const checkoutSubmitButton = checkoutModal.querySelector('#checkout-submit-button');
+                if (checkoutSubmitButton) checkoutSubmitButton.disabled = true;
+            } else {
+                checkoutButton.disabled = false;
+                const checkoutSubmitButton = checkoutModal.querySelector('#checkout-submit-button');
+                if (checkoutSubmitButton) checkoutSubmitButton.disabled = false;
+
+                const existingEmptyMessage = document.getElementById('cart-empty-message');
+                if (existingEmptyMessage) {
+                    existingEmptyMessage.remove();
+                }
+
+                for (const productId in cart) {
+                    const item = cart[productId];
+                    total += parseFloat(item.price) * parseInt(item.quantity);
+                    itemCount += parseInt(item.quantity);
+
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('cart-item');
+                    listItem.dataset.productId = productId;
+                    listItem.innerHTML = `
+                        <img src="${item.image_url || '/_placeholder.png'}" alt="Bild von ${item.name}: ${item.description}" class="cart-item-image" loading="lazy" decoding="async">
+                        <div class="cart-item-info">
+                            <h4>${item.name}</h4>
+                            <p>${formatEuroCurrencyJS(parseFloat(item.price) * parseInt(item.quantity))}</p>
+                        </div>
+                        <div class="cart-item-controls">
+                            <input type="number" class="cart-quantity-input" value="${item.quantity}" min="1" max="${item.stock}" data-product-id="${productId}">
+                            <button class="remove-item-btn" data-product-id="${productId}">×</button>
+                        </div>
+                    `;
+                    cartItemsList.appendChild(listItem);
+                }
+            }
+            cartTotalSpan.textContent = formatEuroCurrencyJS(total);
+            if (mobileCartItemCount) mobileCartItemCount.textContent = itemCount;
+            if (mobileCartTotalSummary) mobileCartTotalSummary.textContent = formatEuroCurrencyJS(total);
+
+            if (itemCount === 0) {
+                checkoutButton.disabled = true;
+            } else {
+                checkoutButton.disabled = false;
+            }
+        };
+
+        window.sendCartUpdateRequest = async (action, productId, quantity = 0) => {
+            const formData = new FormData();
+            formData.append('action', action);
+            formData.append('product_id', productId);
+            if (quantity > 0) {
+                formData.append('quantity', quantity);
+            }
+
+            try {
+                const response = await fetch('api/cart_process.php', {
+                    method: 'POST',
+                    body: formData,
+                    // NEU: Hinzufügen von credential-Handling
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                if (data.success) {
+                    window.updateCartDisplay(data.cart);
+                } else {
+                    alert('Fehler: ' + (data.message || 'Etwas ist schief gelaufen.'));
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                alert('Netzwerkfehler beim Aktualisieren des Warenkorbs.');
+            }
+        };
+
+
+        const pageContentWrapper = document.getElementById('page-content-wrapper');
+
+        if (pageContentWrapper) {
+            pageContentWrapper.addEventListener('click', (event) => {
+                if (event.target.classList.contains('add-to-cart-btn')) {
+                    const button = event.target;
+                    const productId = button.dataset.productId;
+                    const quantityInput = button.closest('.product-item').querySelector('.quantity-input');
+                    const quantity = parseInt(quantityInput.value);
+                    window.sendCartUpdateRequest('add', productId, quantity);
+                }
+
+                if (event.target.classList.contains('remove-item-btn')) {
+                    const productId = event.target.dataset.productId;
+                    window.sendCartUpdateRequest('remove', productId);
+                }
+            });
+
+            pageContentWrapper.addEventListener('change', (event) => {
+                if (event.target.classList.contains('quantity-input') && event.target.closest('.product-item')) {
+                    let value = parseInt(event.target.value);
+                    const max = parseInt(event.target.max);
+                    const min = parseInt(event.target.min);
+
+                    if (isNaN(value) || value < min) value = min;
+                    if (value > max) value = max;
+                    event.target.value = value;
+                }
+
+                if (event.target.classList.contains('cart-quantity-input')) {
+                    const productId = event.target.dataset.productId;
+                    let quantity = parseInt(event.target.value);
+                    const max = parseInt(event.target.max);
+                    const min = parseInt(event.target.min);
+
+                    if (isNaN(quantity) || quantity < min) quantity = min;
+                    if (quantity > max) quantity = max;
+                    event.target.value = quantity;
+                    window.sendCartUpdateRequest('update', productId, quantity);
+                }
+            });
+        }
+
+
+        const initialCart = <?php echo json_encode($_SESSION['cart']); ?>;
+        window.updateCartDisplay(initialCart);
+
+        const isMobile = () => window.innerWidth <= 768;
+
+        const applyMobileCartState = () => {
+            const desktopHeader = cartSidebar.querySelector('.cart-header-desktop');
+            const mobileHeader = cartSidebar.querySelector('.cart-header-mobile');
+
+            const rootStyles = getComputedStyle(document.documentElement);
+            const mobileCollapsedHeight = parseFloat(rootStyles.getPropertyValue('--header-height-mobile-collapsed'));
+
+            if (isMobile()) {
+                if (desktopHeader) desktopHeader.style.display = 'none';
+                if (mobileHeader) mobileHeader.style.display = 'flex';
+
+                if (!cartSidebar.classList.contains('is-expanded')) {
+                    cartSidebar.classList.add('is-collapsed');
+                    cartSidebar.style.transform = `translateY(calc(100% - ${mobileCollapsedHeight}px))`;
+                }
+            } else {
+                if (desktopHeader) desktopHeader.style.display = 'block';
+                if (mobileHeader) mobileHeader.style.display = 'none';
+
+                cartSidebar.classList.remove('is-collapsed');
+                cartSidebar.classList.remove('is-expanded');
+                cartSidebar.style.transform = '';
+            }
+        };
+
+        if (cartToggleButton) {
+            cartToggleButton.addEventListener('click', () => {
+                const rootStyles = getComputedStyle(document.documentElement);
+                const mobileCollapsedHeight = parseFloat(rootStyles.getPropertyValue('--header-height-mobile-collapsed'));
+
+                if (cartSidebar.classList.contains('is-collapsed')) {
+                    cartSidebar.classList.remove('is-collapsed');
+                    cartSidebar.classList.add('is-expanded');
+                    cartSidebar.style.transform = 'translateY(0)';
+                } else {
+                    cartSidebar.classList.remove('is-expanded');
+                    cartSidebar.classList.add('is-collapsed');
+                    cartSidebar.style.transform = `translateY(calc(100% - ${mobileCollapsedHeight}px))`;
+                }
+            });
+        }
+
+        applyMobileCartState();
+        window.addEventListener('resize', applyMobileCartState);
     });
 </script>
+</body>
+</html>
 
 ==================================================
 DATEINAME: src/templates/header.php
@@ -4713,6 +5748,9 @@ DATEINAME: src/templates/header.php
             </nav>
         </div>
     </header>
+
+    <!-- NEU: Dieser Wrapper umschließt den gesamten Seiteninhalt zwischen Header und Footer -->
+    <div id="page-content-wrapper">
 
 ==================================================
 DATEINAME: src/index.php
@@ -4776,11 +5814,10 @@ if ($page === 'api' && isset($segments[1])) {
     }
 }
 
-// --- ADMIN ROUTING PHASE (NEU) ---
+// --- ADMIN ROUTING PHASE ---
 // Wenn das erste Segment 'admin' ist, laden wir den Admin-Einstiegspunkt.
 if ($page === 'admin') {
-    // Admin-Modul wird oft mit einem eigenen Layout oder speziellen <main> Tags behandelt
-    // Für dieses Beispiel ist es einfacher, es direkt zu laden
+    // Admin-Modul wird direkt geladen und hat seinen eigenen Container-Stil
     require_once ROOT_PATH . 'modules/admin.php';
     exit(); // Wichtig: Beende das Skript nach dem Ausführen der Admin-Seite
 }
@@ -4799,33 +5836,32 @@ require_once ROOT_PATH . 'templates/header.php';
 // Modul laden oder 404-Fehler anzeigen
 if (file_exists($module_path)) {
     if ($page === 'home') {
-        // GEÄNDERT: Für die Homepage wird ein neuer Wrapper um Hero-Sektion und Main-Inhalt gelegt.
-        echo '<div class="content-area-wrapper">'; // NEUER CONTAINER FÜR STICKY FOOTER LOGIK
-        require_once $module_path; // Lädt hero-section und main.site-content-wrapper
-        echo '</div>'; // SCHLIESST NEUEN CONTAINER
-    } else {
-        // Für alle anderen Seiten, wrap in <main class="site-content-wrapper">
-        // Diese Klasse sorgt für max-width und padding
-        echo '<main class="site-content-wrapper">';
+        // Die Homepage hat eine spezielle Hero-Sektion und der Inhalt
+        // wird direkt in #page-content-wrapper gerendert.
         require_once $module_path;
-        echo '</main>';
+    } else {
+        // Für alle anderen Seiten: Inhalt in .site-content-wrapper wrappen.
+        echo '<div class="site-content-wrapper">';
+        // Wenn es die Success-Seite ist, rufen wir sie auf
+        // Falls wir allgemeine Nachrichten in success.php anzeigen wollen, könnten wir sie hier abrufen.
+        if ($page === 'success') {
+             // success.php kümmert sich um seine eigene Meldungsanzeige über Session oder direktes Output.
+        }
+        require_once $module_path;
+        echo '</div>';
     }
 } else {
     // Wenn das Modul nicht existiert, 404-Status senden
     header("HTTP/1.0 404 Not Found");
-    echo '<main class="site-content-wrapper">'; // 404-Seite auch in <main> für konsistentes Layout
+    echo '<div class="site-content-wrapper">';
     require_once ROOT_PATH . 'modules/404.php';
-    echo '</main>';
+    echo '</div>';
 }
 
 // Footer der Seite einbinden
 require_once ROOT_PATH . 'templates/footer.php';
 
 ?>
-
-<link rel="icon" type="image/x-icon" href="/_favicon.ico">
-<link rel="icon" type="image/png" href="/-logo.png">
-<link rel="apple-touch-icon" href="/-apple-touch-icon.png">
 
 ==================================================
 DATEINAME: src/.htaccess

@@ -49,7 +49,7 @@ if (!function_exists('formatEuroCurrency')) {
         <div class="home-section-content">
             <h2>Unsere Mission: Guter Geschmack, Gutes tun</h2>
             <p>Bei Früchte aus Portugal glauben wir an Authentizität und Qualität. Wir bringen dir handverlesene, sonnengereifte Früchte direkt von kleinen Bauernhöfen in Portugal. Ohne Umwege, ohne unnötige Zusätze – einfach purer Genuss.</p>
-            <p>Doch wir sind mehr als nur ein ein gutes Geschäft. Unser Projekt verfolgt ein höheres Ziel: <strong>100% des Gewinnes aus jedem Verkauf fließen direkt in die Missionsarbeit des BSB.</strong> Mit jedem Bissen einer saftigen Orange oder einer süßen Kiwi unterstützt du wichtige Projekte, die Menschen in Not helfen und Hoffnung schenken. Dein Einkauf hat eine doppelte Wirkung!</p>
+            <p>Doch wir sind mehr als nur ein ein gutes Geschäft. Unser Projekt verfolgt ein höheres Ziel: <strong>100% des Gewinnes aus jedem Verkauf fließen direkt in die Missionsarbeit.</strong> Mit jedem Bissen einer saftigen Orange oder einer süßen Kiwi unterstützt du wichtige Projekte, die Menschen in Not helfen und Hoffnung schenken. Dein Einkauf hat eine doppelte Wirkung!</p>
             <p>Jede Frucht erzählt eine Geschichte von Sonne, Leidenschaft und traditionellem Anbau, und trägt gleichzeitig dazu bei, die Welt ein kleines Stück besser zu machen. Entdecke den Unterschied, den echte Qualität und ein gutes Herz machen.</p>
         </div>
     </section>

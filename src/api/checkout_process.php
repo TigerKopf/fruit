@@ -102,7 +102,10 @@ try {
     $orderItems = [];
     $productsToUpdateStock = [];
 
-    foreach ($_SESSION['cart'] as $productId => $item) {
+    // Kopie des Warenkorbs für die Success-Seite, da $_SESSION['cart'] gleich geleert wird
+    $cart_snapshot_for_success_page = $_SESSION['cart'];
+
+    foreach ($cart_snapshot_for_success_page as $productId => $item) {
         $stmtProduct = $pdo->prepare("SELECT product_id, name, description, price, stock_quantity FROM products WHERE product_id = :product_id AND is_active = TRUE");
         $stmtProduct->execute([':product_id' => $productId]);
         $dbProduct = $stmtProduct->fetch();
@@ -186,14 +189,41 @@ try {
     // Transaktion committen
     $pdo->commit();
 
-    // Warenkorb leeren
+    // WARNUNG: $_SESSION['cart'] MUSS nach dem Committen der DB und VOR dem setzen der Success-Seite Daten geleert werden!
+    // Andernfalls würde die Success-Seite den Warenkorb wieder befüllen, wenn die Session vor dem Redirect leert.
+    // Aber für unser Frontend wird der Warenkorb ja per reload gelehrt. Wichtig ist, DASS er geleert wird.
     $_SESSION['cart'] = [];
+
+
+    // --- Daten für die Success-Seite in der Session speichern (NEU) ---
+    $_SESSION['last_order_id'] = $orderId;
+    $_SESSION['last_order_details'] = [
+        'order_id' => $orderId,
+        'user_id' => $userId,
+        'total_amount' => $calculatedTotalAmount,
+        'order_date' => date('Y-m-d H:i:s'), // Aktuelles Datum und Uhrzeit
+        'payment_method' => $paymentMethod, // Muss aus dem Formular kommen
+        'items' => $orderItems, // Bereits definierte Items
+    ];
+    $_SESSION['last_pickup_info'] = $pickupDateInfo; // Aus der Datenbank abgerufen
+    $_SESSION['last_payment_info'] = [
+        'payment_method' => $paymentMethod,
+        'transaction_id' => $transactionId,
+        'amount' => $calculatedTotalAmount, // Hier die Gesamtsumme der Bestellung verwenden
+    ];
+    $_SESSION['customer_info'] = [
+        'first_name' => $firstName,
+        'last_name' => $lastName,
+        'email' => $email,
+        'phone' => $phone
+    ];
+    // --- Ende der Success-Seiten-Daten (NEU) ---
 
     // 7. Bestätigungs-E-Mail senden
     $emailSubject = "Ihre Bestellung Nr. {$orderId} bei " . MAIL_FROM_NAME;
     $emailBody = "
         <p>Hallo {$firstName} {$lastName},</p>
-        <p>Vielen Dank für Ihre Bestellung! Ihre Bestellung mit der Nummer <strong>{$orderId}</strong> wurde erfolgreich aufgenommen.</p>
+        <p>Vielen Dank für Ihre Bestellung! Ihre Bestellung mit der Nummer <strong>" . htmlspecialchars($orderId) . "</strong> wurde erfolgreich aufgenommen.</p>
         <p><strong>Bestelldetails:</strong></p>
         <table style='width: 100%; border-collapse: collapse; margin-bottom: 20px;'>
             <thead>
@@ -226,7 +256,7 @@ try {
         <p><strong>Zahlungsmethode:</strong> ";
     if ($paymentMethod === 'bank_transfer') {
         $emailBody .= "Überweisung. Bitte überweisen Sie den Betrag von <strong>" . formatEuroCurrency($calculatedTotalAmount) . "</strong> auf unser Konto. <br>
-                       Verwendungszweck: <strong>{$transactionId}</strong>.<br>
+                       Verwendungszweck: <strong>" . htmlspecialchars($transactionId) . "</strong>.<br>
                        Kontoinhaber: [Ihr Name/Firmenname]<br>
                        IBAN: [Ihre IBAN]<br>
                        BIC: [Ihre BIC]";
@@ -238,21 +268,21 @@ try {
         <p>Wir freuen uns auf Sie!</p>
         <p>Mit freundlichen Grüssen,<br>Ihr Team von " . MAIL_FROM_NAME . "</p>";
 
-    $emailSent = sendAppEmail($email, $emailSubject, $emailBody, $orderId); // orderId an E-Mail-Log weitergeben
+    $emailSent = sendAppEmail($email, $emailSubject, $emailBody, $orderId);
 
+    // $_SESSION['checkout_success_message'] = "Ihre Bestellung Nr. {$orderId} wurde erfolgreich aufgegeben. Eine Bestätigungs-E-Mail wurde an Ihre Adresse gesendet."; // Diese Meldung ist redundant wenn der Success-Inhalt alle Infos hat
+    $_SESSION['checkout_email_status_message'] = "";
     if ($emailSent !== true) {
-        // E-Mail-Fehler loggen, aber die Bestellung als erfolgreich markieren
         error_log("Fehler beim Senden der Bestätigungs-E-Mail für Bestellung {$orderId} an {$email}: " . $emailSent);
-        $response['message'] = "Ihre Bestellung wurde erfolgreich aufgegeben, aber die Bestätigungs-E-Mail konnte nicht gesendet werden. Bitte überprüfen Sie Ihren Spam-Ordner oder kontaktieren Sie uns.";
-        $response['success'] = true; // Bestellung war erfolgreich
-    } else {
-        $response['success'] = true;
-        $response['message'] = "Ihre Bestellung wurde erfolgreich aufgegeben. Eine Bestätigungs-E-Mail wurde an Ihre Adresse gesendet.";
+        $_SESSION['checkout_email_status_message'] = "ACHTUNG: Die Bestätigungs-E-Mail konnte jedoch nicht gesendet werden. Bitte überprüfen Sie Ihren Spam-Ordner oder kontaktieren Sie uns unter info@früch.de.";
     }
+
+
+    $response['success'] = true;
 
 } catch (Exception $e) {
     if ($pdo->inTransaction()) {
-        $pdo->rollBack(); // Bei Fehler Transaktion rückgängig machen
+        $pdo->rollBack();
     }
     error_log("Bestellfehler: " . $e->getMessage());
     $response['message'] = "Fehler bei der Bestellabwicklung: " . $e->getMessage();

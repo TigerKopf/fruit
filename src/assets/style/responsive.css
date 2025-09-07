@@ -118,15 +118,18 @@
 
 @media (max-width: 768px) { /* Mobile Landscape & Portrait */
     :root {
-        --header-height: 100px;
-        --header-height-mobile-collapsed: 60px;
+        --header-height: auto; /* NEU: Header-Höhe ist jetzt flexibel, da er zwei Zeilen hat */
+        --header-height-mobile-collapsed: 60px; /* Bleibt bestehen für Warenkorb */
     }
     header {
-        height: auto;
-        padding: var(--spacing-sm) var(--spacing-md);
+        height: auto; /* Angepasst an neuen Inhalt */
+        padding: var(--spacing-sm) var(--spacing-md); /* Mehr vertikales Padding für den Content */
         box-shadow: 0 2px 10px var(--color-shadow-medium);
+        display: block; /* NEU: Damit header-wrapper innerhalb fluid ist */
+        background-color: var(--color-background-white); /* NEU: Hintergrundfarbe des Headers auf Mobile, da der Nav-Bar nun fester Bestandteil ist und fixiert */
     }
     header.header-scrolled {
+        background-color: var(--color-background-white); /* Hält die Hintergrundfarbe beim Scrollen */
         box-shadow: 0 2px 10px var(--color-shadow-medium);
     }
 
@@ -135,36 +138,46 @@
         height: auto;
         padding: var(--spacing-sm);
         flex-direction: column;
-        align-items: flex-start;
-        transform: translateX(0); /* Sicherstellen, dass die Verschiebung auf Mobile entfernt wird */
+        align-items: flex-start; /* Links ausrichten */
+        transform: translateX(0);
+        /* Keine Max-Breite mehr hier, der Parent macht das jetzt */
+        border: none; /* Keine Border auf Mobile, da der Header die Border sein wird */
+        box-shadow: none; /* Kein extra Schatten hier */
+        border-radius: 0; /* Keine Rundung */
+        background-color: transparent; /* Transparent, der Header gibt die Farbe */
     }
     .google-header-wrapper {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: stretch;
         width: 100%;
         transform: translateX(0);
     }
     .logo {
         margin-bottom: var(--spacing-sm);
         margin-right: 0;
+        text-align: center; /* NEU: Logo zentrieren auf Mobile */
+        width: 100%; /* NEU */
     }
     .nav-options {
         gap: var(--spacing-md);
         width: 100%;
-        justify-content: center;
-        margin-bottom: var(--spacing-sm);
+        justify-content: space-around; /* Links gleichmäßig verteilen */
+        margin-bottom: 0; /* Keine extra margin-bottom, da der Button folgt */
     }
     .cart-button {
         width: 100%;
         text-align: center;
         margin-top: var(--spacing-sm);
         justify-content: center;
+        font-size: 1em; /* Größe auf Mobile anpassen */
+        padding: var(--spacing-xs) var(--spacing-sm);
     }
     .site-content-wrapper {
         flex-direction: column;
-        /* GEÄNDERT: Abstand oben angepasst */
-        margin-top: var(--spacing-md);
-        padding: 0;
+        /* margin-top angepasst: Header-Höhe wird nicht mehr addiert,
+           da der Warenkorb fixed ist und der Main-Inhalt unter dem fixierten Header liegt */
+        margin-top: var(--spacing-lg); /* Einfacher Abstand nach dem Header-Fixed-Bereich */
+        padding: 0; /* Kein globales Padding, Sektionen definieren ihres */
         transform: translateX(0);
     }
     main {
@@ -172,43 +185,57 @@
         margin-bottom: var(--spacing-md);
         border-radius: 0;
         box-shadow: none;
-        padding: var(--spacing-md);
+        padding: var(--spacing-md); /* Padding behalten */
     }
 
     /* Mobiler Warenkorb unten fixiert und zusammenklappbar - CONTAINER SELBST IST WEISS */
     .cart-sidebar {
-        position: fixed;
+        position: fixed; /* Fixiert am Viewport */
         bottom: 0;
         left: 0;
         right: 0;
         width: 100%;
         max-height: calc(var(--cart-max-height-ratio) * 100vh);
-        top: auto;
-        border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
-        box-shadow: 0 -4px 15px var(--color-shadow-medium);
-        transform: translateY(calc(100% - var(--header-height-mobile-collapsed)));
+        top: auto; /* Wichtig, damit es unten ist */
+        border-radius: var(--border-radius-md) var(--border-radius-md) 0 0; /* Nur obere Ecken gerundet */
+        box-shadow: 0 -4px 15px var(--color-shadow-medium); /* Schatten nach oben */
+        transform: translateY(calc(100% - var(--header-height-mobile-collapsed))); /* Zusammengeklappt, nur Header sichtbar */
         transition: transform 0.3s ease-in-out;
         z-index: 100;
         display: flex;
         flex-direction: column;
-        padding: 0;
-        background-color: var(--color-background-white);
+        padding: 0; /* Padding im Sidebar-Wrapper entfernen */
+        background-color: var(--color-background-white); /* Weißer Hintergrund des Sidebar-Wrappers */
         border: none;
-        gap: 0;
+        gap: 0; /* Abstand zwischen inneren Elementen, falls zuvor definiert */
     }
-
+    /* Inhalte im Mobile Warenkorb, wenn ausgeklappt */
     .cart-sidebar.is-expanded {
-        transform: translateY(0);
+        transform: translateY(0); /* Komplett sichtbar */
     }
+    /* Wenn zusammengeklappt, verschwinden die Details */
     .cart-sidebar.is-collapsed {
         overflow-y: hidden;
     }
 
+    /* Die Desktop-Version des Warenkorb-Headers soll auf Mobile versteckt sein */
     .cart-header-desktop {
         display: none;
     }
+    /* Die mobile Version des Warenkorb-Headers soll auf Mobile sichtbar sein */
     .cart-header-mobile {
-        display: flex;
+        display: flex; /* Muss immer sichtbar sein */
+        justify-content: space-between;
+        align-items: center;
+        background-color: var(--color-primary); /* Farbe für Header der mobilen Ansicht */
+        color: var(--color-background-white);
+        padding: var(--spacing-sm) var(--spacing-md);
+        border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1.1em;
+        position: relative;
+        z-index: 101; /* Sicherstellen, dass es über dem Inhalt und Overlay liegt */
     }
 
     .cart-mobile-summary {
@@ -216,22 +243,35 @@
         text-align: left;
     }
 
+    .cart-toggle-button {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.2em;
+        cursor: pointer;
+        padding: 0 var(--spacing-xs);
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-xs);
+        margin-left: var(--spacing-sm);
+    }
     .cart-body-content {
         max-height: calc(var(--cart-max-height-ratio) * 100vh - var(--header-height-mobile-collapsed));
-        overflow-y: hidden;
+        overflow-y: hidden; /* Muss immer auf hidden sein, scrollt nur im wrapper */
         flex-grow: 1;
         display: flex;
         flex-direction: column;
-        padding: var(--spacing-md);
-        background-color: transparent;
+        padding: var(--spacing-md); /* Inneres Padding beibehalten */
+        background-color: transparent; /* Innerer Bereich selbst transparent */
         border: none;
         border-radius: 0;
         box-shadow: none;
     }
     .cart-sidebar.is-collapsed .cart-body-content {
-        display: none;
+        display: none; /* Inhalt verstecken, wenn zusammengeklappt */
     }
-
+    /* NEU: Wichtig, damit der Scrollable Wrapper richtig funktioniert */
     .cart-items-scrollable-wrapper {
         flex-grow: 1;
         overflow-y: auto;
@@ -251,7 +291,7 @@
 
     /* Allgemeine Anpassungen für Mobile Admin-Panel */
     .admin-container {
-        margin-top: calc(var(--header-height) + var(--spacing-md));
+        margin-top: calc(var(--header-height) + var(--spacing-md)); /* Header ist dynamisch hoch, muss berechnet werden */
         padding: 0 var(--spacing-xs);
     }
     .admin-sidebar {
@@ -296,14 +336,12 @@
     :root {
         --font-size-base: 15px;
     }
-    .cart-header-mobile {
-        font-size: 1em;
-    }
-    .cart-mobile-summary {
-        font-size: 0.9em;
-    }
-    .cart-toggle-button {
-        font-size: 1em;
+    /* .google-search-like-nav sollte flex-direction column bleiben */
+    .nav-options {
+        flex-direction: column; /* Vertikal stapeln für bessere Lesbarkeit auf sehr kleinen Screens */
+        align-items: center; /* Zentrieren */
+        padding-top: var(--spacing-xs);
+        gap: var(--spacing-xs);
     }
     .site-content-wrapper,
     .admin-container {

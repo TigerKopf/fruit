@@ -14,6 +14,7 @@ header {
     z-index: 1000;
     transition: box-shadow 0.3s ease, background-color 0.3s ease; /* Übergang für Hintergrundfarbe hinzugefügt */
     box-sizing: border-box;
+    margin-top: 10px;
 }
 
 header.header-scrolled {

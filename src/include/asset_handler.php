@@ -3,15 +3,25 @@
 
 /**
  * Behandelt Anfragen für statische Assets, die mit einem Unterstrich (_), Bindestrich (-) oder Punkt (.) beginnen.
- * Anfragen mit '_' werden aus dem 'assets/'-Ordner bedient.
- * Anfragen mit '-' werden aus dem 'assets/img/'-Ordner bedient.
- * Anfragen mit '.' werden aus dem 'assets/style/'-Ordner bedient.
+ * Diese Datei darf KEINE weiteren PHP-Dateien einbinden, da sie sehr früh im Request-Zyklus geladen wird.
  *
  * @param string $page_name Der bereinigte Seitenname aus der URL (das erste Segment nach dem Root).
  * @return void
  */
 function handleAssetRequest(string $page_name): void
 {
+    // ROOT_PATH muss bereits definiert sein (z.B. in config/config.php)
+    // Wenn config/config.php nicht geladen ist, würde ROOT_PATH hier einen Fehler verursachen.
+    // Daher muss config/config.php VOR asset_handler.php geladen werden.
+    if (!defined('ROOT_PATH')) {
+        // Dies sollte nicht passieren, wenn index.php korrekt ist.
+        // Aber als Fallback oder Debug-Hinweis.
+        error_log("ROOT_PATH not defined before asset_handler.php. Check index.php load order.");
+        http_response_code(500);
+        echo "Server configuration error.";
+        exit();
+    }
+
     $assets_folder_base_path = ROOT_PATH . 'assets/';
     $file_name_without_prefix = '';
     $target_folder_path = '';
@@ -19,15 +29,21 @@ function handleAssetRequest(string $page_name): void
     // 1. Überprüfen, ob eine Asset-Anfrage vorliegt (beginnt mit '_', '-' oder '.')
     if (str_starts_with($page_name, '_')) {
         $file_name_without_prefix = substr($page_name, 1);
-        $target_folder_path = $assets_folder_base_path; // Für '_' direkt im assets-Root
+        // Wenn es sich um eine JS-Datei handelt, den Pfad anpassen
+        if (str_ends_with($file_name_without_prefix, '.js')) {
+            $target_folder_path = $assets_folder_base_path . 'js/';
+        } else {
+            $target_folder_path = $assets_folder_base_path; // Für '_' direkt im assets-Root
+        }
     } elseif (str_starts_with($page_name, '-')) {
         $file_name_without_prefix = substr($page_name, 1);
         $target_folder_path = $assets_folder_base_path . 'img/'; // Für '-' im assets/img-Unterordner
-    } elseif (str_starts_with($page_name, '.')) { // NEU: Für Punkt-Präfix
+    } elseif (str_starts_with($page_name, '.')) { // Für Punkt-Präfix
         $file_name_without_prefix = substr($page_name, 1);
         $target_folder_path = $assets_folder_base_path . 'style/'; // Für '.' im assets/style-Unterordner
     } else {
         // Keine Asset-Anfrage, die von dieser Funktion behandelt wird
+        // Das Skript wird in index.php fortgesetzt.
         return;
     }
 
@@ -66,14 +82,13 @@ function handleAssetRequest(string $page_name): void
         case 'svg':
             header('Content-Type: image/svg+xml');
             break;
-        case 'webp': // Häufig für optimierte Bilder
+        case 'webp':
             header('Content-Type: image/webp');
             break;
-        case 'avif': // NEU: Modernes AVIF-Format
+        case 'avif':
             header('Content-Type: image/avif');
             break;
         default:
-            // Standardmäßig als Binärdaten senden oder Fehlerbehandlung
             header('Content-Type: application/octet-stream');
             break;
     }
@@ -82,3 +97,4 @@ function handleAssetRequest(string $page_name): void
     readfile($file_path);
     exit(); // Wichtig: Beende das Skript nach dem Senden des Assets
 }
+?>

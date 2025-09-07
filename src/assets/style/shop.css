@@ -22,7 +22,7 @@
     background: var(--color-background-white);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius-md);
-    padding: var(--spacing-sm); /* GEÄNDERT: padding reduziert (von md auf sm) */
+    padding: var(--spacing-sm);
     text-align: center;
     box-shadow: 0 4px 12px var(--color-shadow-light);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -38,13 +38,12 @@
 
 .product-item img {
     max-width: 100%;
-    height: 110px; /* GEÄNDERT: Höhe des Bildes weiter reduziert */
+    height: 110px;
     object-fit: contain;
     border-radius: var(--border-radius-sm);
     margin-bottom: var(--spacing-md);
     background-color: #FDFEFE;
     padding: var(--spacing-sm);
-    /* NEU: Bilder ohne harten Rahmen, mit Verlauf */
     mask-image: radial-gradient(circle at center, black 70%, transparent 100%);
     -webkit-mask-image: radial-gradient(circle at center, black 70%, transparent 100%);
 }
@@ -58,8 +57,7 @@
 }
 
 .product-quantity-price-line {
-    /* Grundlegendes Styling für die Zeile */
-    margin-bottom: var(--spacing-sm); /* GEÄNDERT: margin-bottom reduziert (von md auf sm) */
+    margin-bottom: var(--spacing-sm);
     line-height: 1.4;
     text-align: center;
     color: var(--color-text-medium);
@@ -81,7 +79,7 @@
     justify-content: center;
     align-items: center;
     gap: var(--spacing-sm);
-    margin-top: var(--spacing-sm); /* GEÄNDERT: margin-top reduziert (von md auf sm) */
+    margin-top: var(--spacing-sm);
 }
 
 .product-controls input[type="number"] {
@@ -104,7 +102,7 @@
 .product-controls .add-to-cart-btn {
     background-color: var(--color-primary);
     color: var(--color-background-white);
-    border: none;
+    border: none; /* Standardmäßig keine Border */
     padding: var(--spacing-sm) var(--spacing-md);
     border-radius: var(--border-radius-lg);
     cursor: pointer;
@@ -120,4 +118,23 @@
     background-color: #2F5AA9;
     box-shadow: 0 4px 10px var(--color-shadow-light);
     transform: translateY(-2px);
+}
+
+/* NEU: Stile für den deaktivierten "Ausverkauft"-Button */
+.product-controls .add-to-cart-btn[disabled] {
+    background-color: var(--color-background-white); /* Weißer Hintergrund */
+    color: var(--color-text-light); /* Grauer Text */
+    border: 1px solid var(--color-border); /* Graue Border */
+    box-shadow: none; /* Kein Schatten */
+    cursor: not-allowed; /* Zeigt an, dass nicht geklickt werden kann */
+    transform: translateY(0); /* Keine Animation */
+    pointer-events: none; /* Verhindert Interaktion auf dem Button */
+}
+
+/* Hover-Effekt für deaktivierten Button, um sicherzustellen, dass er nicht reagiert */
+.product-controls .add-to-cart-btn[disabled]:hover {
+    background-color: var(--color-background-white); /* Bleibt weiß */
+    color: var(--color-text-light); /* Bleibt grau */
+    box-shadow: none; /* Bleibt ohne Schatten */
+    transform: translateY(0); /* Keine Animation */
 }

@@ -5,7 +5,11 @@
 :root {
     /* Farben */
     --color-primary: #3468C0; /* Ein modernes, etwas gedämpfteres Blau */
+    --color-primary-dark: #2F5AA9; /* Dunklerer Ton für Text */
+    --color-primary-lightest: #EDF3FB; /* Sehr helles Blau */
     --color-secondary: #00BF63; /* Ein frischeres Grün für Aktionen */
+    --color-secondary-light: #E0FFEE; /* Leichtes Grün für Hintergründe */
+    --color-secondary-dark: #00A656; /* Dunkleres Grün für Text */
     --color-accent: #FF8B13; /* Ein wärmerer, weniger aggressiver Akzent für Preise/Wichtiges */
     --color-background-light: #F8FAFC; /* Sehr helles Grau, moderner als #f0f2f5 */
     --color-background-white: #FFFFFF;
@@ -34,12 +38,12 @@
     --border-radius-lg: 24px;
 
     /* Header Höhe */
-    --header-height: 70px; /* GEÄNDERT: Leicht angepasst für kompaktere Darstellung */
-    --header-height-mobile-collapsed: 60px; /* Höhe des mobilen Warenkorb-Headers, wenn zusammengeklappt */
+    --header-height: 70px;
+    --header-height-mobile-collapsed: 60px; /* NEU: Höhe des mobilen Warenkorb-Headers, wenn zusammengeklappt */
 
     /* Warenkorb Höhe (2/3 der Viewport-Höhe) */
     --cart-max-height-ratio: 0.66;
 
     /* NEU: Maximale Breite für Hauptinhalts-Wrapper und Header/Footer */
-    --content-max-width: 1300px; /* GEÄNDERT: Erhöht für mehr Breite */
+    --content-max-width: 1300px;
 }
