@@ -21,7 +21,8 @@
     box-sizing: border-box; /* NEU: Stellt sicher, dass max-width padding beinhaltet */
     color: var(--color-text-dark);
     font-family: var(--font-family-base);
-    transform: translateX(-20px); /* KONSISTENT: Verschiebung um 20px nach links */
+    /* GEÄNDERT: Verschiebung um 20px nach links entfernt */
+    /* transform: translateX(-20px); */
 }
 
 /* Inhaltliche Gliederung des Footers mit CSS Grid für Symmetrie */

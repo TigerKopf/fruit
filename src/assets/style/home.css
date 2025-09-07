@@ -53,24 +53,21 @@
 
 /* Hero Sektion */
 .hero-section {
-    /* WICHTIGE ANPASSUNG: Bildpfad von .jpg zu .png und underscore zu hyphen */
     background: url('/-hero-banner.jpeg') no-repeat center bottom; /* Hintergrundbild, Fokus auf den unteren Bereich */
-    background-size: 120%; /* Leicht reingezoomt */
+    background-size: 130%; /* Leicht reingezoomt */
     background-attachment: fixed; /* Parallax-Effekt: Bild bleibt beim Scrollen "oben" */
     position: relative; /* Wichtig für Z-Index und ::before */
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 100vh; /* Füllt den gesamten Bildschirm aus */
+    min-height: 100vh; /* GEÄNDERT: explizit 100vh für volle Viewport-Höhe */
     /* Padding für den Inhalt, damit er nicht unter dem Header verschwindet */
-    padding-top: calc(var(--header-height) + var(--spacing-xl));
+    padding-top: 0; /* GEÄNDERT: padding-top hier auf 0 setzen, da es der erste Inhalt ist */
     padding-bottom: var(--spacing-xl);
     margin-bottom: 0;
     overflow: hidden; /* Verhindert sichtbaren Overflow des gezoomten Bildes */
-    
-    /* NEU: Um den "Rand um den Banner" zu entfernen und volle Viewport-Breite zu erzwingen */
-    width: 100vw; /* Erzwingt volle Viewport-Breite, auch wenn ein Eltern-Element dies einschränkt */
-    margin-left: calc(50% - 50vw); /* Zentriert das Element, wenn es breiter als sein Eltern-Element ist */
+    width: auto; /* Nimmt die gesamte verfügbare Breite des Bodies ein */
+    flex-shrink: 0; /* NEU: Verhindert, dass der Hero-Bereich schrumpft */
 
     /* NEU: Übergang zum Inhalt darunter (Linear-Gradient Maske) */
     mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
@@ -302,7 +299,7 @@
     background-color: #FDFEFE;
     padding: var(--spacing-xs);
     mask-image: radial-gradient(circle at center, black 70%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%); /* Changed to linear for teaser as well */
+    -webkit-mask-image: radial-gradient(circle at center, black 70%, transparent 100%); /* Radial for teaser also */
 }
 
 
@@ -377,25 +374,15 @@
         background-position: center bottom;
         min-height: 90vh; /* Etwas weniger als 100vh auf kleineren Desktops/Tablets */
     }
-    .hero-content h1 {
-        font-size: 3.5em;
-    }
-    .hero-content p {
-        font-size: 1.4em;
-    }
-    .hero-content .mission-highlight {
-        font-size: 1.4em;
-    }
-    .features-grid, .testimonials-grid, .product-teaser-grid {
-        grid-template-columns: 1fr; /* Eine Spalte auf Tablets */
+    .hero-content h1 { font-size: 3.5em; }
+    .hero-content p { font-size: 1.4em; }
+    .hero-content .mission-highlight { font-size: 1.4em; }
+    .home-section-content { padding: 0 var(--spacing-sm); }
+    .home-page-content-wrapper {
         padding: 0 var(--spacing-sm);
-    }
-    .home-section-content {
-        padding: 0 var(--spacing-sm);
-    }
-    .hero-button {
-        padding: var(--spacing-sm) var(--spacing-lg); /* Gleiches Padding wie Desktop */
-        font-size: 1.2em;
+        transform: translateX(0); /* Entferne Verschiebung auf Tablets */
+        /* NEU: Setze margin-top auf einen Standardwert, wenn es im flex-grow-Container ist */
+        margin-top: var(--spacing-lg);
     }
 }
 
@@ -404,64 +391,32 @@
         background-size: 180%; /* Stärkerer Zoom für mobile Querformate */
         background-position: center bottom;
         min-height: 80vh; /* Anpassung für mobile Geräte */
-        padding-top: calc(var(--header-height) + var(--spacing-lg));
+        padding-top: calc(var(--header-height) + var(--spacing-lg)); /* GEÄNDERT: Padding-top für den Inhalt im Hero-Banner wieder aktivieren, da der Header auf Mobile größer ist */
         padding-bottom: var(--spacing-lg);
     }
-    .hero-content h1 {
-        font-size: 2.8em;
-    }
-    .hero-content p {
-        font-size: 1.2em;
-    }
-    .hero-content .mission-highlight {
-        font-size: 1.2em;
-    }
-    .home-section {
-        padding: var(--spacing-lg) 0;
-    }
-    .home-section h2 {
-        font-size: 1.8em;
-    }
-    .home-section p {
-        font-size: 1em;
-    }
-    .feature-item img {
-        width: 60px;
-        height: 60px;
-    }
-    .feature-item h3 {
-        font-size: 1.3em;
-    }
+    .hero-content h1 { font-size: 2.8em; }
+    .hero-content p { font-size: 1.2em; }
+    .hero-content .mission-highlight { font-size: 1.2em; }
+    .home-section { padding: var(--spacing-lg) 0; }
+    .home-section h2 { font-size: 1.8em; }
+    .home-section p { font-size: 1em; }
 }
 
 @media (max-width: 500px) { /* Small Mobile */
     .hero-section {
-        background-size: 220%; /* Noch stärkerer Zoom für sehr kleine Bildschirme */
+        background-size: 220%;
         background-position: center bottom;
         min-height: 70vh;
-        padding-top: calc(var(--header-height) + var(--spacing-md));
+        padding-top: calc(var(--header-height) + var(--spacing-md)); /* GEÄNDERT: Padding-top anpassen */
         padding-bottom: var(--spacing-md);
     }
-    .hero-content h1 {
-        font-size: 2.2em;
-    }
-    .hero-content p {
-        font-size: 1em;
-    }
-    .hero-content .mission-highlight {
-        font-size: 1.1em;
-    }
-    .hero-button {
-        padding: var(--spacing-xs) var(--spacing-md);
-        font-size: 1em;
-    }
-    .home-section h2 {
-        font-size: 1.6em;
-    }
-    .feature-item, .testimonial-card, .product-teaser-item {
-        padding: var(--spacing-sm);
-    }
-    .product-teaser-item img {
-        height: 120px;
+    .hero-content h1 { font-size: 2.2em; }
+    .hero-content p { font-size: 1em; }
+    .hero-content .mission-highlight { font-size: 1.1em; }
+    .hero-button { padding: var(--spacing-xs) var(--spacing-md); font-size: 1em; }
+    .home-section h2 { font-size: 1.6em; }
+    .home-page-content-wrapper {
+        margin: var(--spacing-lg) auto var(--spacing-md) auto;
+        padding: 0 var(--spacing-xs);
     }
 }

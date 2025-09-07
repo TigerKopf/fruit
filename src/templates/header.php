@@ -8,8 +8,8 @@
     <!-- CSS-Dateien und Icons -->
     <link rel="stylesheet" href="/.main.css">
     <link rel="icon" type="image/x-icon" href="/_favicon.ico">
-    <link rel="icon" type="image/png" href="/_logo.png">
-    <link rel="apple-touch-icon" href="/_apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="/-logo.png">
+    <link rel="apple-touch-icon" href="/-apple-touch-icon.png">
 </head>
 <body>
     <header>
@@ -25,4 +25,3 @@
             </nav>
         </div>
     </header>
-    <main>

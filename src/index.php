@@ -60,15 +60,15 @@ if ($page === 'api' && isset($segments[1])) {
 // --- ADMIN ROUTING PHASE (NEU) ---
 // Wenn das erste Segment 'admin' ist, laden wir den Admin-Einstiegspunkt.
 if ($page === 'admin') {
-    require_once ROOT_PATH . 'modules/admin/index.php';
+    // Admin-Modul wird oft mit einem eigenen Layout oder speziellen <main> Tags behandelt
+    // Für dieses Beispiel ist es einfacher, es direkt zu laden
+    require_once ROOT_PATH . 'modules/admin.php';
     exit(); // Wichtig: Beende das Skript nach dem Ausführen der Admin-Seite
 }
 
 
 // --- PAGE / MODULE LOADING PHASE ---
-// Seitennamen bereinigen, um nur alphanumerische Zeichen, Bindestriche, Unterstriche UND PUNKT (für Dateierweiterungen) zu erlauben
-// Dies ist wichtig, um zu verhindern, dass Pfade wie 'api' oder 'admin' als Modulname verwendet werden,
-// nachdem sie bereits von den spezifischen Routing-Phasen behandelt wurden.
+// Seitennamen bereinigen, um nur alphanumerische Zeichen, Bindestriche, Unterstriche zu erlauben
 $page = preg_replace('/[^a-zA-Z0-9\-_.]/', '', $page);
 
 // Pfad zum Modul
@@ -79,11 +79,24 @@ require_once ROOT_PATH . 'templates/header.php';
 
 // Modul laden oder 404-Fehler anzeigen
 if (file_exists($module_path)) {
-    require_once $module_path;
+    if ($page === 'home') {
+        // GEÄNDERT: Für die Homepage wird ein neuer Wrapper um Hero-Sektion und Main-Inhalt gelegt.
+        echo '<div class="content-area-wrapper">'; // NEUER CONTAINER FÜR STICKY FOOTER LOGIK
+        require_once $module_path; // Lädt hero-section und main.site-content-wrapper
+        echo '</div>'; // SCHLIESST NEUEN CONTAINER
+    } else {
+        // Für alle anderen Seiten, wrap in <main class="site-content-wrapper">
+        // Diese Klasse sorgt für max-width und padding
+        echo '<main class="site-content-wrapper">';
+        require_once $module_path;
+        echo '</main>';
+    }
 } else {
     // Wenn das Modul nicht existiert, 404-Status senden
     header("HTTP/1.0 404 Not Found");
+    echo '<main class="site-content-wrapper">'; // 404-Seite auch in <main> für konsistentes Layout
     require_once ROOT_PATH . 'modules/404.php';
+    echo '</main>';
 }
 
 // Footer der Seite einbinden
@@ -92,5 +105,5 @@ require_once ROOT_PATH . 'templates/footer.php';
 ?>
 
 <link rel="icon" type="image/x-icon" href="/_favicon.ico">
-<link rel="icon" type="image/png" href="/_logo.png">
-<link rel="apple-touch-icon" href="/_apple-touch-icon.png">
+<link rel="icon" type="image/png" href="/-logo.png">
+<link rel="apple-touch-icon" href="/-apple-touch-icon.png">

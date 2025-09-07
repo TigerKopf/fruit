@@ -754,6 +754,431 @@ header.header-scrolled .google-search-like-nav {
 }
 
 ==================================================
+DATEINAME: src/assets/style/home.css
+--------------------------------------------------
+/* src/assets/style/home.css */
+
+/* Allgemeine Stile für Home-Sektionen */
+.home-section {
+    padding: var(--spacing-xl) 0;
+    margin-bottom: var(--spacing-lg);
+    opacity: 0; /* Standardmäßig unsichtbar für Animation */
+    transform: translateY(20px); /* Leicht nach unten verschoben für Slide-Up */
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    position: relative;
+    z-index: 1; /* Sicherstellen, dass Inhalte über Hintergrund liegen */
+}
+
+.home-section.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.home-section:nth-of-type(even) {
+    background-color: var(--color-background-light); /* Abwechselnder Hintergrund */
+}
+
+.home-section-content {
+    max-width: var(--content-max-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.home-section h2 {
+    font-size: 2.8em;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-lg);
+    font-weight: 700;
+    text-shadow: 1px 1px 2px var(--color-shadow-light);
+}
+
+.home-section h3 {
+    font-size: 2em;
+    color: var(--color-text-dark);
+    margin-bottom: var(--spacing-md);
+    font-weight: 600;
+}
+
+.home-section p {
+    font-size: 1.1em;
+    color: var(--color-text-medium);
+    line-height: var(--line-height-base);
+    max-width: 800px;
+    margin: 0 auto var(--spacing-md) auto;
+}
+
+/* Hero Sektion */
+.hero-section {
+    background: url('/-hero-banner.jpeg') no-repeat center bottom; /* Hintergrundbild, Fokus auf den unteren Bereich */
+    background-size: 130%; /* Leicht reingezoomt */
+    background-attachment: fixed; /* Parallax-Effekt: Bild bleibt beim Scrollen "oben" */
+    position: relative; /* Wichtig für Z-Index und ::before */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%; /* Füllt den gesamten Bildschirm aus */
+    /* Padding für den Inhalt, damit er nicht unter dem Header verschwindet */
+    padding-top: 0;
+    padding-bottom: var(--spacing-xl);
+    margin-bottom: 0;
+    overflow: hidden; /* Verhindert sichtbaren Overflow des gezoomten Bildes */
+    width: auto; /* Nimmt die gesamte verfügbare Breite des Bodies ein */
+
+    /* NEU: Übergang zum Inhalt darunter (Linear-Gradient Maske) */
+    mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
+}
+
+/* Semi-transparenter Overlay für bessere Lesbarkeit der Schrift */
+.hero-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.25); /* Dunkler, leicht transparenter Schleier */
+    z-index: 1;
+}
+
+.hero-content {
+    max-width: 900px;
+    text-align: center;
+    position: relative; /* Stellt sicher, dass der Inhalt über dem Overlay liegt */
+    z-index: 2;
+    color: var(--color-background-white); /* Textfarbe */
+    /* Internes Padding für den Inhalt im Vollbild-Banner, um ihn auf kleineren Bildschirmen einzurücken */
+    padding: 0 var(--spacing-md);
+}
+
+.hero-content h1 {
+    font-size: 4.5em; /* Etwas größere Schrift für den Vollbildmodus */
+    margin-bottom: var(--spacing-md);
+    font-weight: 800;
+    line-height: 1.1;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.8); /* Stärkerer Textschatten für bessere Lesbarkeit */
+    animation: fadeInUp 1s ease-out forwards 0.5s;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.hero-content p {
+    font-size: 1.6em; /* Etwas größere Schrift */
+    margin-bottom: var(--spacing-lg);
+    font-weight: 400;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7); /* Stärkerer Textschatten */
+    animation: fadeInUp 1s ease-out forwards 0.8s;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.hero-button {
+    display: inline-block;
+    background-color: var(--color-secondary);
+    color: var(--color-background-white);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--border-radius-lg);
+    text-decoration: none;
+    font-size: 1.2em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    animation: fadeInUp 1s ease-out forwards 1.1s;
+    opacity: 0;
+    transform: translateY(30px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); /* Stärkerer Schatten für Pop-Effekt */
+}
+
+.hero-button:hover {
+    background-color: #00A656;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5); /* Noch stärkerer Schatten beim Hover */
+}
+
+/* Stil für den Missions-Hinweis */
+.mission-highlight {
+    color: var(--color-secondary); /* Ein auffälliges Grün */
+    font-weight: 700;
+    font-size: 1.2em;
+    margin-top: var(--spacing-md);
+    display: block; /* Macht es zu einem Blockelement, für mehr Platz */
+    text-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.hero-content .mission-highlight {
+    color: var(--color-accent); /* Im Hero-Banner eine kräftigere Akzentfarbe für besseren Kontrast */
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8); /* Sehr starker Textschatten */
+    animation: fadeInUp 1s ease-out forwards 1.4s; /* Später als Button einblenden */
+    opacity: 0;
+    transform: translateY(30px);
+    font-size: 1.6em; /* Im Hero-Banner etwas größer und prominenter */
+}
+
+
+/* Feature Sektion */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
+}
+
+.feature-item {
+    background-color: var(--color-background-white);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 4px 12px var(--color-shadow-light);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+    border: 1px solid var(--color-border);
+}
+
+.feature-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px var(--color-shadow-medium);
+}
+
+.feature-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: var(--spacing-md);
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+}
+
+.feature-item h3 {
+    color: var(--color-primary);
+    font-size: 1.5em;
+    margin-bottom: var(--spacing-sm);
+}
+
+.feature-item p {
+    font-size: 0.95em;
+    color: var(--color-text-medium);
+}
+
+/* Testimonial Sektion */
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
+}
+
+.testimonial-card {
+    background-color: var(--color-background-white);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 4px 12px var(--color-shadow-light);
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 200px;
+    border: 1px solid var(--color-border);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px var(--color-shadow-medium);
+}
+
+.testimonial-quote {
+    font-style: italic;
+    color: var(--color-text-dark);
+    margin-bottom: var(--spacing-md);
+    font-size: 1.05em;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    margin-top: auto; /* Sorgt dafür, dass es unten klebt */
+}
+
+.testimonial-author img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: var(--spacing-sm);
+    border: 2px solid var(--color-primary);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.author-info strong {
+    display: block;
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.author-info span {
+    font-size: 0.9em;
+    color: var(--color-text-medium);
+}
+
+/* Produkt Teaser Sektion */
+.product-teaser-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
+}
+
+.product-teaser-item {
+    background-color: var(--color-background-white);
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 4px 12px var(--color-shadow-light);
+    text-align: center;
+    border: 1px solid var(--color-border);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none; /* Für den Link */
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.product-teaser-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px var(--color-shadow-medium);
+}
+
+.product-teaser-item img {
+    max-width: 100%;
+    height: 150px;
+    object-fit: contain;
+    margin-bottom: var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    background-color: #FDFEFE;
+    padding: var(--spacing-xs);
+    mask-image: radial-gradient(circle at center, black 70%, transparent 100%);
+    -webkit-mask-image: radial-gradient(circle at center, black 70%, transparent 100%); /* Radial for teaser also */
+}
+
+
+.product-teaser-item h3 {
+    color: var(--color-text-dark);
+    font-size: 1.3em;
+    margin: 0 0 var(--spacing-xs) 0;
+    font-weight: 600;
+}
+
+.product-teaser-item p {
+    font-size: 1.1em;
+    color: var(--color-accent);
+    font-weight: 700;
+    margin-top: 0;
+}
+
+/* Call to Action Sektion */
+.cta-section {
+    background-color: var(--color-primary);
+    color: var(--color-background-white);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    padding: var(--spacing-xl) 0;
+    text-align: center;
+}
+
+.cta-section h2 {
+    color: var(--color-background-white);
+}
+
+.cta-section p {
+    color: #e0e0e0;
+}
+
+.cta-button {
+    display: inline-block;
+    background-color: var(--color-accent);
+    color: var(--color-background-white);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--border-radius-lg);
+    text-decoration: none;
+    font-size: 1.2em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    margin-top: var(--spacing-md);
+}
+
+.cta-button:hover {
+    background-color: #e67e22; /* Dunklerer Akzent-Farbton */
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Animation Keyframes (wenn nicht von Scroll-JS gesteuert) */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* Responsive Anpassungen für die Home-Seite */
+@media (max-width: 992px) {
+    .hero-section {
+        background-size: 150%; /* Zoom anpassen für Tablets */
+        background-position: center bottom;
+        min-height: 90vh; /* Etwas weniger als 100vh auf kleineren Desktops/Tablets */
+    }
+    .hero-content h1 { font-size: 3.5em; }
+    .hero-content p { font-size: 1.4em; }
+    .hero-content .mission-highlight { font-size: 1.4em; }
+    .home-section-content { padding: 0 var(--spacing-sm); }
+    .home-page-content-wrapper {
+        padding: 0 var(--spacing-sm);
+        transform: translateX(0); /* Entferne Verschiebung auf Tablets */
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        background-size: 180%; /* Stärkerer Zoom für mobile Querformate */
+        background-position: center bottom;
+        min-height: 80vh; /* Anpassung für mobile Geräte */
+        padding-top: calc(var(--header-height) + var(--spacing-lg));
+        padding-bottom: var(--spacing-lg);
+    }
+    .hero-content h1 { font-size: 2.8em; }
+    .hero-content p { font-size: 1.2em; }
+    .hero-content .mission-highlight { font-size: 1.2em; }
+    .home-section { padding: var(--spacing-lg) 0; }
+    .home-section h2 { font-size: 1.8em; }
+    .home-section p { font-size: 1em; }
+}
+
+@media (max-width: 500px) { /* Small Mobile */
+    .hero-section {
+        background-size: 220%;
+        background-position: center bottom;
+        min-height: 70vh;
+        padding-top: calc(var(--header-height) + var(--spacing-md));
+        padding-bottom: var(--spacing-md);
+    }
+    .hero-content h1 { font-size: 2.2em; }
+    .hero-content p { font-size: 1em; }
+    .hero-content .mission-highlight { font-size: 1.1em; }
+    .hero-button { padding: var(--spacing-xs) var(--spacing-md); font-size: 1em; }
+    .home-section h2 { font-size: 1.6em; }
+    .home-page-content-wrapper {
+        margin: var(--spacing-lg) auto var(--spacing-md) auto;
+        padding: 0 var(--spacing-xs);
+    }
+}
+
+
+
+==================================================
 DATEINAME: src/assets/style/layout.css
 --------------------------------------------------
 /* Hauptinhaltsbereich & umgebender Container */
@@ -789,6 +1214,7 @@ main {
 ==================================================
 DATEINAME: src/assets/style/main.css
 --------------------------------------------------
+/* main.css */
 @import '/.variables.css';
 @import '/.base.css';
 @import '/.header.css';
@@ -799,6 +1225,7 @@ DATEINAME: src/assets/style/main.css
 @import '/.modal.css';
 @import '/.alerts.css';
 @import '/.admin.css';
+@import '/.home.css';
 @import '/.responsive.css';
 
 ==================================================
@@ -3451,7 +3878,190 @@ if (!$isAdminLoggedIn) {
 ==================================================
 DATEINAME: src/modules/home.php
 --------------------------------------------------
-hallo<br>hallo<br>hallo<br>hallo<br>hallo<br>hallo<br>hallo<br>
+<?php
+// modules/home.php
+
+global $pdo;
+$featured_products = [];
+if (isset($pdo)) {
+    try {
+        $stmt = $pdo->prepare("SELECT product_id, name, description, price, image_url FROM products WHERE is_active = TRUE ORDER BY created_at DESC LIMIT 3");
+        $stmt->execute();
+        $featured_products = $stmt->fetchAll();
+    } catch (PDOException $e) {
+        error_log("Fehler beim Laden der Featured Products für die Homepage: " . $e->getMessage());
+    }
+}
+
+if (!function_exists('formatEuroCurrency')) {
+    function formatEuroCurrency(float $amount): string {
+        if (fmod($amount, 1.0) == 0) {
+            return number_format($amount, 0, ',', '.') . ' €';
+        } else {
+            return number_format($amount, 2, ',', '.') . ' €';
+        }
+    }
+}
+?>
+
+<!-- Hero Sektion - Steht jetzt direkt im Body, um die volle Breite/Höhe nutzen zu können -->
+<section class="hero-section">
+    <div class="hero-content">
+        <h1>Frische Früchte direkt aus Portugal</h1>
+        <p>Erlebe den wahren Geschmack der Natur – saisonal, nachhaltig und mit Liebe geerntet.</p>
+        <a href="/shop" class="hero-button">Jetzt bestellen</a>
+        <span class="mission-highlight">100% des Gewinnes gehen in die Missionsarbeit!</span>
+    </div>
+</section>
+
+<!-- Der Rest der Homepage-Sektionen wird nun in ein <main>-Tag mit der Klasse site-content-wrapper gewickelt -->
+<main class="site-content-wrapper">
+    <!-- Ein optionaler innerer Wrapper, wenn der Inhalt der home-section-content nicht direkt die padding übernimmt -->
+    <div class="home-page-content-wrapper">
+
+        <!-- Über uns / Philosophie Sektion -->
+        <section class="home-section" id="about-us">
+            <div class="home-section-content">
+                <h2>Unsere Mission: Guter Geschmack, Gutes tun</h2>
+                <p>Bei Früchte aus Portugal glauben wir an Authentizität und Qualität. Wir bringen dir handverlesene, sonnengereifte Früchte direkt von kleinen Bauernhöfen in Portugal. Ohne Umwege, ohne unnötige Zusätze – einfach purer Genuss.</p>
+                <p>Doch wir sind mehr als nur ein Obstlieferant. Unser Projekt verfolgt ein höheres Ziel: **100% des Gewinnes aus jedem Verkauf fließen direkt in die Missionsarbeit.** Mit jedem Bissen einer saftigen Orange oder einer süßen Feige unterstützt du wichtige Projekte, die Menschen in Not helfen und Hoffnung schenken. Dein Einkauf hat eine doppelte Wirkung!</p>
+                <p>Jede Frucht erzählt eine Geschichte von Sonne, Leidenschaft und traditionellem Anbau, und trägt gleichzeitig dazu bei, die Welt ein kleines Stück besser zu machen. Entdecke den Unterschied, den echte Qualität und ein gutes Herz machen.</p>
+            </div>
+        </section>
+
+        <!-- Vorteile / Features Sektion -->
+        <section class="home-section" id="features">
+            <div class="home-section-content">
+                <h2>Warum Früchte aus Portugal wählen?</h2>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <img src="/_quality.png" alt="Icon für Qualität">
+                        <h3>Unvergleichliche Qualität</h3>
+                        <p>Nur die besten, sorgfältig ausgewählten Früchte finden den Weg in deinen Korb.</p>
+                    </div>
+                    <div class="feature-item">
+                        <img src="/_freshness.png" alt="Icon für Frische">
+                        <h3>Garantierte Frische</h3>
+                        <p>Direkt vom Baum zu dir – für ein Geschmackserlebnis wie im Urlaub.</p>
+                    </div>
+                    <div class="feature-item">
+                        <img src="/_delivery.png" alt="Icon für schnelle Lieferung">
+                        <h3>Schnelle Lieferung</h3>
+                        <p>Deine Bestellung erreicht dich schnell und sicher, optimal verpackt.</p>
+                    </div>
+                    <div class="feature-item">
+                        <img src="/_sustainability.png" alt="Icon für Nachhaltigkeit">
+                        <h3>Nachhaltiger Anbau</h3>
+                        <p>Wir unterstützen Bauern, die Wert auf umweltfreundliche Methoden legen.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Produkt Teaser Sektion -->
+        <section class="home-section" id="products-teaser">
+            <div class="home-section-content">
+                <h2>Unsere beliebtesten Früchte</h2>
+                <p>Entdecke eine Auswahl unserer exquisiten Produkte, die unsere Kunden lieben.</p>
+                <div class="product-teaser-grid">
+                    <?php if (!empty($featured_products)): ?>
+                        <?php foreach ($featured_products as $product): ?>
+                            <a href="/shop#product-<?php echo htmlspecialchars($product['product_id']); ?>" class="product-teaser-item">
+                                <img src="<?php echo htmlspecialchars($product['image_url'] ?: '/_placeholder.png'); ?>" alt="Bild von <?php echo htmlspecialchars($product['name']); ?>">
+                                <h3><?php echo htmlspecialchars($product['name']); ?></h3>
+                                <p><?php echo formatEuroCurrency($product['price']); ?></p>
+                            </a>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>Derzeit keine Produkte zum Anpreisen verfügbar. Besuchen Sie unseren <a href="/shop">Shop</a>!</p>
+                    <?php endif; ?>
+                </div>
+                <div style="margin-top: var(--spacing-xl);">
+                    <a href="/shop" class="hero-button">Alle Produkte entdecken</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonial Sektion -->
+        <section class="home-section" id="testimonials">
+            <div class="home-section-content">
+                <h2>Was unsere Kunden sagen</h2>
+                <p>Echte Stimmen unserer zufriedenen Kunden.</p>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <p class="testimonial-quote">"Die Orangen sind einfach himmlisch! So saftig und süß, das ist ein Unterschied wie Tag und Nacht zu dem, was man im Supermarkt bekommt."</p>
+                        <div class="testimonial-author">
+                            <img src="/_testimonial1.jpg" alt="Kundenbild Anna M.">
+                            <div class="author-info">
+                                <strong>Anna M.</strong>
+                                <span>Köln</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="testimonial-quote">"Ich bin begeistert von der Qualität und der schnellen Lieferung. Die Früchte sind immer perfekt und halten sich lange. Absolut empfehlenswert!"</p>
+                        <div class="testimonial-author">
+                            <img src="/_testimonial2.jpg" alt="Kundenbild Max S.">
+                            <div class="author-info">
+                                <strong>Max S.</strong>
+                                <span>Berlin</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="testimonial-quote">"Endlich frische Feigen, die schmecken, als kämen sie direkt vom Baum. Der Service ist top, und die Auswahl ist fantastisch!"</p>
+                        <div class="testimonial-author">
+                            <img src="/_testimonial3.jpg" alt="Kundenbild Lisa K.">
+                            <div class="author-info">
+                                <strong>Lisa K.</strong>
+                                <span>München</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action Sektion -->
+        <section class="cta-section">
+            <div class="home-section-content">
+                <h2>Bereit, zu geniessen und zu helfen?</h2>
+                <p>Tauche ein in die Welt der unvergleichlichen Geschmäcker und unterstütze gleichzeitig unsere Missionsarbeit. Jeder Einkauf zählt!</p>
+                <a href="/shop" class="cta-button">Jetzt reinschauen & Gutes tun</a>
+                <span class="mission-highlight" style="color: white; font-size: 1.1em; margin-top: var(--spacing-lg);">100% des Gewinnes gehen in die Missionsarbeit!</span>
+            </div>
+        </section>
+
+    </div><!-- Ende home-page-content-wrapper -->
+</main><!-- Ende main.site-content-wrapper -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const animateOnScroll = () => {
+            const sections = document.querySelectorAll('.home-section');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        };
+
+        animateOnScroll();
+    });
+</script>
 
 ==================================================
 DATEINAME: src/modules/kontakt.php
@@ -3548,8 +4158,6 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
                 // dass die ursprüngliche Abfrage mit "ORDER BY c.category_id" die Kategorien korrekt einliest.
                 // Wenn die Kategorien im Array $products_by_category alphabetisch nach Name sortiert sind,
                 // weil PHP-Assoziative Arrays dies tun könnten, dann müsste man das Array explizit neu sortieren.
-                // Für PHP ist die Iterationsreihenfolge von foreach() standardmäßig die Einfügungsreihenfolge
-                // oder die Reihenfolge nach der letzten Schlüsseländerung, nicht notwendigerweise alphabetisch.
                 // Da die DB-Abfrage nach c.category_id sortiert, sollten die Kategorien in der richtigen Reihenfolge auftauchen.
                 ?>
                 <?php foreach ($products_by_category as $category_name => $products): ?>
@@ -3612,12 +4220,12 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
                             <li class="cart-item" data-product-id="<?php echo htmlspecialchars($productId); ?>">
                                 <img src="<?php echo htmlspecialchars($item['image_url'] ?: '/_placeholder.png'); ?>" alt="Bild von <?php echo htmlspecialchars($item['name']); ?>: <?php echo htmlspecialchars($item['description']); ?>" class="cart-item-image">
                                 <div class="cart-item-info">
-                                    <h4>${item.name}</h4>
-                                    <p>${formatEuroCurrencyJS(parseFloat(item.price) * parseInt(item.quantity))}</p>
+                                    <h4><?php echo htmlspecialchars($item['name']); ?></h4>
+                                    <p><?php echo formatEuroCurrency(parseFloat($item.price) * parseInt($item.quantity)); ?></p>
                                 </div>
                                 <div class="cart-item-controls">
-                                    <input type="number" class="cart-quantity-input" value="${item.quantity}" min="1" max="${item.stock}" data-product-id="${productId}">
-                                    <button class="remove-item-btn" data-product-id="${productId}">&times;</button>
+                                    <input type="number" class="cart-quantity-input" value="<?php echo htmlspecialchars($item['quantity']); ?>" min="1" max="<?php echo htmlspecialchars($item['stock']); ?>" data-product-id="<?php echo htmlspecialchars($productId); ?>">
+                                    <button class="remove-item-btn" data-product-id="<?php echo htmlspecialchars($productId); ?>">×</button>
                                 </div>
                             </li>
                         <?php endforeach; ?>
@@ -3634,7 +4242,7 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
     <!-- Checkout Modal remains here -->
     <div id="checkoutModal" class="modal">
         <div class="modal-content">
-            <span class="close-button">&times;</span>
+            <span class="close-button">×</span>
             <h3>Bestellung abschliessen</h3>
             <div id="checkout-message" class="alert" style="display:none;"></div>
             <form id="checkoutForm">
@@ -3741,7 +4349,7 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
                         </div>
                         <div class="cart-item-controls">
                             <input type="number" class="cart-quantity-input" value="${item.quantity}" min="1" max="${item.stock}" data-product-id="${productId}">
-                            <button class="remove-item-btn" data-product-id="${productId}">&times;</button>
+                            <button class="remove-item-btn" data-product-id="${productId}">×</button>
                         </div>
                     `;
                     cartItemsList.appendChild(listItem);
@@ -4134,8 +4742,6 @@ DATEINAME: src/templates/header.php
             </nav>
         </div>
     </header>
-    <main>
-
 
 ==================================================
 DATEINAME: src/index.php
@@ -4202,15 +4808,15 @@ if ($page === 'api' && isset($segments[1])) {
 // --- ADMIN ROUTING PHASE (NEU) ---
 // Wenn das erste Segment 'admin' ist, laden wir den Admin-Einstiegspunkt.
 if ($page === 'admin') {
-    require_once ROOT_PATH . 'modules/admin/index.php';
+    // Admin-Modul wird oft mit einem eigenen Layout oder speziellen <main> Tags behandelt
+    // Für dieses Beispiel ist es einfacher, es direkt zu laden
+    require_once ROOT_PATH . 'modules/admin.php';
     exit(); // Wichtig: Beende das Skript nach dem Ausführen der Admin-Seite
 }
 
 
 // --- PAGE / MODULE LOADING PHASE ---
-// Seitennamen bereinigen, um nur alphanumerische Zeichen, Bindestriche, Unterstriche UND PUNKT (für Dateierweiterungen) zu erlauben
-// Dies ist wichtig, um zu verhindern, dass Pfade wie 'api' oder 'admin' als Modulname verwendet werden,
-// nachdem sie bereits von den spezifischen Routing-Phasen behandelt wurden.
+// Seitennamen bereinigen, um nur alphanumerische Zeichen, Bindestriche, Unterstriche zu erlauben
 $page = preg_replace('/[^a-zA-Z0-9\-_.]/', '', $page);
 
 // Pfad zum Modul
@@ -4221,11 +4827,23 @@ require_once ROOT_PATH . 'templates/header.php';
 
 // Modul laden oder 404-Fehler anzeigen
 if (file_exists($module_path)) {
-    require_once $module_path;
+    if ($page === 'home') {
+        // Für die Homepage wird der Hero-Sektion außerhalb von <main> gerendert.
+        // Die restlichen Sektionen werden innerhalb von home.php in ein <main>-Tag gewickelt.
+        require_once $module_path;
+    } else {
+        // Für alle anderen Seiten, wrap in <main class="site-content-wrapper">
+        // Diese Klasse sorgt für max-width und padding
+        echo '<main class="site-content-wrapper">';
+        require_once $module_path;
+        echo '</main>';
+    }
 } else {
     // Wenn das Modul nicht existiert, 404-Status senden
     header("HTTP/1.0 404 Not Found");
+    echo '<main class="site-content-wrapper">'; // 404-Seite auch in <main> für konsistentes Layout
     require_once ROOT_PATH . 'modules/404.php';
+    echo '</main>';
 }
 
 // Footer der Seite einbinden

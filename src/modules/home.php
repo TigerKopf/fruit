@@ -60,17 +60,17 @@ if (!function_exists('formatEuroCurrency')) {
             <h2>Warum Früchte aus Portugal wählen?</h2>
             <div class="features-grid">
                 <div class="feature-item">
-                    <img src="/_quality.png" alt="Icon für Qualität">
+                    <img src="/-quality.jpeg" alt="Icon für Qualität">
                     <h3>Unvergleichliche Qualität</h3>
                     <p>Die Früchte werden frisch gepflügt. Somit haben sie viel mehr Zeit in der Sonne verbracht als übliche Früchte.</p>
                 </div>
                 <div class="feature-item">
-                    <img src="/_freshness.png" alt="Icon für Frische">
+                    <img src="/-freshness.jpeg" alt="Icon für Frische">
                     <h3>Garantierte Frische</h3>
                     <p>Direkt vom Baum zu dir – für ein Geschmackserlebnis wie im Urlaub.</p>
                 </div>
                 <div class="feature-item">
-                    <img src="/_delivery.png" alt="Icon für Für die Missionsarbeit">
+                    <img src="/-mission.jpeg" alt="Icon für Für die Missionsarbeit">
                     <h3>Für die Missionsarbeit</h3>
                     <p>Damit die Früchte zu dir kommen, gibt es viele ehrenamtliche Helfer.</p>
                 </div>

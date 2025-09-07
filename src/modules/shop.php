@@ -85,8 +85,6 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
                 // dass die ursprüngliche Abfrage mit "ORDER BY c.category_id" die Kategorien korrekt einliest.
                 // Wenn die Kategorien im Array $products_by_category alphabetisch nach Name sortiert sind,
                 // weil PHP-Assoziative Arrays dies tun könnten, dann müsste man das Array explizit neu sortieren.
-                // Für PHP ist die Iterationsreihenfolge von foreach() standardmäßig die Einfügungsreihenfolge
-                // oder die Reihenfolge nach der letzten Schlüsseländerung, nicht notwendigerweise alphabetisch.
                 // Da die DB-Abfrage nach c.category_id sortiert, sollten die Kategorien in der richtigen Reihenfolge auftauchen.
                 ?>
                 <?php foreach ($products_by_category as $category_name => $products): ?>
@@ -149,12 +147,12 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
                             <li class="cart-item" data-product-id="<?php echo htmlspecialchars($productId); ?>">
                                 <img src="<?php echo htmlspecialchars($item['image_url'] ?: '/_placeholder.png'); ?>" alt="Bild von <?php echo htmlspecialchars($item['name']); ?>: <?php echo htmlspecialchars($item['description']); ?>" class="cart-item-image">
                                 <div class="cart-item-info">
-                                    <h4>${item.name}</h4>
-                                    <p>${formatEuroCurrencyJS(parseFloat(item.price) * parseInt(item.quantity))}</p>
+                                    <h4><?php echo htmlspecialchars($item['name']); ?></h4>
+                                    <p><?php echo formatEuroCurrency(parseFloat($item.price) * parseInt($item.quantity)); ?></p>
                                 </div>
                                 <div class="cart-item-controls">
-                                    <input type="number" class="cart-quantity-input" value="${item.quantity}" min="1" max="${item.stock}" data-product-id="${productId}">
-                                    <button class="remove-item-btn" data-product-id="${productId}">&times;</button>
+                                    <input type="number" class="cart-quantity-input" value="<?php echo htmlspecialchars($item['quantity']); ?>" min="1" max="<?php echo htmlspecialchars($item['stock']); ?>" data-product-id="<?php echo htmlspecialchars($productId); ?>">
+                                    <button class="remove-item-btn" data-product-id="<?php echo htmlspecialchars($productId); ?>">×</button>
                                 </div>
                             </li>
                         <?php endforeach; ?>
@@ -171,7 +169,7 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
     <!-- Checkout Modal remains here -->
     <div id="checkoutModal" class="modal">
         <div class="modal-content">
-            <span class="close-button">&times;</span>
+            <span class="close-button">×</span>
             <h3>Bestellung abschliessen</h3>
             <div id="checkout-message" class="alert" style="display:none;"></div>
             <form id="checkoutForm">
@@ -278,7 +276,7 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
                         </div>
                         <div class="cart-item-controls">
                             <input type="number" class="cart-quantity-input" value="${item.quantity}" min="1" max="${item.stock}" data-product-id="${productId}">
-                            <button class="remove-item-btn" data-product-id="${productId}">&times;</button>
+                            <button class="remove-item-btn" data-product-id="${productId}">×</button>
                         </div>
                     `;
                     cartItemsList.appendChild(listItem);
