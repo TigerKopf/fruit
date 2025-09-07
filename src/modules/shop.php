@@ -35,8 +35,6 @@ try {
     $all_products = $stmt->fetchAll();
 
     foreach ($all_products as $product) {
-        // Hier wird die Kategorie nach category_name gruppiert, aber die Reihenfolge der Kategorien
-        // in der Ausgabe wird durch die ORDER BY Klausel der SQL-Abfrage beeinflusst.
         $products_by_category[$product['category_name']][] = $product;
     }
 
@@ -74,26 +72,14 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
             <?php if (empty($products_by_category)): ?>
                 <p>Derzeit sind keine Produkte verfügbar.</p>
             <?php else: ?>
-                <?php
-                // Um die Kategorien tatsächlich nach ID (oder einer impliziten Reihenfolge aus der DB) zu sortieren,
-                // und nicht alphabetisch durch den PHP-Schlüssel 'category_name',
-                // müsste die $products_by_category Struktur anders aufgebaut werden, z.B.
-                // $products_by_category[$product['category_id']]['name'] = $product['category_name'];
-                // $products_by_category[$product['category_id']]['products'][] = $product;
-                // Dann würde man über die Keys von $products_by_category iterieren, die die IDs wären.
-                // Für diese Anfrage belassen wir die Gruppierung nach Name und vertrauen darauf,
-                // dass die ursprüngliche Abfrage mit "ORDER BY c.category_id" die Kategorien korrekt einliest.
-                // Wenn die Kategorien im Array $products_by_category alphabetisch nach Name sortiert sind,
-                // weil PHP-Assoziative Arrays dies tun könnten, dann müsste man das Array explizit neu sortieren.
-                // Da die DB-Abfrage nach c.category_id sortiert, sollten die Kategorien in der richtigen Reihenfolge auftauchen.
-                ?>
                 <?php foreach ($products_by_category as $category_name => $products): ?>
                     <section class="category-section">
                         <h2><?php echo htmlspecialchars($category_name); ?></h2>
                         <div class="product-grid">
                             <?php foreach ($products as $product): ?>
                                 <div class="product-item">
-                                    <img src="<?php echo htmlspecialchars($product['image_url'] ?: '/_placeholder.png'); ?>" alt="Bild von <?php echo htmlspecialchars($product['name']); ?> (<?php echo htmlspecialchars($product['description']); ?>)">
+                                    <!-- GEÄNDERT: loading="lazy" und decoding="async" hinzugefügt -->
+                                    <img src="<?php echo htmlspecialchars($product['image_url'] ?: '/_placeholder.png'); ?>" alt="Bild von <?php echo htmlspecialchars($product['name']); ?> (<?php echo htmlspecialchars($product['description']); ?>)" loading="lazy" decoding="async">
                                     <h3><?php echo htmlspecialchars($product['name']); ?></h3>
                                     <p class="product-quantity-price-line">
                                         <span class="product-unit"><?php echo htmlspecialchars($product['description']); ?> für</span> <span class="product-price-value"><?php echo formatEuroCurrency($product['price']); ?></span>
@@ -145,10 +131,11 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
                     <?php else: ?>
                         <?php foreach ($_SESSION['cart'] as $productId => $item): ?>
                             <li class="cart-item" data-product-id="<?php echo htmlspecialchars($productId); ?>">
-                                <img src="<?php echo htmlspecialchars($item['image_url'] ?: '/_placeholder.png'); ?>" alt="Bild von <?php echo htmlspecialchars($item['name']); ?>: <?php echo htmlspecialchars($item['description']); ?>" class="cart-item-image">
+                                <!-- GEÄNDERT: loading="lazy" und decoding="async" hinzugefügt, alt-Text verbessert -->
+                                <img src="<?php echo htmlspecialchars($item['image_url'] ?: '/_placeholder.png'); ?>" alt="Bild von <?php echo htmlspecialchars($item['name']); ?>: <?php echo htmlspecialchars($item['description']); ?>" class="cart-item-image" loading="lazy" decoding="async">
                                 <div class="cart-item-info">
                                     <h4><?php echo htmlspecialchars($item['name']); ?></h4>
-                                    <p><?php echo formatEuroCurrency(parseFloat($item.price) * parseInt($item.quantity)); ?></p>
+                                    <p><?php echo formatEuroCurrency(floatval($item['price']) * intval($item['quantity'])); ?></p>
                                 </div>
                                 <div class="cart-item-controls">
                                     <input type="number" class="cart-quantity-input" value="<?php echo htmlspecialchars($item['quantity']); ?>" min="1" max="<?php echo htmlspecialchars($item['stock']); ?>" data-product-id="<?php echo htmlspecialchars($productId); ?>">
@@ -269,7 +256,8 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
                     listItem.classList.add('cart-item');
                     listItem.dataset.productId = productId;
                     listItem.innerHTML = `
-                        <img src="${item.image_url || '/_placeholder.png'}" alt="Bild von ${item.name}: ${item.description}" class="cart-item-image">
+                        <!-- GEÄNDERT: loading="lazy" und decoding="async" hinzugefügt, alt-Text verbessert -->
+                        <img src="${item.image_url || '/_placeholder.png'}" alt="Bild von ${item.name}: ${item.description}" class="cart-item-image" loading="lazy" decoding="async">
                         <div class="cart-item-info">
                             <h4>${item.name}</h4>
                             <p>${formatEuroCurrencyJS(parseFloat(item.price) * parseInt(item.quantity))}</p>

@@ -20,7 +20,8 @@ $totalAmount = 0;
                 $totalAmount += $itemTotal;
             ?>
                 <li class="cart-item">
-                    <img src="<?= htmlspecialchars($item['image_url']) ?>" alt="<?= htmlspecialchars($item['name']) ?>" class="cart-item-img">
+                    <!-- GEÄNDERT: loading="lazy" und decoding="async" hinzugefügt -->
+                    <img src="<?= htmlspecialchars($item['image_url']) ?>" alt="<?= htmlspecialchars($item['name']) ?>: <?= htmlspecialchars($item['description']) ?>" class="cart-item-img" loading="lazy" decoding="async">
                     <div class="cart-item-details">
                         <h4><?= htmlspecialchars($item['name']) ?></h4>
                         <p><?= number_format($item['price'], 2, ',', '.') ?> € x</p>

@@ -12,17 +12,17 @@
 
 .footer-content-wrapper {
     background-color: var(--color-background-white);
-    max-width: var(--content-max-width); /* GEÄNDERT: Konsistent mit Main-Content */
+    max-width: var(--content-max-width); /* KONSISTENT mit Main-Content */
     width: 100%;
     margin: 0 auto var(--spacing-md) auto;
     border-radius: var(--border-radius-md);
     box-shadow: 0 4px 15px var(--color-shadow-light);
     padding: var(--spacing-xl);
-    box-sizing: border-box; /* NEU: Stellt sicher, dass max-width padding beinhaltet */
+    box-sizing: border-box;
     color: var(--color-text-dark);
     font-family: var(--font-family-base);
     /* GEÄNDERT: Verschiebung um 20px nach links entfernt */
-    /* transform: translateX(-20px); */
+    transform: translateX(0);
 }
 
 /* Inhaltliche Gliederung des Footers mit CSS Grid für Symmetrie */

@@ -32,7 +32,7 @@ header.header-scrolled {
     border-radius: var(--border-radius-lg);
     padding: var(--spacing-sm) var(--spacing-md);
     box-shadow: 0 2px 8px var(--color-shadow-light);
-    height: 48px;
+    height: 52px; /* GEÄNDERT: Leicht erhöhte Höhe für bessere Optik */
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -47,7 +47,7 @@ header.header-scrolled .google-search-like-nav {
     align-items: center;
     width: 100%;
     max-width: var(--content-max-width); /* Angepasst an die Inhaltsbreite */
-    transform: translateX(-20px); /* Verschiebung um 20px nach links */
+    transform: translateX(0); /* GEÄNDERT: Verschiebung um 20px nach links entfernt */
 }
 
 .logo {
@@ -60,7 +60,7 @@ header.header-scrolled .google-search-like-nav {
 
 .nav-options {
     list-style: none;
-    margin: 0;
+    margin: 0; /* GEÄNDERT: Margin auf 0 gesetzt */
     padding: 0;
     display: flex;
     gap: var(--spacing-lg);

@@ -378,11 +378,11 @@
     .hero-content p { font-size: 1.4em; }
     .hero-content .mission-highlight { font-size: 1.4em; }
     .home-section-content { padding: 0 var(--spacing-sm); }
-    .home-page-content-wrapper {
+    .home-page-content-wrapper { /* Dieser Wrapper wird nicht mehr direkt in index.php verwendet */
         padding: 0 var(--spacing-sm);
         transform: translateX(0); /* Entferne Verschiebung auf Tablets */
         /* NEU: Setze margin-top auf einen Standardwert, wenn es im flex-grow-Container ist */
-        margin-top: var(--spacing-lg);
+        margin-top: var(--spacing-lg); /* Angepasst */
     }
 }
 
@@ -415,8 +415,8 @@
     .hero-content .mission-highlight { font-size: 1.1em; }
     .hero-button { padding: var(--spacing-xs) var(--spacing-md); font-size: 1em; }
     .home-section h2 { font-size: 1.6em; }
-    .home-page-content-wrapper {
-        margin: var(--spacing-lg) auto var(--spacing-md) auto;
+    .home-page-content-wrapper { /* Dieser Wrapper wird nicht mehr direkt in index.php verwendet */
+        margin: var(--spacing-lg) auto var(--spacing-md) auto; /* Angepasst */
         padding: 0 var(--spacing-xs);
     }
 }

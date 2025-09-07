@@ -1,4 +1,4 @@
-/* Google Fonts Import */
+/* main.css */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 /* CSS Custom Properties (Variablen) für Konsistenz */
@@ -34,12 +34,12 @@
     --border-radius-lg: 24px;
 
     /* Header Höhe */
-    --header-height: 80px; /* Leichte Anpassung für einen kompakteren Header */
+    --header-height: 70px; /* GEÄNDERT: Leicht angepasst für kompaktere Darstellung */
     --header-height-mobile-collapsed: 60px; /* Höhe des mobilen Warenkorb-Headers, wenn zusammengeklappt */
 
     /* Warenkorb Höhe (2/3 der Viewport-Höhe) */
     --cart-max-height-ratio: 0.66;
 
     /* NEU: Maximale Breite für Hauptinhalts-Wrapper und Header/Footer */
-    --content-max-width: 1240px;
+    --content-max-width: 1300px; /* GEÄNDERT: Erhöht für mehr Breite */
 }

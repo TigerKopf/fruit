@@ -36,11 +36,10 @@
             <div class="footer-section social">
                 <h3>Folge uns</h3>
                 <div class="social-icons">
-                    <!-- Annahme: Du hast diese Icons im assets-Ordner als _whatsapp.png und _instagram.png -->
-                    <a href="https://www.efbornheim.de/" target="_blank" aria-label="Webseite"><img src="/-webseite.png" alt="Webseite"></a>
-                    <a href="https://chat.whatsapp.com/BaBd04yeoGvDkcGZcRNkTI?mode=ac_t" target="_blank" aria-label="WhatsApp"><img src="/-WhatsApp.png" alt="WhatsApp"></a>
-                    <a href="https://www.youtube.com/@efbornheim" target="_blank" aria-label="Youtube"><img src="/-youtube.png" alt="Youtube"></a>
-                    <a href="https://www.instagram.com/efbornheim/" target="_blank" aria-label="Twitter"><img src="/-instagram.png" alt="Instagram"></a>
+                    <a href="https://www.efbornheim.de/" target="_blank" aria-label="Webseite"><img src="/-webseite.png" alt="Webseite" loading="lazy" decoding="async"></a>
+                    <a href="https://chat.whatsapp.com/BaBd04yeoGvDkcGZcRNkTI?mode=ac_t" target="_blank" aria-label="WhatsApp"><img src="/-WhatsApp.png" alt="WhatsApp" loading="lazy" decoding="async"></a>
+                    <a href="https://www.youtube.com/@efbornheim" target="_blank" aria-label="Youtube"><img src="/-youtube.png" alt="Youtube" loading="lazy" decoding="async"></a>
+                    <a href="https://www.instagram.com/efbornheim/" target="_blank" aria-label="Twitter"><img src="/-instagram.png" alt="Instagram" loading="lazy" decoding="async"></a>
                 </div>
             </div>
         </div>

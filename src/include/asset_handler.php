@@ -69,6 +69,9 @@ function handleAssetRequest(string $page_name): void
         case 'webp': // Häufig für optimierte Bilder
             header('Content-Type: image/webp');
             break;
+        case 'avif': // NEU: Modernes AVIF-Format
+            header('Content-Type: image/avif');
+            break;
         default:
             // Standardmäßig als Binärdaten senden oder Fehlerbehandlung
             header('Content-Type: application/octet-stream');
