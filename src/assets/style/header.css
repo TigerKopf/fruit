@@ -1,0 +1,116 @@
+/* Header-Bereich (Sticky Navigation Bar) */
+header {
+    width: 100%;
+    height: var(--header-height);
+    padding: 0 var(--spacing-md);
+    background-color: transparent; /* Standardmäßig transparent */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: none; /* Initial kein Schatten */
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    transition: box-shadow 0.3s ease, background-color 0.3s ease; /* Übergang für Hintergrundfarbe hinzugefügt */
+    box-sizing: border-box;
+}
+
+header.header-scrolled {
+    background-color: transparent; /* GEÄNDERT: Kein Hintergrund beim Scrollen */
+    box-shadow: none; /* GEÄNDERT: Kein Schatten beim Scrollen */
+}
+
+.google-search-like-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: var(--content-max-width); /* Angepasst an die Inhaltsbreite */
+    background-color: var(--color-background-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-sm) var(--spacing-md);
+    box-shadow: 0 2px 8px var(--color-shadow-light);
+    height: 48px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+header.header-scrolled .google-search-like-nav {
+    border-color: var(--color-border);
+    box-shadow: 0 1px 5px var(--color-shadow-light);
+}
+
+.google-header-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: var(--content-max-width); /* Angepasst an die Inhaltsbreite */
+    transform: translateX(-20px); /* Verschiebung um 20px nach links */
+}
+
+.logo {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-decoration: none;
+    margin-right: var(--spacing-lg);
+}
+
+.nav-options {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: var(--spacing-lg);
+}
+
+.nav-options li a {
+    text-decoration: none;
+    color: var(--color-text-medium);
+    font-size: var(--font-size-base);
+    padding: var(--spacing-xs) 0;
+    transition: color 0.3s ease;
+    font-weight: 500;
+}
+
+.nav-options li a:hover,
+.nav-options li a.active {
+    color: var(--color-primary);
+    position: relative;
+}
+
+.nav-options li a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--color-primary);
+    border-radius: 2px;
+}
+
+.cart-button {
+    background-color: var(--color-primary);
+    color: var(--color-background-white);
+    text-decoration: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-lg);
+    font-size: 0.9em;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.cart-button:hover {
+    background-color: #2F5AA9;
+    box-shadow: 0 4px 10px var(--color-shadow-light);
+    transform: translateY(-2px);
+}

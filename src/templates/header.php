@@ -6,7 +6,7 @@
     <title>Früchte aus Portugal</title>
 
     <!-- CSS-Dateien und Icons -->
-    <link rel="stylesheet" href="/_styles.css">
+    <link rel="stylesheet" href="/.main.css">
     <link rel="icon" type="image/x-icon" href="/_favicon.ico">
     <link rel="icon" type="image/png" href="/_logo.png">
     <link rel="apple-touch-icon" href="/_apple-touch-icon.png">

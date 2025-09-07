@@ -1,0 +1,45 @@
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* CSS Custom Properties (Variablen) für Konsistenz */
+:root {
+    /* Farben */
+    --color-primary: #3468C0; /* Ein modernes, etwas gedämpfteres Blau */
+    --color-secondary: #00BF63; /* Ein frischeres Grün für Aktionen */
+    --color-accent: #FF8B13; /* Ein wärmerer, weniger aggressiver Akzent für Preise/Wichtiges */
+    --color-background-light: #F8FAFC; /* Sehr helles Grau, moderner als #f0f2f5 */
+    --color-background-white: #FFFFFF;
+    --color-text-dark: #2C3E50; /* Dunklerer Text für bessere Lesbarkeit */
+    --color-text-medium: #627D98; /* Mittlerer Grauton für Beschreibungen */
+    --color-text-light: #A0B3C8; /* Helles Grau für Hilfstexte */
+    --color-border: #E0E6ED; /* Hellerer Rand */
+    --color-shadow-light: rgba(0, 0, 0, 0.05);
+    --color-shadow-medium: rgba(0, 0, 0, 0.1);
+
+    /* Typografie */
+    --font-family-base: 'Inter', Arial, sans-serif;
+    --font-size-base: 16px;
+    --line-height-base: 1.6;
+
+    /* Abstände */
+    --spacing-xs: 8px;
+    --spacing-sm: 12px;
+    --spacing-md: 20px;
+    --spacing-lg: 30px;
+    --spacing-xl: 40px;
+
+    /* Radien */
+    --border-radius-sm: 8px;
+    --border-radius-md: 12px;
+    --border-radius-lg: 24px;
+
+    /* Header Höhe */
+    --header-height: 80px; /* Leichte Anpassung für einen kompakteren Header */
+    --header-height-mobile-collapsed: 60px; /* Höhe des mobilen Warenkorb-Headers, wenn zusammengeklappt */
+
+    /* Warenkorb Höhe (2/3 der Viewport-Höhe) */
+    --cart-max-height-ratio: 0.66;
+
+    /* NEU: Maximale Breite für Hauptinhalts-Wrapper und Header/Footer */
+    --content-max-width: 1240px;
+}

@@ -10,7 +10,7 @@
                 <h3>Früchte aus Portugal</h3>
                 <p>© <?php echo date("Y"); ?> Früchte aus Portugal. Alle Rechte vorbehalten.</p>
                 <p>Rosental 1, 53332 Bornheim</p>
-                <p>E-Mail: <a href="mailto:info@example.com">info@example.com</a></p>
+                <p>E-Mail: <a href="mailto:info@früch.de">info@früch.de</a></p>
             </div>
             <div class="footer-section navigation">
                 <h3>Navigation</h3>

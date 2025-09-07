@@ -58,7 +58,7 @@ if (!$isAdminLoggedIn) {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Admin Login</title>
-        <link rel="stylesheet" href="/assets/styles.css"> <!-- Lade dein Haupt-CSS -->
+        <link rel="stylesheet" href="/.main.css"> <!-- Lade dein Haupt-CSS -->
         <style>
             /* Spezifische Login-Stile, falls sie nicht im Haupt-CSS sind */
             body { font-family: 'Inter', Arial, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }

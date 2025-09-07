@@ -1,0 +1,15 @@
+/* Grundlegende Stile & Sticky Footer Layout */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-base);
+    background-color: var(--color-background-light);
+    color: var(--color-text-dark);
+    line-height: var(--line-height-base);
+    -webkit-font-smoothing: antialiased; /* Für glattere Schrift auf Webkit-Browsern */
+    -moz-osx-font-smoothing: grayscale; /* Für glattere Schrift auf Firefox */
+}

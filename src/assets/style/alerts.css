@@ -1,0 +1,21 @@
+/* General Alerts */
+.alert {
+    padding: var(--spacing-sm) var(--spacing-md);
+    margin-top: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    font-size: 0.95em;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+.alert.success {
+    background-color: #D4EDDA;
+    color: #155724;
+    border-color: #C3E6CB;
+}
+.alert.error {
+    background-color: #F8D7DA;
+    color: #721C24;
+    border-color: #F5C6CB;
+}

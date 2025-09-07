@@ -30,10 +30,13 @@ $success_message = '';
 try {
     // Produkte und Kategorien abrufen
     // Sicherstellen, dass image_url und description auch abgerufen werden
-    $stmt = $pdo->query("SELECT p.*, c.name as category_name FROM products p JOIN categories c ON p.category_id = c.category_id WHERE p.is_active = TRUE ORDER BY c.name, p.name");
+    // GEÄNDERT: Sortierung nach c.category_id ASC und p.product_id ASC
+    $stmt = $pdo->query("SELECT p.*, c.name as category_name FROM products p JOIN categories c ON p.category_id = c.category_id WHERE p.is_active = TRUE ORDER BY c.category_id ASC, p.product_id ASC");
     $all_products = $stmt->fetchAll();
 
     foreach ($all_products as $product) {
+        // Hier wird die Kategorie nach category_name gruppiert, aber die Reihenfolge der Kategorien
+        // in der Ausgabe wird durch die ORDER BY Klausel der SQL-Abfrage beeinflusst.
         $products_by_category[$product['category_name']][] = $product;
     }
 
@@ -59,7 +62,6 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
 <div class="site-content-wrapper">
 
     <main>
-        <h1>Unser Produktsortiment</h1>
 
         <?php if ($error_message): ?>
             <div class="alert error"><?php echo htmlspecialchars($error_message); ?></div>
@@ -72,6 +74,21 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
             <?php if (empty($products_by_category)): ?>
                 <p>Derzeit sind keine Produkte verfügbar.</p>
             <?php else: ?>
+                <?php
+                // Um die Kategorien tatsächlich nach ID (oder einer impliziten Reihenfolge aus der DB) zu sortieren,
+                // und nicht alphabetisch durch den PHP-Schlüssel 'category_name',
+                // müsste die $products_by_category Struktur anders aufgebaut werden, z.B.
+                // $products_by_category[$product['category_id']]['name'] = $product['category_name'];
+                // $products_by_category[$product['category_id']]['products'][] = $product;
+                // Dann würde man über die Keys von $products_by_category iterieren, die die IDs wären.
+                // Für diese Anfrage belassen wir die Gruppierung nach Name und vertrauen darauf,
+                // dass die ursprüngliche Abfrage mit "ORDER BY c.category_id" die Kategorien korrekt einliest.
+                // Wenn die Kategorien im Array $products_by_category alphabetisch nach Name sortiert sind,
+                // weil PHP-Assoziative Arrays dies tun könnten, dann müsste man das Array explizit neu sortieren.
+                // Für PHP ist die Iterationsreihenfolge von foreach() standardmäßig die Einfügungsreihenfolge
+                // oder die Reihenfolge nach der letzten Schlüsseländerung, nicht notwendigerweise alphabetisch.
+                // Da die DB-Abfrage nach c.category_id sortiert, sollten die Kategorien in der richtigen Reihenfolge auftauchen.
+                ?>
                 <?php foreach ($products_by_category as $category_name => $products): ?>
                     <section class="category-section">
                         <h2><?php echo htmlspecialchars($category_name); ?></h2>
@@ -80,9 +97,8 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
                                 <div class="product-item">
                                     <img src="<?php echo htmlspecialchars($product['image_url'] ?: '/_placeholder.png'); ?>" alt="Bild von <?php echo htmlspecialchars($product['name']); ?> (<?php echo htmlspecialchars($product['description']); ?>)">
                                     <h3><?php echo htmlspecialchars($product['name']); ?></h3>
-                                    <!-- Geänderte Zeile für Mengenangabe und Preis -->
                                     <p class="product-quantity-price-line">
-                                        <?php echo htmlspecialchars($product['description']); ?> für <?php echo formatEuroCurrency($product['price']); ?>
+                                        <span class="product-unit"><?php echo htmlspecialchars($product['description']); ?> für</span> <span class="product-price-value"><?php echo formatEuroCurrency($product['price']); ?></span>
                                     </p>
                                     <div class="product-controls">
                                         <input type="number" class="quantity-input" value="1" min="1" max="<?php echo (int)$product['stock_quantity']; ?>" data-product-id="<?php echo (int)$product['product_id']; ?>">
@@ -133,12 +149,12 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
                             <li class="cart-item" data-product-id="<?php echo htmlspecialchars($productId); ?>">
                                 <img src="<?php echo htmlspecialchars($item['image_url'] ?: '/_placeholder.png'); ?>" alt="Bild von <?php echo htmlspecialchars($item['name']); ?>: <?php echo htmlspecialchars($item['description']); ?>" class="cart-item-image">
                                 <div class="cart-item-info">
-                                    <h4><?php echo htmlspecialchars($item['name']); ?></h4>
-                                    <p><?php echo formatEuroCurrency($item['price'] * $item['quantity']); ?></p>
+                                    <h4>${item.name}</h4>
+                                    <p>${formatEuroCurrencyJS(parseFloat(item.price) * parseInt(item.quantity))}</p>
                                 </div>
                                 <div class="cart-item-controls">
-                                    <input type="number" class="cart-quantity-input" value="<?php echo (int)$item['quantity']; ?>" min="1" max="<?php echo (int)$item['stock']; ?>" data-product-id="<?php echo htmlspecialchars($productId); ?>">
-                                    <button class="remove-item-btn" data-product-id="<?php echo htmlspecialchars($productId); ?>">&times;</button>
+                                    <input type="number" class="cart-quantity-input" value="${item.quantity}" min="1" max="${item.stock}" data-product-id="${productId}">
+                                    <button class="remove-item-btn" data-product-id="${productId}">&times;</button>
                                 </div>
                             </li>
                         <?php endforeach; ?>
@@ -148,7 +164,7 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
             <div id="cart-total-container">
                 <span>Gesamt:</span> <span id="cart-total"><?php echo formatEuroCurrency($cart_total); ?></span>
             </div>
-            <button class="checkout-button" id="open-checkout-modal" <?php echo empty($_SESSION['cart']) ? 'disabled' : ''; ?>>Weiter zur Kasse</button>
+            <button class="checkout-button" id="open-checkout-modal" <?php echo empty($_SESSION['cart']) ? 'disabled' : ''; ?>>Weiter</button>
         </div>
     </aside>
 

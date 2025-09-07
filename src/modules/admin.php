@@ -358,8 +358,8 @@ if (!$isAdminLoggedIn) {
 }
 
 // CSS für die Admin-Seite (nur anzeigen, wenn eingeloggt)
-// Dieses CSS wird durch index.php oder template/header.php über assets/styles.css geladen
-// HINWEIS: Bei der Umstellung auf Variablen in styles.css könnte dieser inline-style Block entfernt werden.
+// Dieses CSS wird durch index.php oder template/header.php über assets/main.css geladen
+// HINWEIS: Bei der Umstellung auf Variablen in main.css könnte dieser inline-style Block entfernt werden.
 ?>
 
 <div class="admin-container">
@@ -758,7 +758,7 @@ if (!$isAdminLoggedIn) {
                             </div>
                             <div class="form-group">
                                 <label for="last_name">Nachname:</label>
-                                <input type="text" id="last_name" name="last_name" value="<?php echo htmlspecialchars($customerToEdit['last_name']); ?>" required>
+                                <input type="text" id="lastName" name="last_name" value="<?php echo htmlspecialchars($customerToEdit['last_name']); ?>" required>
                             </div>
                             <div class="form-group">
                                 <label for="email">E-Mail:</label>
@@ -999,7 +999,8 @@ if (!$isAdminLoggedIn) {
                     </div>
                     <?php
                 } else {
-                    $stmt = $pdo->query("SELECT p.*, c.name as category_name FROM products p JOIN categories c ON p.category_id = c.category_id ORDER BY p.name");
+                    // GEÄNDERT: Sortierung nach p.product_id ASC
+                    $stmt = $pdo->query("SELECT p.*, c.name as category_name FROM products p JOIN categories c ON p.category_id = c.category_id ORDER BY p.product_id ASC");
                     $products = $stmt->fetchAll();
                     ?>
                     <div class="action-buttons">
@@ -1074,7 +1075,7 @@ if (!$isAdminLoggedIn) {
                     </div>
                     <?php
                 } else {
-                    $stmt = $pdo->query("SELECT * FROM categories ORDER BY name");
+                    $stmt = $pdo->query("SELECT * FROM categories ORDER BY category_id ASC");
                     $categories = $stmt->fetchAll();
                     ?>
                     <div class="action-buttons">
