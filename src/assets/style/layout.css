@@ -1,13 +1,13 @@
 /* Hauptinhaltsbereich & umgebender Container */
 .site-content-wrapper {
     display: flex;
-    flex: 1;
+    flex: 1; /* <-- Wichtig! Lässt diesen Bereich den Rest des Platzes einnehmen */
     width: 100%;
     max-width: var(--content-max-width); /* Verwende die Variable */
     margin: 0 auto; /* Zentriert den Inhalts-Wrapper */
     padding: 0 var(--spacing-md);
-    box-sizing: border-box; /* NEU: Stellt sicher, dass max-width padding beinhaltet */
-    margin-top: calc(var(--header-height) + var(--spacing-sm) - 50px); /* GEÄNDERT: Abstand oben reduziert (von spacing-md auf spacing-sm) */
+    box-sizing: border-box; /* Stellt sicher, dass max-width padding beinhaltet */
+    margin-top: calc(var(--header-height) + var(--spacing-sm)); /* GEÄNDERT: Abstand oben angepasst */
     margin-bottom: var(--spacing-lg);
 
     transform: translateX(60px); /* KONSISTENT: Verschiebung um 20px nach links */
@@ -20,10 +20,12 @@ main {
     border-radius: 0; /* Kein abgerundeter Rahmen */
     box-shadow: none; /* Kein Schatten */
     border: none; /* Kein Rahmen */
-    padding: var(--spacing-xl);
+    padding: var(--spacing-xl); /* GEÄNDERT: Padding hier, da .site-content-wrapper nur äußeres Padding hat */
     box-sizing: border-box;
     position: relative;
     z-index: 1;
     min-height: 400px;
     margin-right: var(--spacing-lg); /* Behält den Abstand zum Warenkorb bei */
+    display: flex; /* NEU: Macht main auch zu einem Flex-Container, um Inhalte zu kontrollieren */
+    flex-direction: column; /* NEU: Inhalte in Spalte anordnen */
 }

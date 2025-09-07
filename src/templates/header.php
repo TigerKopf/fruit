@@ -25,3 +25,6 @@
             </nav>
         </div>
     </header>
+
+    <!-- NEU: Dieser Wrapper umschließt den gesamten Seiteninhalt zwischen Header und Footer -->
+    <div id="page-content-wrapper">

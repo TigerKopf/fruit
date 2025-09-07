@@ -13,3 +13,10 @@ html, body {
     -webkit-font-smoothing: antialiased; /* Für glattere Schrift auf Webkit-Browsern */
     -moz-osx-font-smoothing: grayscale; /* Für glattere Schrift auf Firefox */
 }
+
+/* NEU: Dieser Wrapper nimmt den gesamten verfügbaren Platz ein */
+#page-content-wrapper {
+    flex-grow: 1; /* Sorgt dafür, dass dieser Bereich den gesamten freien Platz im Flex-Container (body) einnimmt */
+    display: flex; /* Auch als Flex-Container, um inneren Content zu kontrollieren */
+    flex-direction: column; /* Sicherstellen, dass die inneren Elemente untereinander liegen */
+}

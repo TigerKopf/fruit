@@ -3,6 +3,8 @@
 // Dieser Footer wird durch index.php eingebunden
 ?>
 
+</div> <!-- NEU: Schließt den #page-content-wrapper -->
+
 <footer class="main-footer">
     <div class="footer-content-wrapper">
         <div class="footer-container">

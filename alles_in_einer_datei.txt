@@ -550,7 +550,8 @@ DATEINAME: src/assets/style/footer.css
     box-sizing: border-box; /* NEU: Stellt sicher, dass max-width padding beinhaltet */
     color: var(--color-text-dark);
     font-family: var(--font-family-base);
-    transform: translateX(-20px); /* KONSISTENT: Verschiebung um 20px nach links */
+    /* GEÄNDERT: Verschiebung um 20px nach links entfernt */
+    /* transform: translateX(-20px); */
 }
 
 /* Inhaltliche Gliederung des Footers mit CSS Grid für Symmetrie */
@@ -818,13 +819,14 @@ DATEINAME: src/assets/style/home.css
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 100%; /* Füllt den gesamten Bildschirm aus */
+    min-height: 100vh; /* GEÄNDERT: explizit 100vh für volle Viewport-Höhe */
     /* Padding für den Inhalt, damit er nicht unter dem Header verschwindet */
-    padding-top: 0;
+    padding-top: 0; /* GEÄNDERT: padding-top hier auf 0 setzen, da es der erste Inhalt ist */
     padding-bottom: var(--spacing-xl);
     margin-bottom: 0;
     overflow: hidden; /* Verhindert sichtbaren Overflow des gezoomten Bildes */
     width: auto; /* Nimmt die gesamte verfügbare Breite des Bodies ein */
+    flex-shrink: 0; /* NEU: Verhindert, dass der Hero-Bereich schrumpft */
 
     /* NEU: Übergang zum Inhalt darunter (Linear-Gradient Maske) */
     mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
@@ -1138,6 +1140,8 @@ DATEINAME: src/assets/style/home.css
     .home-page-content-wrapper {
         padding: 0 var(--spacing-sm);
         transform: translateX(0); /* Entferne Verschiebung auf Tablets */
+        /* NEU: Setze margin-top auf einen Standardwert, wenn es im flex-grow-Container ist */
+        margin-top: var(--spacing-lg);
     }
 }
 
@@ -1146,7 +1150,7 @@ DATEINAME: src/assets/style/home.css
         background-size: 180%; /* Stärkerer Zoom für mobile Querformate */
         background-position: center bottom;
         min-height: 80vh; /* Anpassung für mobile Geräte */
-        padding-top: calc(var(--header-height) + var(--spacing-lg));
+        padding-top: calc(var(--header-height) + var(--spacing-lg)); /* GEÄNDERT: Padding-top für den Inhalt im Hero-Banner wieder aktivieren, da der Header auf Mobile größer ist */
         padding-bottom: var(--spacing-lg);
     }
     .hero-content h1 { font-size: 2.8em; }
@@ -1162,7 +1166,7 @@ DATEINAME: src/assets/style/home.css
         background-size: 220%;
         background-position: center bottom;
         min-height: 70vh;
-        padding-top: calc(var(--header-height) + var(--spacing-md));
+        padding-top: calc(var(--header-height) + var(--spacing-md)); /* GEÄNDERT: Padding-top anpassen */
         padding-bottom: var(--spacing-md);
     }
     .hero-content h1 { font-size: 2.2em; }
@@ -1175,8 +1179,6 @@ DATEINAME: src/assets/style/home.css
         padding: 0 var(--spacing-xs);
     }
 }
-
-
 
 ==================================================
 DATEINAME: src/assets/style/layout.css
@@ -1193,7 +1195,7 @@ DATEINAME: src/assets/style/layout.css
     margin-top: calc(var(--header-height) + var(--spacing-sm) - 50px); /* GEÄNDERT: Abstand oben reduziert (von spacing-md auf spacing-sm) */
     margin-bottom: var(--spacing-lg);
 
-    transform: translateX(-20px); /* KONSISTENT: Verschiebung um 20px nach links */
+    transform: translateX(60px); /* KONSISTENT: Verschiebung um 20px nach links */
 }
 
 /* Hauptinhaltsbereich für Shop-Produkte */
@@ -3881,6 +3883,11 @@ DATEINAME: src/modules/home.php
 <?php
 // modules/home.php
 
+// Hier könnten Sie bei Bedarf dynamische Daten laden, z.B. eine Auswahl von Produkten für den Teaser.
+// Für diese Beispielseite werden wir hauptsächlich statische Inhalte verwenden,
+// die das Design und die Animationen demonstrieren.
+
+// Beispiel für das Abrufen von 3 aktiven Produkten für den Teaser
 global $pdo;
 $featured_products = [];
 if (isset($pdo)) {
@@ -3890,9 +3897,12 @@ if (isset($pdo)) {
         $featured_products = $stmt->fetchAll();
     } catch (PDOException $e) {
         error_log("Fehler beim Laden der Featured Products für die Homepage: " . $e->getMessage());
+        // $featured_products bleibt leer
     }
 }
 
+// Die Funktion formatEuroCurrency() wird über include/helpers.php geladen und ist global verfügbar.
+// Wir fügen sie hier sicherheitshalber nochmals hinzu, falls helper.php nicht überall geladen wird (was aber der loader.php tun sollte)
 if (!function_exists('formatEuroCurrency')) {
     function formatEuroCurrency(float $amount): string {
         if (fmod($amount, 1.0) == 0) {
@@ -3904,152 +3914,113 @@ if (!function_exists('formatEuroCurrency')) {
 }
 ?>
 
-<!-- Hero Sektion - Steht jetzt direkt im Body, um die volle Breite/Höhe nutzen zu können -->
-<section class="hero-section">
-    <div class="hero-content">
-        <h1>Frische Früchte direkt aus Portugal</h1>
-        <p>Erlebe den wahren Geschmack der Natur – saisonal, nachhaltig und mit Liebe geerntet.</p>
-        <a href="/shop" class="hero-button">Jetzt bestellen</a>
-        <span class="mission-highlight">100% des Gewinnes gehen in die Missionsarbeit!</span>
-    </div>
-</section>
+<div class="home-page-content">
 
-<!-- Der Rest der Homepage-Sektionen wird nun in ein <main>-Tag mit der Klasse site-content-wrapper gewickelt -->
-<main class="site-content-wrapper">
-    <!-- Ein optionaler innerer Wrapper, wenn der Inhalt der home-section-content nicht direkt die padding übernimmt -->
-    <div class="home-page-content-wrapper">
+    <!-- Hero Sektion -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>Frische Früchte direkt aus Portugal</h1>
+            <p>Erlebe den wahren Geschmack der Natur – saisonal, nachhaltig und mit Liebe geerntet.</p>
+            <a href="/shop" class="hero-button">Jetzt bestellen</a>
+            <span class="mission-highlight">100% des Gewinnes gehen in die Missionsarbeit!</span>
+        </div>
+    </section>
 
-        <!-- Über uns / Philosophie Sektion -->
-        <section class="home-section" id="about-us">
-            <div class="home-section-content">
-                <h2>Unsere Mission: Guter Geschmack, Gutes tun</h2>
-                <p>Bei Früchte aus Portugal glauben wir an Authentizität und Qualität. Wir bringen dir handverlesene, sonnengereifte Früchte direkt von kleinen Bauernhöfen in Portugal. Ohne Umwege, ohne unnötige Zusätze – einfach purer Genuss.</p>
-                <p>Doch wir sind mehr als nur ein Obstlieferant. Unser Projekt verfolgt ein höheres Ziel: **100% des Gewinnes aus jedem Verkauf fließen direkt in die Missionsarbeit.** Mit jedem Bissen einer saftigen Orange oder einer süßen Feige unterstützt du wichtige Projekte, die Menschen in Not helfen und Hoffnung schenken. Dein Einkauf hat eine doppelte Wirkung!</p>
-                <p>Jede Frucht erzählt eine Geschichte von Sonne, Leidenschaft und traditionellem Anbau, und trägt gleichzeitig dazu bei, die Welt ein kleines Stück besser zu machen. Entdecke den Unterschied, den echte Qualität und ein gutes Herz machen.</p>
-            </div>
-        </section>
+    <!-- Über uns / Philosophie Sektion -->
+    <section class="home-section" id="about-us">
+        <div class="home-section-content">
+            <h2>Unsere Mission: Guter Geschmack, Gutes tun</h2>
+            <p>Bei Früchte aus Portugal glauben wir an Authentizität und Qualität. Wir bringen dir handverlesene, sonnengereifte Früchte direkt von kleinen Bauernhöfen in Portugal. Ohne Umwege, ohne unnötige Zusätze – einfach purer Genuss.</p>
+            <p>Doch wir sind mehr als nur ein ein gutes Geschäft. Unser Projekt verfolgt ein höheres Ziel: <strong>100% des Gewinnes aus jedem Verkauf fließen direkt in die Missionsarbeit des BSB.</strong> Mit jedem Bissen einer saftigen Orange oder einer süßen Kiwi unterstützt du wichtige Projekte, die Menschen in Not helfen und Hoffnung schenken. Dein Einkauf hat eine doppelte Wirkung!</p>
+            <p>Jede Frucht erzählt eine Geschichte von Sonne, Leidenschaft und traditionellem Anbau, und trägt gleichzeitig dazu bei, die Welt ein kleines Stück besser zu machen. Entdecke den Unterschied, den echte Qualität und ein gutes Herz machen.</p>
+        </div>
+    </section>
 
-        <!-- Vorteile / Features Sektion -->
-        <section class="home-section" id="features">
-            <div class="home-section-content">
-                <h2>Warum Früchte aus Portugal wählen?</h2>
-                <div class="features-grid">
-                    <div class="feature-item">
-                        <img src="/_quality.png" alt="Icon für Qualität">
-                        <h3>Unvergleichliche Qualität</h3>
-                        <p>Nur die besten, sorgfältig ausgewählten Früchte finden den Weg in deinen Korb.</p>
-                    </div>
-                    <div class="feature-item">
-                        <img src="/_freshness.png" alt="Icon für Frische">
-                        <h3>Garantierte Frische</h3>
-                        <p>Direkt vom Baum zu dir – für ein Geschmackserlebnis wie im Urlaub.</p>
-                    </div>
-                    <div class="feature-item">
-                        <img src="/_delivery.png" alt="Icon für schnelle Lieferung">
-                        <h3>Schnelle Lieferung</h3>
-                        <p>Deine Bestellung erreicht dich schnell und sicher, optimal verpackt.</p>
-                    </div>
-                    <div class="feature-item">
-                        <img src="/_sustainability.png" alt="Icon für Nachhaltigkeit">
-                        <h3>Nachhaltiger Anbau</h3>
-                        <p>Wir unterstützen Bauern, die Wert auf umweltfreundliche Methoden legen.</p>
-                    </div>
+    <!-- Vorteile / Features Sektion -->
+    <section class="home-section" id="features">
+        <div class="home-section-content">
+            <h2>Warum Früchte aus Portugal wählen?</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <img src="/-quality.jpeg" alt="Icon für Qualität">
+                    <h3>Unvergleichliche Qualität</h3>
+                    <p>Die Früchte werden frisch gepflügt. Somit haben sie viel mehr Zeit in der Sonne verbracht als übliche Früchte.</p>
+                </div>
+                <div class="feature-item">
+                    <img src="/-freshness.jpeg" alt="Icon für Frische">
+                    <h3>Garantierte Frische</h3>
+                    <p>Direkt vom Baum zu dir – für ein Geschmackserlebnis wie im Urlaub.</p>
+                </div>
+                <div class="feature-item">
+                    <img src="/-mission.jpeg" alt="Icon für Für die Missionsarbeit">
+                    <h3>Für die Missionsarbeit</h3>
+                    <p>Damit die Früchte zu dir kommen, gibt es viele ehrenamtliche Helfer.</p>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Produkt Teaser Sektion -->
-        <section class="home-section" id="products-teaser">
-            <div class="home-section-content">
-                <h2>Unsere beliebtesten Früchte</h2>
-                <p>Entdecke eine Auswahl unserer exquisiten Produkte, die unsere Kunden lieben.</p>
-                <div class="product-teaser-grid">
-                    <?php if (!empty($featured_products)): ?>
-                        <?php foreach ($featured_products as $product): ?>
-                            <a href="/shop#product-<?php echo htmlspecialchars($product['product_id']); ?>" class="product-teaser-item">
-                                <img src="<?php echo htmlspecialchars($product['image_url'] ?: '/_placeholder.png'); ?>" alt="Bild von <?php echo htmlspecialchars($product['name']); ?>">
-                                <h3><?php echo htmlspecialchars($product['name']); ?></h3>
-                                <p><?php echo formatEuroCurrency($product['price']); ?></p>
-                            </a>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <p>Derzeit keine Produkte zum Anpreisen verfügbar. Besuchen Sie unseren <a href="/shop">Shop</a>!</p>
-                    <?php endif; ?>
-                </div>
-                <div style="margin-top: var(--spacing-xl);">
-                    <a href="/shop" class="hero-button">Alle Produkte entdecken</a>
-                </div>
+    <!-- Produkt Teaser Sektion -->
+    <section class="home-section" id="products-teaser">
+        <div class="home-section-content">
+            <h2>Unsere beliebtesten Früchte</h2>
+            <p>Entdecke eine Auswahl unserer exquisiten Produkte, die unsere Kunden lieben.</p>
+            <div class="product-teaser-grid">
+                <?php if (!empty($featured_products)): ?>
+                    <?php foreach ($featured_products as $product): ?>
+                        <a href="/shop#product-<?php echo htmlspecialchars($product['product_id']); ?>" class="product-teaser-item">
+                            <img src="<?php echo htmlspecialchars($product['image_url'] ?: '/_placeholder.png'); ?>" alt="Bild von <?php echo htmlspecialchars($product['name']); ?>">
+                            <h3><?php echo htmlspecialchars($product['name']); ?></h3>
+                            <p><?php echo formatEuroCurrency($product['price']); ?></p>
+                            <!-- <div class="product-controls">
+                                // Hier könnte man einen "Zum Warenkorb"-Button hinzufügen, der direkt über JS arbeitet
+                            </div> -->
+                        </a>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>Derzeit keine Produkte zum Anpreisen verfügbar. Besuchen Sie unseren <a href="/shop">Shop</a>!</p>
+                <?php endif; ?>
             </div>
-        </section>
-
-        <!-- Testimonial Sektion -->
-        <section class="home-section" id="testimonials">
-            <div class="home-section-content">
-                <h2>Was unsere Kunden sagen</h2>
-                <p>Echte Stimmen unserer zufriedenen Kunden.</p>
-                <div class="testimonials-grid">
-                    <div class="testimonial-card">
-                        <p class="testimonial-quote">"Die Orangen sind einfach himmlisch! So saftig und süß, das ist ein Unterschied wie Tag und Nacht zu dem, was man im Supermarkt bekommt."</p>
-                        <div class="testimonial-author">
-                            <img src="/_testimonial1.jpg" alt="Kundenbild Anna M.">
-                            <div class="author-info">
-                                <strong>Anna M.</strong>
-                                <span>Köln</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-card">
-                        <p class="testimonial-quote">"Ich bin begeistert von der Qualität und der schnellen Lieferung. Die Früchte sind immer perfekt und halten sich lange. Absolut empfehlenswert!"</p>
-                        <div class="testimonial-author">
-                            <img src="/_testimonial2.jpg" alt="Kundenbild Max S.">
-                            <div class="author-info">
-                                <strong>Max S.</strong>
-                                <span>Berlin</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-card">
-                        <p class="testimonial-quote">"Endlich frische Feigen, die schmecken, als kämen sie direkt vom Baum. Der Service ist top, und die Auswahl ist fantastisch!"</p>
-                        <div class="testimonial-author">
-                            <img src="/_testimonial3.jpg" alt="Kundenbild Lisa K.">
-                            <div class="author-info">
-                                <strong>Lisa K.</strong>
-                                <span>München</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div style="margin-top: var(--spacing-xl);">
+                <a href="/shop" class="hero-button">Alle Produkte entdecken</a>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Call to Action Sektion -->
-        <section class="cta-section">
-            <div class="home-section-content">
-                <h2>Bereit, zu geniessen und zu helfen?</h2>
-                <p>Tauche ein in die Welt der unvergleichlichen Geschmäcker und unterstütze gleichzeitig unsere Missionsarbeit. Jeder Einkauf zählt!</p>
-                <a href="/shop" class="cta-button">Jetzt reinschauen & Gutes tun</a>
-                <span class="mission-highlight" style="color: white; font-size: 1.1em; margin-top: var(--spacing-lg);">100% des Gewinnes gehen in die Missionsarbeit!</span>
-            </div>
-        </section>
+    <!-- Call to Action Sektion -->
+    <section class="cta-section">
+        <div class="home-section-content">
+            <h2>Bereit, zu geniessen und zu helfen?</h2>
+            <p>Tauche ein in die Welt der unvergleichlichen Geschmäcker und unterstütze gleichzeitig unsere Missionsarbeit. Jeder Einkauf zählt!</p>
+            <a href="/shop" class="cta-button">Jetzt reinschauen & Gutes tun</a>
+            <span class="mission-highlight" style="color: white; font-size: 1.1em; margin-top: var(--spacing-lg);">100% des Gewinnes gehen in die Missionsarbeit!</span>
+        </div>
+    </section>
 
-    </div><!-- Ende home-page-content-wrapper -->
-</main><!-- Ende main.site-content-wrapper -->
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // Observer für Scroll-Animationen
         const animateOnScroll = () => {
             const sections = document.querySelectorAll('.home-section');
 
             const observerOptions = {
-                root: null,
+                root: null, // viewport
                 rootMargin: '0px',
-                threshold: 0.1
+                threshold: 0.1 // 10% der Sektion muss sichtbar sein
             };
 
             const observer = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('is-visible');
+                        // Optional: Animation nur einmal abspielen, kann aber auch wiederholt werden,
+                        // wenn man aus dem Viewport scrollt und wieder hinein.
+                        // observer.unobserve(entry.target);
+                    } else {
+                        // Optional: Elemente wieder verstecken, wenn sie nicht mehr sichtbar sind
+                        // entry.target.classList.remove('is-visible');
                     }
                 });
             }, observerOptions);
@@ -4685,10 +4656,10 @@ DATEINAME: src/templates/footer.php
                 <h3>Folge uns</h3>
                 <div class="social-icons">
                     <!-- Annahme: Du hast diese Icons im assets-Ordner als _whatsapp.png und _instagram.png -->
-                    <a href="https://www.efbornheim.de/" target="_blank" aria-label="Webseite"><img src="/_webseite.png" alt="Webseite"></a>
-                    <a href="https://chat.whatsapp.com/BaBd04yeoGvDkcGZcRNkTI?mode=ac_t" target="_blank" aria-label="WhatsApp"><img src="/_WhatsApp.png" alt="WhatsApp"></a>
-                    <a href="https://www.youtube.com/@efbornheim" target="_blank" aria-label="Youtube"><img src="/_youtube.png" alt="Youtube"></a>
-                    <a href="https://www.instagram.com/efbornheim/" target="_blank" aria-label="Twitter"><img src="/_instagram.png" alt="Instagram"></a>
+                    <a href="https://www.efbornheim.de/" target="_blank" aria-label="Webseite"><img src="/-webseite.png" alt="Webseite"></a>
+                    <a href="https://chat.whatsapp.com/BaBd04yeoGvDkcGZcRNkTI?mode=ac_t" target="_blank" aria-label="WhatsApp"><img src="/-WhatsApp.png" alt="WhatsApp"></a>
+                    <a href="https://www.youtube.com/@efbornheim" target="_blank" aria-label="Youtube"><img src="/-youtube.png" alt="Youtube"></a>
+                    <a href="https://www.instagram.com/efbornheim/" target="_blank" aria-label="Twitter"><img src="/-instagram.png" alt="Instagram"></a>
                 </div>
             </div>
         </div>
@@ -4725,8 +4696,8 @@ DATEINAME: src/templates/header.php
     <!-- CSS-Dateien und Icons -->
     <link rel="stylesheet" href="/.main.css">
     <link rel="icon" type="image/x-icon" href="/_favicon.ico">
-    <link rel="icon" type="image/png" href="/_logo.png">
-    <link rel="apple-touch-icon" href="/_apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="/-logo.png">
+    <link rel="apple-touch-icon" href="/-apple-touch-icon.png">
 </head>
 <body>
     <header>
@@ -4828,9 +4799,10 @@ require_once ROOT_PATH . 'templates/header.php';
 // Modul laden oder 404-Fehler anzeigen
 if (file_exists($module_path)) {
     if ($page === 'home') {
-        // Für die Homepage wird der Hero-Sektion außerhalb von <main> gerendert.
-        // Die restlichen Sektionen werden innerhalb von home.php in ein <main>-Tag gewickelt.
-        require_once $module_path;
+        // GEÄNDERT: Für die Homepage wird ein neuer Wrapper um Hero-Sektion und Main-Inhalt gelegt.
+        echo '<div class="content-area-wrapper">'; // NEUER CONTAINER FÜR STICKY FOOTER LOGIK
+        require_once $module_path; // Lädt hero-section und main.site-content-wrapper
+        echo '</div>'; // SCHLIESST NEUEN CONTAINER
     } else {
         // Für alle anderen Seiten, wrap in <main class="site-content-wrapper">
         // Diese Klasse sorgt für max-width und padding
@@ -4852,8 +4824,8 @@ require_once ROOT_PATH . 'templates/footer.php';
 ?>
 
 <link rel="icon" type="image/x-icon" href="/_favicon.ico">
-<link rel="icon" type="image/png" href="/_logo.png">
-<link rel="apple-touch-icon" href="/_apple-touch-icon.png">
+<link rel="icon" type="image/png" href="/-logo.png">
+<link rel="apple-touch-icon" href="/-apple-touch-icon.png">
 
 ==================================================
 DATEINAME: src/.htaccess
