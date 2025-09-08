@@ -53,23 +53,23 @@
 
 /* Hero Sektion */
 .hero-section {
-    background: url('/-hero-banner.jpeg') no-repeat center bottom; /* Hintergrundbild, Fokus auf den unteren Bereich */
-    background-size: 130%; /* Leicht reingezoomt */
-    background-attachment: fixed; /* Parallax-Effekt: Bild bleibt beim Scrollen "oben" */
-    position: relative; /* Wichtig für Z-Index und ::before */
+    /* Standard-Hintergrundbild für größere Bildschirme (Desktop First) */
+    background: url('/-hero-banner.jpeg') no-repeat center bottom; 
+    background-size: cover; /* GEÄNDERT: 'cover' füllt immer den Bereich aus, ohne das Bild zu stretchen */
+    background-attachment: fixed;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 100vh; /* GEÄNDERT: explizit 100vh für volle Viewport-Höhe */
-    /* Padding für den Inhalt, damit er nicht unter dem Header verschwindet */
-    padding-top: 0; /* GEÄNDERT: padding-top hier auf 0 setzen, da es der erste Inhalt ist */
+    min-height: 100vh;
+    padding-top: 0;
     padding-bottom: var(--spacing-xl);
     margin-bottom: 0;
-    overflow: hidden; /* Verhindert sichtbaren Overflow des gezoomten Bildes */
-    width: auto; /* Nimmt die gesamte verfügbare Breite des Bodies ein */
-    flex-shrink: 0; /* NEU: Verhindert, dass der Hero-Bereich schrumpft */
+    overflow: hidden;
+    width: auto;
+    flex-shrink: 0;
 
-    /* NEU: Übergang zum Inhalt darunter (Linear-Gradient Maske) */
+    /* Übergang zum Inhalt darunter (Linear-Gradient Maske) */
     mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
     -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
 }
@@ -82,36 +82,35 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.25); /* Dunkler, leicht transparenter Schleier */
+    background: rgba(0, 0, 0, 0.25);
     z-index: 1;
 }
 
 .hero-content {
     max-width: 900px;
     text-align: center;
-    position: relative; /* Stellt sicher, dass der Inhalt über dem Overlay liegt */
+    position: relative;
     z-index: 2;
-    color: var(--color-background-white); /* Textfarbe */
-    /* Internes Padding für den Inhalt im Vollbild-Banner, um ihn auf kleineren Bildschirmen einzurücken */
+    color: var(--color-background-white);
     padding: 0 var(--spacing-md);
 }
 
 .hero-content h1 {
-    font-size: 4.5em; /* Etwas größere Schrift für den Vollbildmodus */
+    font-size: 4.5em;
     margin-bottom: var(--spacing-md);
     font-weight: 800;
     line-height: 1.1;
-    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.8); /* Stärkerer Textschatten für bessere Lesbarkeit */
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
     animation: fadeInUp 1s ease-out forwards 0.5s;
     opacity: 0;
     transform: translateY(30px);
 }
 
 .hero-content p {
-    font-size: 1.6em; /* Etwas größere Schrift */
+    font-size: 1.6em;
     margin-bottom: var(--spacing-lg);
     font-weight: 400;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7); /* Stärkerer Textschatten */
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
     animation: fadeInUp 1s ease-out forwards 0.8s;
     opacity: 0;
     transform: translateY(30px);
@@ -130,32 +129,32 @@
     animation: fadeInUp 1s ease-out forwards 1.1s;
     opacity: 0;
     transform: translateY(30px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); /* Stärkerer Schatten für Pop-Effekt */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
 .hero-button:hover {
     background-color: #00A656;
     transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5); /* Noch stärkerer Schatten beim Hover */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
 }
 
 /* Stil für den Missions-Hinweis */
 .mission-highlight {
-    color: var(--color-secondary); /* Ein auffälliges Grün */
+    color: var(--color-secondary);
     font-weight: 700;
     font-size: 1.2em;
     margin-top: var(--spacing-md);
-    display: block; /* Macht es zu einem Blockelement, für mehr Platz */
+    display: block;
     text-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .hero-content .mission-highlight {
-    color: var(--color-accent); /* Im Hero-Banner eine kräftigere Akzentfarbe für besseren Kontrast */
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8); /* Sehr starker Textschatten */
-    animation: fadeInUp 1s ease-out forwards 1.4s; /* Später als Button einblenden */
+    color: var(--color-accent);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+    animation: fadeInUp 1s ease-out forwards 1.4s;
     opacity: 0;
     transform: translateY(30px);
-    font-size: 1.6em; /* Im Hero-Banner etwas größer und prominenter */
+    font-size: 1.6em;
 }
 
 
@@ -238,7 +237,7 @@
 .testimonial-author {
     display: flex;
     align-items: center;
-    margin-top: auto; /* Sorgt dafür, dass es unten klebt */
+    margin-top: auto;
 }
 
 .testimonial-author img {
@@ -278,7 +277,7 @@
     text-align: center;
     border: 1px solid var(--color-border);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    text-decoration: none; /* Für den Link */
+    text-decoration: none;
     color: inherit;
     display: flex;
     flex-direction: column;
@@ -295,11 +294,10 @@
     height: 150px;
     object-fit: contain;
     margin-bottom: var(--spacing-md);
-    border-radius: var(--border-radius-sm);
-    background-color: #FDFEFE;
-    padding: var(--spacing-xs);
-    mask-image: radial-gradient(circle at center, black 70%, transparent 100%);
-    -webkit-mask-image: radial-gradient(circle at center, black 70%, transparent 100%); /* Radial for teaser also */
+    border-radius: var(--border-radius-sm); /* Behält leichte Abrundung bei */
+    background-color: #FDFEFE; /* Behält weißen Hintergrund bei */
+    padding: var(--spacing-xs); /* Behält Padding bei */
+    /* ENTFERNT: mask-image und -webkit-mask-image für rechteckige Form */
 }
 
 
@@ -370,28 +368,29 @@
 /* Responsive Anpassungen für die Home-Seite */
 @media (max-width: 992px) {
     .hero-section {
-        background-size: 150%; /* Zoom anpassen für Tablets */
+        background-size: cover; /* Auch auf Tablets immer 'cover' */
         background-position: center bottom;
-        min-height: 90vh; /* Etwas weniger als 100vh auf kleineren Desktops/Tablets */
+        min-height: 90vh;
     }
     .hero-content h1 { font-size: 3.5em; }
     .hero-content p { font-size: 1.4em; }
     .hero-content .mission-highlight { font-size: 1.4em; }
     .home-section-content { padding: 0 var(--spacing-sm); }
-    .home-page-content-wrapper { /* Dieser Wrapper wird nicht mehr direkt in index.php verwendet */
+    .home-page-content-wrapper {
         padding: 0 var(--spacing-sm);
-        transform: translateX(0); /* Entferne Verschiebung auf Tablets */
-        /* NEU: Setze margin-top auf einen Standardwert, wenn es im flex-grow-Container ist */
-        margin-top: var(--spacing-lg); /* Angepasst */
+        transform: translateX(0);
+        margin-top: var(--spacing-lg);
     }
 }
 
 @media (max-width: 768px) {
     .hero-section {
-        background-size: 180%; /* Stärkerer Zoom für mobile Querformate */
+        /* HINTERGRUND ÄNDERT SICH AUF MOBILE */
+        background: url('/-hero-banner-mobile.png') no-repeat center bottom;
+        background-size: cover; /* GEÄNDERT: 'cover' statt Prozentwerte */
         background-position: center bottom;
-        min-height: 80vh; /* Anpassung für mobile Geräte */
-        padding-top: calc(var(--header-height) + var(--spacing-lg)); /* GEÄNDERT: Padding-top für den Inhalt im Hero-Banner wieder aktivieren, da der Header auf Mobile größer ist */
+        min-height: 80vh;
+        padding-top: calc(var(--header-height) + var(--spacing-lg));
         padding-bottom: var(--spacing-lg);
     }
     .hero-content h1 { font-size: 2.8em; }
@@ -404,10 +403,10 @@
 
 @media (max-width: 500px) { /* Small Mobile */
     .hero-section {
-        background-size: 220%;
+        background-size: cover; /* GEÄNDERT: 'cover' statt Prozentwerte */
         background-position: center bottom;
         min-height: 70vh;
-        padding-top: calc(var(--header-height) + var(--spacing-md)); /* GEÄNDERT: Padding-top anpassen */
+        padding-top: calc(var(--header-height) + var(--spacing-md));
         padding-bottom: var(--spacing-md);
     }
     .hero-content h1 { font-size: 2.2em; }
@@ -415,8 +414,8 @@
     .hero-content .mission-highlight { font-size: 1.1em; }
     .hero-button { padding: var(--spacing-xs) var(--spacing-md); font-size: 1em; }
     .home-section h2 { font-size: 1.6em; }
-    .home-page-content-wrapper { /* Dieser Wrapper wird nicht mehr direkt in index.php verwendet */
-        margin: var(--spacing-lg) auto var(--spacing-md) auto; /* Angepasst */
+    .home-page-content-wrapper {
+        margin: var(--spacing-lg) auto var(--spacing-md) auto;
         padding: 0 var(--spacing-xs);
     }
 }

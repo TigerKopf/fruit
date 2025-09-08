@@ -13,8 +13,6 @@
 </head>
 <body>
     <?php
-    // NEU: disclaimer_modal.php enthält jetzt nur PHP-Logik und setzt $show_disclaimer_modal.
-    // Das HTML des Modals wird HIER gerendert, wenn $show_disclaimer_modal true ist.
     require_once ROOT_PATH . 'include/disclaimer_modal.php';
 
     if ($show_disclaimer_modal):
@@ -40,10 +38,21 @@
             <p class="disclaimer-bottom-note">Sie müssen den Hinweis akzeptieren, um die Webseite zu nutzen.</p>
         </div>
     </div>
-    <?php endif; // Ende des if($show_disclaimer_modal) Blocks ?>
+    <?php endif; ?>
 
     <header>
         <div class="google-header-wrapper">
+            <!-- Hamburger Icon für Mobile -->
+            <button class="menu-toggle" aria-label="Menü öffnen" style="display: none;">
+                <span class="hamburger"></span>
+            </button>
+            
+            <!-- Logo, das auf Mobile im Header Wrapper sichtbar ist -->
+            <a href="/" class="site-logo-link">
+                <img src="/-full_logo.png" alt="Früchte aus Portugal Logo" class="site-logo-image" loading="eager">
+            </a>
+
+            <!-- Der eigentliche Navigationsbereich (der ausklappt) -->
             <nav class="google-search-like-nav">
                 <ul class="nav-options">
                     <li><a href="/">Home</a></li>
@@ -51,14 +60,56 @@
                     <li><a href="/geschichte">Geschichte</a></li>
                     <li><a href="/kontakt">Kontakt</a></li>
                 </ul>
-                <a href="/spenden" class="cart-button">Spenden</a>
             </nav>
+
+            <!-- Spenden Button, der sowohl für Desktop als auch Mobile dient und bei Mobile immer angezeigt wird -->
+            <a href="/spenden" class="cart-button donate-button">Spenden</a>
         </div>
     </header>
 
     <div id="page-content-wrapper">
 
-    <!-- NEU: JavaScript für das Disclaimer Modal hier einbinden -->
-    <?php if ($show_disclaimer_modal ?? false): // Nur einbinden, wenn das Modal auch gerendert wird ?>
+    <?php if ($show_disclaimer_modal ?? false): ?>
         <script src="/_disclaimer.js" defer></script>
     <?php endif; ?>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const menuToggle = document.querySelector('.menu-toggle');
+        const googleHeaderWrapper = document.querySelector('.google-header-wrapper');
+        // NEU: Das korrekte Element für die Navigation auswählen
+        const googleSearchLikeNav = document.querySelector('.google-search-like-nav');
+
+        // Prüfen, ob alle benötigten Elemente existieren
+        if (menuToggle && googleSearchLikeNav && googleHeaderWrapper) {
+            menuToggle.addEventListener('click', () => {
+                // Die Klasse 'is-open' auf das Navigations-Container-Element anwenden
+                googleSearchLikeNav.classList.toggle('is-open');
+                menuToggle.classList.toggle('is-active');
+                googleHeaderWrapper.classList.toggle('nav-expanded');
+                menuToggle.blur();
+            });
+
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 768) { // Desktop-Breakpoint
+                    // Klasse entfernen, wenn zur Desktop-Ansicht gewechselt wird
+                    googleSearchLikeNav.classList.remove('is-open');
+                    menuToggle.classList.remove('is-active');
+                    googleHeaderWrapper.classList.remove('nav-expanded');
+                    document.body.style.overflow = '';
+                }
+            });
+
+            document.addEventListener('keydown', (event) => {
+                // Menü mit ESC schließen
+                if (event.key === 'Escape' && googleSearchLikeNav.classList.contains('is-open')) {
+                    googleSearchLikeNav.classList.remove('is-open');
+                    menuToggle.classList.remove('is-active');
+                    googleHeaderWrapper.classList.remove('nav-expanded');
+                    document.body.style.overflow = '';
+                    menuToggle.focus();
+                }
+            });
+        }
+    });
+</script>

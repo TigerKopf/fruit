@@ -1,72 +1,80 @@
 /* Header-Bereich (Sticky Navigation Bar) */
 header {
     width: 100%;
-    height: var(--header-height);
+    height: var(--header-height); /* Definiert die Grundhöhe des Desktop Headers */
     padding: 0 var(--spacing-md);
-    background-color: transparent; /* Standardmäßig transparent */
+    background-color: transparent;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: none; /* Initial kein Schatten */
+    box-shadow: none;
     position: fixed;
     top: 0;
     left: 0;
     z-index: 1000;
-    transition: box-shadow 0.3s ease, background-color 0.3s ease; /* Übergang für Hintergrundfarbe hinzugefügt */
+    transition: box-shadow 0.3s ease, background-color 0.3s ease, height 0.3s ease;
     box-sizing: border-box;
-    margin-top: 10px;
 }
-
 header.header-scrolled {
-    background-color: transparent; /* GEÄNDERT: Kein Hintergrund beim Scrollen */
-    box-shadow: none; /* GEÄNDERT: Kein Schatten beim Scrollen */
+    background-color: transparent; /* KEINE ÄNDERUNG im Desktop Modus */
+    box-shadow: none;
 }
 
-.google-search-like-nav {
+
+/* Haupt-Wrapper im Header */
+.google-header-wrapper {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Elemente verteilen */
     align-items: center;
     width: 100%;
-    max-width: var(--content-max-width); /* Angepasst an die Inhaltsbreite */
+    max-width: var(--content-max-width);
+    position: relative; /* Für absolute Positionierung, falls benötigt */
+    height: 52px; /* Setzt die feste Höhe der Header-Box */
     background-color: var(--color-background-white);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius-lg);
-    padding: var(--spacing-sm) var(--spacing-md);
     box-shadow: 0 2px 8px var(--color-shadow-light);
-    height: 52px; /* GEÄNDERT: Leicht erhöhte Höhe für bessere Optik */
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    padding: var(--spacing-sm) var(--spacing-md);
+    box-sizing: border-box; /* Sicherstellen, dass Padding berücksichtigt wird */
 }
 
-header.header-scrolled .google-search-like-nav {
+header.header-scrolled .google-header-wrapper { /* Bei Scrollen dezenter */
     border-color: var(--color-border);
     box-shadow: 0 1px 5px var(--color-shadow-light);
 }
 
-.google-header-wrapper {
+/* Logo (Bild) */
+.site-logo-link {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    width: 100%;
-    max-width: var(--content-max-width); /* Angepasst an die Inhaltsbreite */
-    transform: translateX(0); /* GEÄNDERT: Verschiebung um 20px nach links entfernt */
-}
-
-.logo {
-    font-size: 1.8em;
-    font-weight: 700;
-    color: var(--color-primary);
+    height: 100%; /* Passt die Link-Höhe an den Header an */
+    padding: 0; /* Kein Padding, Bild wird kontrolliert */
+    margin-right: var(--spacing-lg); /* Abstand zur Nav */
     text-decoration: none;
-    margin-right: var(--spacing-lg);
+    order: 0; /* Desktop-Reihenfolge: Logo -> Nav -> Spenden */
+}
+.site-logo-image {
+    height: 46px; /* Feste Höhe für das Logo */
+    width: auto; /* Breite proportional */
+    object-fit: contain;
+    transition: transform 0.2s ease;
+}
+.site-logo-link:hover .site-logo-image {
+    transform: scale(1.05); /* Leichte Hover-Animation */
 }
 
+
+/* Navigationsoptionen (Home, Bestellen, etc.) - Desktop Version */
 .nav-options {
     list-style: none;
-    margin: 0; /* GEÄNDERT: Margin auf 0 gesetzt */
+    margin: 0;
     padding: 0;
     display: flex;
     gap: var(--spacing-lg);
+    order: 1; /* Desktop-Reihenfolge */
+    flex-grow: 1; /* Füllt den Platz zwischen Logo und Button */
+    justify-content: center; /* Zentriert die Nav-Links im verfügbaren Raum */
 }
-
 .nav-options li a {
     text-decoration: none;
     color: var(--color-text-medium);
@@ -75,13 +83,10 @@ header.header-scrolled .google-search-like-nav {
     transition: color 0.3s ease;
     font-weight: 500;
 }
-
-.nav-options li a:hover,
-.nav-options li a.active {
+.nav-options li a:hover, .nav-options li a.active {
     color: var(--color-primary);
     position: relative;
 }
-
 .nav-options li a.active::after {
     content: '';
     position: absolute;
@@ -93,7 +98,8 @@ header.header-scrolled .google-search-like-nav {
     border-radius: 2px;
 }
 
-.cart-button {
+/* Spenden Button (Allgemein) */
+.cart-button { /* Allgemeine Klasse für alle Buttons */
     background-color: var(--color-primary);
     color: var(--color-background-white);
     text-decoration: none;
@@ -108,10 +114,240 @@ header.header-scrolled .google-search-like-nav {
     display: inline-flex;
     align-items: center;
     gap: var(--spacing-xs);
+    flex-shrink: 0; /* Verhindert, dass der Button schrumpft */
 }
-
 .cart-button:hover {
     background-color: #2F5AA9;
     box-shadow: 0 4px 10px var(--color-shadow-light);
     transform: translateY(-2px);
+}
+
+.donate-button { /* Spezielle Klasse für den Spendenbutton */
+    order: 2; /* Desktop-Reihenfolge: Ganz rechts */
+}
+
+
+/* --- MOBILE ANPASSUNGEN (ab 768px oder kleiner) --- */
+@media (max-width: 768px) {
+    header {
+        height: var(--header-height-mobile-collapsed); /* Feste Höhe für mobile Top-Leiste */
+        background-color: var(--color-background-white);
+        box-shadow: 0 2px 10px var(--color-shadow-medium);
+        display: flex; /* Der Header selbst wird wieder ein Flex-Container */
+        justify-content: center; /* Inhalt zentrieren */
+        align-items: center; /* Vertikal zentrieren */
+        padding: 0 var(--spacing-md); /* Passt Padding für mobile an */
+        flex-direction: row; /* Wichtig für korrekten mobilen Header */
+    }
+    header.header-scrolled {
+        background-color: var(--color-background-white);
+        box-shadow: 0 2px 10px var(--color-shadow-medium);
+    }
+
+    /* Google Header Wrapper wird zur mobilen Top-Bar */
+    .google-header-wrapper {
+        position: relative; /* Wichtig für absolute Menüpositionierung */
+        width: 100%;
+        max-width: none; /* Keine feste Max-Breite mehr */
+        height: var(--header-height-mobile-collapsed); /* Feste Höhe */
+        padding: 0; /* Keine extra Padding, um inneren Inhalt zu kontrollieren */
+        border: none;
+        box-shadow: none;
+        background-color: transparent; /* Farbe wird vom Header genommen */
+        border-radius: 0;
+        justify-content: flex-start; /* Für Logo & Toggle auf einer Linie */
+        align-items: stretch;
+        flex-wrap: nowrap; /* Kein Umbruch in der Top-Bar */
+        display: flex; /* Macht es zum flex Container für Menü/Logo/Spenden */
+        gap: var(--spacing-sm);
+    }
+    .google-header-wrapper.nav-expanded {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        box-shadow: none;
+    }
+
+    /* Logo Bild auf Mobile */
+    .site-logo-link {
+        order: 1; /* Zwischen Hamburger und Spenden-Button */
+        flex-grow: 1; /* Nimmt restlichen Platz ein */
+        text-align: center;
+        justify-content: center;
+        height: auto;
+    }
+    .site-logo-image {
+        height: 50px; /* Kleiner auf Mobile */
+    }
+
+    /* Hamburger-Menü Toggle Button */
+    .menu-toggle {
+        display: block !important;
+        order: 0; /* Ganz links */
+        background: none;
+        border: none;
+        padding: var(--spacing-xs);
+        cursor: pointer;
+        z-index: 1001; /* Über dem Spenden Button */
+        flex-shrink: 0; /* Verhindert schrumpfen */
+    }
+    .hamburger {
+        display: block;
+        width: 25px;
+        height: 3px;
+        background-color: var(--color-text-dark);
+        position: relative;
+        transition: all 0.3s ease-in-out;
+    }
+    .hamburger::before, .hamburger::after {
+        content: '';
+        display: block;
+        width: 25px;
+        height: 3px;
+        background-color: var(--color-text-dark);
+        position: absolute;
+        transition: all 0.3s ease-in-out;
+    }
+    .hamburger::before { top: -8px; }
+    .hamburger::after { bottom: -8px; }
+
+    /* Animation für Hamburger zu X */
+    .menu-toggle.is-active .hamburger { background-color: transparent; }
+    .menu-toggle.is-active .hamburger::before { top: 0; transform: rotate(45deg); }
+    .menu-toggle.is-active .hamburger::after { bottom: 0; transform: rotate(-45deg); }
+
+
+    /* Mobile Navigationsbereich (der ausklappt) */
+    .google-search-like-nav {
+        position: fixed; /* Fixed, damit es über dem Content bleibt beim Scrollen */
+        top: var(--header-height-mobile-collapsed); /* Positioniert direkt unter der Top-Leiste */
+        left: 0; /* Ganze Breite des Viewports */
+        right: 0;
+        width: 100%; /* Um 100% Breite zu gewährleisten, ignorieren Sie margin/padding des Body */
+        max-width: none;
+        background-color: var(--color-background-white);
+        border: none; /* Kein Border oben mehr */
+        border-bottom-left-radius: var(--border-radius-md); /* Nur unten Links/Rechts */
+        border-bottom-right-radius: var(--border-radius-md);
+        box-shadow: 0 8px 15px var(--color-shadow-medium);
+        overflow: hidden;
+        max-height: 0; /* Initial versteckt */
+        transition: max-height 0.4s ease-out;
+        flex-direction: column; /* Vertikal gestapelt */
+        align-items: stretch; /* Volle Breite für Links */
+        padding: 0;
+        pointer-events: none;
+        z-index: 998; /* Unter Donate Button, über dem Content */
+    }
+    .google-search-like-nav.is-open {
+        max-height: calc(100vh - var(--header-height-mobile-collapsed) - var(--spacing-md)); /* Dynamische Höhe basierend auf Viewport */
+        padding: var(--spacing-sm) var(--spacing-md) var(--spacing-md) var(--spacing-md);
+        pointer-events: auto;
+        overflow-y: auto; /* Scrollbar für lange Menüs */
+    }
+    .nav-options { /* Die eigentliche Link-Liste im mobilen Menü */
+        flex-direction: column;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+    .nav-options li {
+        width: 100%;
+        text-align: left;
+        margin-bottom: var(--spacing-xs);
+    }
+    .nav-options li a {
+        display: block;
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: 1.1em;
+        font-weight: 500;
+        color: var(--color-text-dark);
+        border-radius: var(--border-radius-sm);
+        transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    }
+    .nav-options li a:hover, .nav-options li a.active {
+        background-color: var(--color-background-light);
+        color: var(--color-primary);
+        transform: translateX(5px);
+    }
+    .nav-options li a.active::after {
+        display: none;
+    }
+
+    /* Spendenbutton für Mobile (immer oben rechts sichtbar) */
+    .donate-button { /* Jetzt ein einzelner Button */
+        display: flex !important; /* MUSS flex sein für das Icon etc. */
+        order: 2; /* Rechts vom Logo */
+        align-self: center;
+        margin-left: auto; /* Schiebt ihn nach ganz rechts */
+        font-size: 0.85em;
+        padding: var(--spacing-xs) var(--spacing-sm);
+        height: auto;
+        flex-shrink: 0;
+        background-color: var(--color-secondary); /* GRÜN: Der mobile Spendenbutton ist ein Akzent! */
+    }
+    .donate-button:hover { /* Angepasster Hover für den grünen Spendenbutton */
+        background-color: #00A656;
+        box-shadow: 0 4px 10px var(--color-shadow-light);
+        transform: translateY(-2px);
+    }
+    .donate-button.donate-button-mobile { display: none; } /* Die alte Klasse entfernen */
+    .donate-button.donate-button-desktop { display: none; } /* Alte Klasse für Desktop, bleibt none */
+
+
+    .site-content-wrapper {
+        margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-md));
+        /* Margin muss vom fixed header beachtet werden, dieser offset bleibt gleich */
+        padding-left: var(--spacing-md); /* Feste padding Werte für Mobile-Seiten */
+        padding-right: var(--spacing-md);
+    }
+
+    .admin-container {
+        margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-md));
+    }
+}
+
+/* Kleinste Mobilgeräte */
+@media (max-width: 500px) {
+    /* Header padding im Wrapper wurde bereits gesetzt */
+    .google-header-wrapper {
+        padding: var(--spacing-sm) var(--spacing-xs); /* Geringeres Padding in der Top-Bar */
+        height: var(--header-height-mobile-collapsed);
+    }
+    .site-logo-image {
+        height: 30px; /* Noch kleiner auf kleinsten Bildschirmen */
+    }
+    .donate-button {
+        font-size: 0.8em;
+        padding: var(--spacing-xs) var(--spacing-xs);
+    }
+    .menu-toggle .hamburger, .menu-toggle .hamburger::before, .menu-toggle .hamburger::after {
+        width: 22px;
+        height: 2px;
+    }
+    .menu-toggle .hamburger::before { top: -6px; }
+    .menu-toggle .hamburger::after { bottom: -6px; }
+
+    /* Wenn das Menü offen ist, scrollt der Body, nicht die nav itself */
+    .google-search-like-nav.is-open {
+        max-height: calc(100vh - var(--header-height-mobile-collapsed) - var(--spacing-sm)); /* Passt dynamische Höhe an */
+        padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm) var(--spacing-sm); /* Geringeres Padding */
+        left: var(--spacing-sm);
+        right: var(--spacing-sm);
+    }
+    .nav-options li a {
+        font-size: 1em;
+        padding: var(--spacing-xs);
+    }
+
+    .site-content-wrapper {
+        margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-sm));
+        padding-left: var(--spacing-sm);
+        padding-right: var(--spacing-sm);
+    }
+
+    .admin-container {
+        margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-sm));
+        padding-left: var(--spacing-sm);
+        padding-right: var(--spacing-sm);
+    }
 }
