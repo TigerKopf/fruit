@@ -533,6 +533,203 @@ DATEINAME: src/assets/style/cart.css
 }
 
 ==================================================
+DATEINAME: src/assets/style/disclaimer.css
+--------------------------------------------------
+/* src/assets/style/disclaimer.css */
+
+.disclaimer-modal {
+    display: flex;
+    position: fixed;
+    z-index: 2000; /* Muss über allem anderen liegen */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Verhindert Scrollbars für das Modal-Overlay selbst */
+    background-color: rgba(0,0,0,0.8); /* Starker Overlay */
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px); /* Optional: Unscharfer Hintergrund */
+    animation: fadeIn 0.5s ease-out;
+}
+
+.disclaimer-modal-content {
+    background-color: var(--color-background-white);
+    margin: var(--spacing-md); /* Mindestabstand zum Rand */
+    padding: var(--spacing-xl) var(--spacing-lg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    max-width: 650px; /* Breite anpassen */
+    width: 90%; /* Standardbreite */
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5); /* Tieferer Schatten */
+    text-align: center;
+    position: relative;
+    animation: zoomIn 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    display: flex; /* Für interne Ausrichtung */
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    box-sizing: border-box; /* Padding und Border in Breite/Höhe berücksichtigen */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.disclaimer-modal-content h2 {
+    color: var(--color-primary); /* Blau, nicht grelles Rot */
+    font-size: 2.5em; /* Größer und klarer */
+    margin-bottom: var(--spacing-lg);
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--spacing-sm);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.disclaimer-modal-content p {
+    font-size: 1.05em;
+    color: var(--color-text-dark);
+    margin-bottom: var(--spacing-sm); /* Etwas mehr Abstand */
+    line-height: 1.6;
+}
+
+.disclaimer-modal-content p strong {
+    color: var(--color-accent); /* Orange-Akzent für Wichtigkeit */
+    font-weight: 700;
+}
+
+.disclaimer-modal-content ul {
+    list-style: disc inside; /* Punkt ist jetzt innerhalb */
+    text-align: left;
+    margin: var(--spacing-sm) var(--spacing-md) var(--spacing-lg) var(--spacing-lg);
+    padding: 0;
+    color: var(--color-text-medium);
+    border-left: 3px solid var(--color-primary-lightest); /* Dezente Abgrenzung */
+    padding-left: var(--spacing-md);
+}
+.disclaimer-modal-content ul li {
+    margin-bottom: var(--spacing-xs);
+    font-size: 1em;
+    line-height: 1.4;
+}
+.disclaimer-modal-content ul li strong {
+    color: var(--color-text-dark); /* Auch hier akzentuierter Text */
+    font-weight: 600;
+}
+.disclaimer-modal-content ul li a {
+    color: var(--color-primary); /* Link-Farbe */
+    text-decoration: underline;
+    transition: color 0.2s ease;
+}
+.disclaimer-modal-content ul li a:hover {
+    color: var(--color-accent);
+}
+
+.disclaimer-button-wrapper {
+    margin-top: var(--spacing-lg);
+}
+
+.disclaimer-accept-btn {
+    background-color: #EF4444; /* Bleibt Rot während Countdown */
+    color: white;
+    padding: var(--spacing-md) var(--spacing-xl); /* Größerer Button */
+    border: none;
+    border-radius: var(--border-radius-md);
+    cursor: not-allowed;
+    font-size: 1.2em; /* Größere Schrift */
+    font-weight: 700;
+    width: 100%;
+    max-width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Kräftigerer Schatten */
+}
+
+.disclaimer-accept-btn[disabled] {
+    opacity: 0.8; /* Leicht gedimmt, wenn disabled */
+    cursor: not-allowed;
+    background-color: #EF4444; /* Bleibt rot im disabled Zustand */
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2); /* Weniger Schatten */
+    transform: translateY(0); /* Keine Verschiebung */
+}
+
+.disclaimer-accept-btn:not([disabled]) {
+    background-color: var(--color-secondary); /* Akzeptiert: Grün wie Action-Buttons */
+    cursor: pointer;
+}
+.disclaimer-accept-btn:not([disabled]):hover {
+    background-color: #00A656; /* Dunkleres Grün */
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+
+.disclaimer-bottom-note {
+    font-size: 0.9em;
+    color: var(--color-text-light);
+    margin-top: var(--spacing-sm);
+    margin-bottom: 0;
+}
+
+/* Responsive Anpassungen */
+@media (max-width: 768px) {
+    .disclaimer-modal-content {
+        padding: var(--spacing-lg) var(--spacing-sm);
+    }
+    .disclaimer-modal-content h2 {
+        font-size: 2em;
+        margin-bottom: var(--spacing-md);
+    }
+    .disclaimer-modal-content p {
+        font-size: 1em;
+    }
+    .disclaimer-modal-content ul {
+        margin: var(--spacing-xs) var(--spacing-sm) var(--spacing-lg) var(--spacing-sm);
+        padding-left: var(--spacing-sm);
+    }
+    .disclaimer-accept-btn {
+        max-width: 300px;
+        font-size: 1.1em;
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+    .disclaimer-bottom-note {
+        font-size: 0.75em;
+    }
+}
+@media (max-width: 500px) {
+    .disclaimer-modal-content {
+        padding: var(--spacing-md) var(--spacing-xs);
+    }
+    .disclaimer-modal-content h2 {
+        font-size: 1.6em;
+        margin-bottom: var(--spacing-sm);
+        padding-bottom: var(--spacing-xs);
+    }
+    .disclaimer-modal-content p {
+        font-size: 0.95em;
+        margin-bottom: var(--spacing-xs);
+    }
+    .disclaimer-modal-content ul {
+        margin: var(--spacing-xs) 0 var(--spacing-md) 0;
+        padding-left: var(--spacing-md);
+    }
+    .disclaimer-modal-content ul li {
+        font-size: 0.9em;
+    }
+    .disclaimer-accept-btn {
+        max-width: 100%;
+        font-size: 1em;
+        padding: var(--spacing-sm) var(--spacing-sm);
+    }
+}
+
+==================================================
 DATEINAME: src/assets/style/footer.css
 --------------------------------------------------
 /* Footer-Bereich (schwebender Block) */
@@ -648,72 +845,80 @@ DATEINAME: src/assets/style/header.css
 /* Header-Bereich (Sticky Navigation Bar) */
 header {
     width: 100%;
-    height: var(--header-height);
+    height: var(--header-height); /* Definiert die Grundhöhe des Desktop Headers */
     padding: 0 var(--spacing-md);
-    background-color: transparent; /* Standardmäßig transparent */
+    background-color: transparent;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: none; /* Initial kein Schatten */
+    box-shadow: none;
     position: fixed;
     top: 0;
     left: 0;
     z-index: 1000;
-    transition: box-shadow 0.3s ease, background-color 0.3s ease; /* Übergang für Hintergrundfarbe hinzugefügt */
+    transition: box-shadow 0.3s ease, background-color 0.3s ease, height 0.3s ease;
     box-sizing: border-box;
-    margin-top: 10px;
 }
-
 header.header-scrolled {
-    background-color: transparent; /* GEÄNDERT: Kein Hintergrund beim Scrollen */
-    box-shadow: none; /* GEÄNDERT: Kein Schatten beim Scrollen */
+    background-color: transparent; /* KEINE ÄNDERUNG im Desktop Modus */
+    box-shadow: none;
 }
 
-.google-search-like-nav {
+
+/* Haupt-Wrapper im Header */
+.google-header-wrapper {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Elemente verteilen */
     align-items: center;
     width: 100%;
-    max-width: var(--content-max-width); /* Angepasst an die Inhaltsbreite */
+    max-width: var(--content-max-width);
+    position: relative; /* Für absolute Positionierung, falls benötigt */
+    height: 52px; /* Setzt die feste Höhe der Header-Box */
     background-color: var(--color-background-white);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius-lg);
-    padding: var(--spacing-sm) var(--spacing-md);
     box-shadow: 0 2px 8px var(--color-shadow-light);
-    height: 52px; /* GEÄNDERT: Leicht erhöhte Höhe für bessere Optik */
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    padding: var(--spacing-sm) var(--spacing-md);
+    box-sizing: border-box; /* Sicherstellen, dass Padding berücksichtigt wird */
 }
 
-header.header-scrolled .google-search-like-nav {
+header.header-scrolled .google-header-wrapper { /* Bei Scrollen dezenter */
     border-color: var(--color-border);
     box-shadow: 0 1px 5px var(--color-shadow-light);
 }
 
-.google-header-wrapper {
+/* Logo (Bild) */
+.site-logo-link {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    width: 100%;
-    max-width: var(--content-max-width); /* Angepasst an die Inhaltsbreite */
-    transform: translateX(0); /* GEÄNDERT: Verschiebung um 20px nach links entfernt */
-}
-
-.logo {
-    font-size: 1.8em;
-    font-weight: 700;
-    color: var(--color-primary);
+    height: 100%; /* Passt die Link-Höhe an den Header an */
+    padding: 0; /* Kein Padding, Bild wird kontrolliert */
+    margin-right: var(--spacing-lg); /* Abstand zur Nav */
     text-decoration: none;
-    margin-right: var(--spacing-lg);
+    order: 0; /* Desktop-Reihenfolge: Logo -> Nav -> Spenden */
+}
+.site-logo-image {
+    height: 46px; /* Feste Höhe für das Logo */
+    width: auto; /* Breite proportional */
+    object-fit: contain;
+    transition: transform 0.2s ease;
+}
+.site-logo-link:hover .site-logo-image {
+    transform: scale(1.05); /* Leichte Hover-Animation */
 }
 
+
+/* Navigationsoptionen (Home, Bestellen, etc.) - Desktop Version */
 .nav-options {
     list-style: none;
-    margin: 0; /* GEÄNDERT: Margin auf 0 gesetzt */
+    margin: 0;
     padding: 0;
     display: flex;
     gap: var(--spacing-lg);
+    order: 1; /* Desktop-Reihenfolge */
+    flex-grow: 1; /* Füllt den Platz zwischen Logo und Button */
+    justify-content: center; /* Zentriert die Nav-Links im verfügbaren Raum */
 }
-
 .nav-options li a {
     text-decoration: none;
     color: var(--color-text-medium);
@@ -722,13 +927,10 @@ header.header-scrolled .google-search-like-nav {
     transition: color 0.3s ease;
     font-weight: 500;
 }
-
-.nav-options li a:hover,
-.nav-options li a.active {
+.nav-options li a:hover, .nav-options li a.active {
     color: var(--color-primary);
     position: relative;
 }
-
 .nav-options li a.active::after {
     content: '';
     position: absolute;
@@ -740,7 +942,8 @@ header.header-scrolled .google-search-like-nav {
     border-radius: 2px;
 }
 
-.cart-button {
+/* Spenden Button (Allgemein) */
+.cart-button { /* Allgemeine Klasse für alle Buttons */
     background-color: var(--color-primary);
     color: var(--color-background-white);
     text-decoration: none;
@@ -755,12 +958,242 @@ header.header-scrolled .google-search-like-nav {
     display: inline-flex;
     align-items: center;
     gap: var(--spacing-xs);
+    flex-shrink: 0; /* Verhindert, dass der Button schrumpft */
 }
-
 .cart-button:hover {
     background-color: #2F5AA9;
     box-shadow: 0 4px 10px var(--color-shadow-light);
     transform: translateY(-2px);
+}
+
+.donate-button { /* Spezielle Klasse für den Spendenbutton */
+    order: 2; /* Desktop-Reihenfolge: Ganz rechts */
+}
+
+
+/* --- MOBILE ANPASSUNGEN (ab 768px oder kleiner) --- */
+@media (max-width: 768px) {
+    header {
+        height: var(--header-height-mobile-collapsed); /* Feste Höhe für mobile Top-Leiste */
+        background-color: var(--color-background-white);
+        box-shadow: 0 2px 10px var(--color-shadow-medium);
+        display: flex; /* Der Header selbst wird wieder ein Flex-Container */
+        justify-content: center; /* Inhalt zentrieren */
+        align-items: center; /* Vertikal zentrieren */
+        padding: 0 var(--spacing-md); /* Passt Padding für mobile an */
+        flex-direction: row; /* Wichtig für korrekten mobilen Header */
+    }
+    header.header-scrolled {
+        background-color: var(--color-background-white);
+        box-shadow: 0 2px 10px var(--color-shadow-medium);
+    }
+
+    /* Google Header Wrapper wird zur mobilen Top-Bar */
+    .google-header-wrapper {
+        position: relative; /* Wichtig für absolute Menüpositionierung */
+        width: 100%;
+        max-width: none; /* Keine feste Max-Breite mehr */
+        height: var(--header-height-mobile-collapsed); /* Feste Höhe */
+        padding: 0; /* Keine extra Padding, um inneren Inhalt zu kontrollieren */
+        border: none;
+        box-shadow: none;
+        background-color: transparent; /* Farbe wird vom Header genommen */
+        border-radius: 0;
+        justify-content: flex-start; /* Für Logo & Toggle auf einer Linie */
+        align-items: stretch;
+        flex-wrap: nowrap; /* Kein Umbruch in der Top-Bar */
+        display: flex; /* Macht es zum flex Container für Menü/Logo/Spenden */
+        gap: var(--spacing-sm);
+    }
+    .google-header-wrapper.nav-expanded {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        box-shadow: none;
+    }
+
+    /* Logo Bild auf Mobile */
+    .site-logo-link {
+        order: 1; /* Zwischen Hamburger und Spenden-Button */
+        flex-grow: 1; /* Nimmt restlichen Platz ein */
+        text-align: center;
+        justify-content: center;
+        height: auto;
+    }
+    .site-logo-image {
+        height: 50px; /* Kleiner auf Mobile */
+    }
+
+    /* Hamburger-Menü Toggle Button */
+    .menu-toggle {
+        display: block !important;
+        order: 0; /* Ganz links */
+        background: none;
+        border: none;
+        padding: var(--spacing-xs);
+        cursor: pointer;
+        z-index: 1001; /* Über dem Spenden Button */
+        flex-shrink: 0; /* Verhindert schrumpfen */
+    }
+    .hamburger {
+        display: block;
+        width: 25px;
+        height: 3px;
+        background-color: var(--color-text-dark);
+        position: relative;
+        transition: all 0.3s ease-in-out;
+    }
+    .hamburger::before, .hamburger::after {
+        content: '';
+        display: block;
+        width: 25px;
+        height: 3px;
+        background-color: var(--color-text-dark);
+        position: absolute;
+        transition: all 0.3s ease-in-out;
+    }
+    .hamburger::before { top: -8px; }
+    .hamburger::after { bottom: -8px; }
+
+    /* Animation für Hamburger zu X */
+    .menu-toggle.is-active .hamburger { background-color: transparent; }
+    .menu-toggle.is-active .hamburger::before { top: 0; transform: rotate(45deg); }
+    .menu-toggle.is-active .hamburger::after { bottom: 0; transform: rotate(-45deg); }
+
+
+    /* Mobile Navigationsbereich (der ausklappt) */
+    .google-search-like-nav {
+        position: fixed; /* Fixed, damit es über dem Content bleibt beim Scrollen */
+        top: var(--header-height-mobile-collapsed); /* Positioniert direkt unter der Top-Leiste */
+        left: 0; /* Ganze Breite des Viewports */
+        right: 0;
+        width: 100%; /* Um 100% Breite zu gewährleisten, ignorieren Sie margin/padding des Body */
+        max-width: none;
+        background-color: var(--color-background-white);
+        border: none; /* Kein Border oben mehr */
+        border-bottom-left-radius: var(--border-radius-md); /* Nur unten Links/Rechts */
+        border-bottom-right-radius: var(--border-radius-md);
+        box-shadow: 0 8px 15px var(--color-shadow-medium);
+        overflow: hidden;
+        max-height: 0; /* Initial versteckt */
+        transition: max-height 0.4s ease-out;
+        flex-direction: column; /* Vertikal gestapelt */
+        align-items: stretch; /* Volle Breite für Links */
+        padding: 0;
+        pointer-events: none;
+        z-index: 998; /* Unter Donate Button, über dem Content */
+    }
+    .google-search-like-nav.is-open {
+        max-height: calc(100vh - var(--header-height-mobile-collapsed) - var(--spacing-md)); /* Dynamische Höhe basierend auf Viewport */
+        padding: var(--spacing-sm) var(--spacing-md) var(--spacing-md) var(--spacing-md);
+        pointer-events: auto;
+        overflow-y: auto; /* Scrollbar für lange Menüs */
+    }
+    .nav-options { /* Die eigentliche Link-Liste im mobilen Menü */
+        flex-direction: column;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+    .nav-options li {
+        width: 100%;
+        text-align: left;
+        margin-bottom: var(--spacing-xs);
+    }
+    .nav-options li a {
+        display: block;
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: 1.1em;
+        font-weight: 500;
+        color: var(--color-text-dark);
+        border-radius: var(--border-radius-sm);
+        transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    }
+    .nav-options li a:hover, .nav-options li a.active {
+        background-color: var(--color-background-light);
+        color: var(--color-primary);
+        transform: translateX(5px);
+    }
+    .nav-options li a.active::after {
+        display: none;
+    }
+
+    /* Spendenbutton für Mobile (immer oben rechts sichtbar) */
+    .donate-button { /* Jetzt ein einzelner Button */
+        display: flex !important; /* MUSS flex sein für das Icon etc. */
+        order: 2; /* Rechts vom Logo */
+        align-self: center;
+        margin-left: auto; /* Schiebt ihn nach ganz rechts */
+        font-size: 0.85em;
+        padding: var(--spacing-xs) var(--spacing-sm);
+        height: auto;
+        flex-shrink: 0;
+        background-color: var(--color-secondary); /* GRÜN: Der mobile Spendenbutton ist ein Akzent! */
+    }
+    .donate-button:hover { /* Angepasster Hover für den grünen Spendenbutton */
+        background-color: #00A656;
+        box-shadow: 0 4px 10px var(--color-shadow-light);
+        transform: translateY(-2px);
+    }
+    .donate-button.donate-button-mobile { display: none; } /* Die alte Klasse entfernen */
+    .donate-button.donate-button-desktop { display: none; } /* Alte Klasse für Desktop, bleibt none */
+
+
+    .site-content-wrapper {
+        margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-md));
+        /* Margin muss vom fixed header beachtet werden, dieser offset bleibt gleich */
+        padding-left: var(--spacing-md); /* Feste padding Werte für Mobile-Seiten */
+        padding-right: var(--spacing-md);
+    }
+
+    .admin-container {
+        margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-md));
+    }
+}
+
+/* Kleinste Mobilgeräte */
+@media (max-width: 500px) {
+    /* Header padding im Wrapper wurde bereits gesetzt */
+    .google-header-wrapper {
+        padding: var(--spacing-sm) var(--spacing-xs); /* Geringeres Padding in der Top-Bar */
+        height: var(--header-height-mobile-collapsed);
+    }
+    .site-logo-image {
+        height: 30px; /* Noch kleiner auf kleinsten Bildschirmen */
+    }
+    .donate-button {
+        font-size: 0.8em;
+        padding: var(--spacing-xs) var(--spacing-xs);
+    }
+    .menu-toggle .hamburger, .menu-toggle .hamburger::before, .menu-toggle .hamburger::after {
+        width: 22px;
+        height: 2px;
+    }
+    .menu-toggle .hamburger::before { top: -6px; }
+    .menu-toggle .hamburger::after { bottom: -6px; }
+
+    /* Wenn das Menü offen ist, scrollt der Body, nicht die nav itself */
+    .google-search-like-nav.is-open {
+        max-height: calc(100vh - var(--header-height-mobile-collapsed) - var(--spacing-sm)); /* Passt dynamische Höhe an */
+        padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm) var(--spacing-sm); /* Geringeres Padding */
+        left: var(--spacing-sm);
+        right: var(--spacing-sm);
+    }
+    .nav-options li a {
+        font-size: 1em;
+        padding: var(--spacing-xs);
+    }
+
+    .site-content-wrapper {
+        margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-sm));
+        padding-left: var(--spacing-sm);
+        padding-right: var(--spacing-sm);
+    }
+
+    .admin-container {
+        margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-sm));
+        padding-left: var(--spacing-sm);
+        padding-right: var(--spacing-sm);
+    }
 }
 
 ==================================================
@@ -821,23 +1254,23 @@ DATEINAME: src/assets/style/home.css
 
 /* Hero Sektion */
 .hero-section {
-    background: url('/-hero-banner.jpeg') no-repeat center bottom; /* Hintergrundbild, Fokus auf den unteren Bereich */
-    background-size: 130%; /* Leicht reingezoomt */
-    background-attachment: fixed; /* Parallax-Effekt: Bild bleibt beim Scrollen "oben" */
-    position: relative; /* Wichtig für Z-Index und ::before */
+    /* Standard-Hintergrundbild für größere Bildschirme (Desktop First) */
+    background: url('/-hero-banner.jpeg') no-repeat center bottom; 
+    background-size: cover; /* GEÄNDERT: 'cover' füllt immer den Bereich aus, ohne das Bild zu stretchen */
+    background-attachment: fixed;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 100vh; /* GEÄNDERT: explizit 100vh für volle Viewport-Höhe */
-    /* Padding für den Inhalt, damit er nicht unter dem Header verschwindet */
-    padding-top: 0; /* GEÄNDERT: padding-top hier auf 0 setzen, da es der erste Inhalt ist */
+    min-height: 100vh;
+    padding-top: 0;
     padding-bottom: var(--spacing-xl);
     margin-bottom: 0;
-    overflow: hidden; /* Verhindert sichtbaren Overflow des gezoomten Bildes */
-    width: auto; /* Nimmt die gesamte verfügbare Breite des Bodies ein */
-    flex-shrink: 0; /* NEU: Verhindert, dass der Hero-Bereich schrumpft */
+    overflow: hidden;
+    width: auto;
+    flex-shrink: 0;
 
-    /* NEU: Übergang zum Inhalt darunter (Linear-Gradient Maske) */
+    /* Übergang zum Inhalt darunter (Linear-Gradient Maske) */
     mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
     -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
 }
@@ -850,36 +1283,35 @@ DATEINAME: src/assets/style/home.css
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.25); /* Dunkler, leicht transparenter Schleier */
+    background: rgba(0, 0, 0, 0.25);
     z-index: 1;
 }
 
 .hero-content {
     max-width: 900px;
     text-align: center;
-    position: relative; /* Stellt sicher, dass der Inhalt über dem Overlay liegt */
+    position: relative;
     z-index: 2;
-    color: var(--color-background-white); /* Textfarbe */
-    /* Internes Padding für den Inhalt im Vollbild-Banner, um ihn auf kleineren Bildschirmen einzurücken */
+    color: var(--color-background-white);
     padding: 0 var(--spacing-md);
 }
 
 .hero-content h1 {
-    font-size: 4.5em; /* Etwas größere Schrift für den Vollbildmodus */
+    font-size: 4.5em;
     margin-bottom: var(--spacing-md);
     font-weight: 800;
     line-height: 1.1;
-    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.8); /* Stärkerer Textschatten für bessere Lesbarkeit */
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
     animation: fadeInUp 1s ease-out forwards 0.5s;
     opacity: 0;
     transform: translateY(30px);
 }
 
 .hero-content p {
-    font-size: 1.6em; /* Etwas größere Schrift */
+    font-size: 1.6em;
     margin-bottom: var(--spacing-lg);
     font-weight: 400;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7); /* Stärkerer Textschatten */
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
     animation: fadeInUp 1s ease-out forwards 0.8s;
     opacity: 0;
     transform: translateY(30px);
@@ -898,32 +1330,32 @@ DATEINAME: src/assets/style/home.css
     animation: fadeInUp 1s ease-out forwards 1.1s;
     opacity: 0;
     transform: translateY(30px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); /* Stärkerer Schatten für Pop-Effekt */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
 .hero-button:hover {
     background-color: #00A656;
     transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5); /* Noch stärkerer Schatten beim Hover */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
 }
 
 /* Stil für den Missions-Hinweis */
 .mission-highlight {
-    color: var(--color-secondary); /* Ein auffälliges Grün */
+    color: var(--color-secondary);
     font-weight: 700;
     font-size: 1.2em;
     margin-top: var(--spacing-md);
-    display: block; /* Macht es zu einem Blockelement, für mehr Platz */
+    display: block;
     text-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .hero-content .mission-highlight {
-    color: var(--color-accent); /* Im Hero-Banner eine kräftigere Akzentfarbe für besseren Kontrast */
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8); /* Sehr starker Textschatten */
-    animation: fadeInUp 1s ease-out forwards 1.4s; /* Später als Button einblenden */
+    color: var(--color-accent);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+    animation: fadeInUp 1s ease-out forwards 1.4s;
     opacity: 0;
     transform: translateY(30px);
-    font-size: 1.6em; /* Im Hero-Banner etwas größer und prominenter */
+    font-size: 1.6em;
 }
 
 
@@ -1006,7 +1438,7 @@ DATEINAME: src/assets/style/home.css
 .testimonial-author {
     display: flex;
     align-items: center;
-    margin-top: auto; /* Sorgt dafür, dass es unten klebt */
+    margin-top: auto;
 }
 
 .testimonial-author img {
@@ -1046,7 +1478,7 @@ DATEINAME: src/assets/style/home.css
     text-align: center;
     border: 1px solid var(--color-border);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    text-decoration: none; /* Für den Link */
+    text-decoration: none;
     color: inherit;
     display: flex;
     flex-direction: column;
@@ -1063,11 +1495,10 @@ DATEINAME: src/assets/style/home.css
     height: 150px;
     object-fit: contain;
     margin-bottom: var(--spacing-md);
-    border-radius: var(--border-radius-sm);
-    background-color: #FDFEFE;
-    padding: var(--spacing-xs);
-    mask-image: radial-gradient(circle at center, black 70%, transparent 100%);
-    -webkit-mask-image: radial-gradient(circle at center, black 70%, transparent 100%); /* Radial for teaser also */
+    border-radius: var(--border-radius-sm); /* Behält leichte Abrundung bei */
+    background-color: #FDFEFE; /* Behält weißen Hintergrund bei */
+    padding: var(--spacing-xs); /* Behält Padding bei */
+    /* ENTFERNT: mask-image und -webkit-mask-image für rechteckige Form */
 }
 
 
@@ -1138,28 +1569,29 @@ DATEINAME: src/assets/style/home.css
 /* Responsive Anpassungen für die Home-Seite */
 @media (max-width: 992px) {
     .hero-section {
-        background-size: 150%; /* Zoom anpassen für Tablets */
+        background-size: cover; /* Auch auf Tablets immer 'cover' */
         background-position: center bottom;
-        min-height: 90vh; /* Etwas weniger als 100vh auf kleineren Desktops/Tablets */
+        min-height: 90vh;
     }
     .hero-content h1 { font-size: 3.5em; }
     .hero-content p { font-size: 1.4em; }
     .hero-content .mission-highlight { font-size: 1.4em; }
     .home-section-content { padding: 0 var(--spacing-sm); }
-    .home-page-content-wrapper { /* Dieser Wrapper wird nicht mehr direkt in index.php verwendet */
+    .home-page-content-wrapper {
         padding: 0 var(--spacing-sm);
-        transform: translateX(0); /* Entferne Verschiebung auf Tablets */
-        /* NEU: Setze margin-top auf einen Standardwert, wenn es im flex-grow-Container ist */
-        margin-top: var(--spacing-lg); /* Angepasst */
+        transform: translateX(0);
+        margin-top: var(--spacing-lg);
     }
 }
 
 @media (max-width: 768px) {
     .hero-section {
-        background-size: 180%; /* Stärkerer Zoom für mobile Querformate */
+        /* HINTERGRUND ÄNDERT SICH AUF MOBILE */
+        background: url('/-hero-banner-mobile.png') no-repeat center bottom;
+        background-size: cover; /* GEÄNDERT: 'cover' statt Prozentwerte */
         background-position: center bottom;
-        min-height: 80vh; /* Anpassung für mobile Geräte */
-        padding-top: calc(var(--header-height) + var(--spacing-lg)); /* GEÄNDERT: Padding-top für den Inhalt im Hero-Banner wieder aktivieren, da der Header auf Mobile größer ist */
+        min-height: 80vh;
+        padding-top: calc(var(--header-height) + var(--spacing-lg));
         padding-bottom: var(--spacing-lg);
     }
     .hero-content h1 { font-size: 2.8em; }
@@ -1172,10 +1604,10 @@ DATEINAME: src/assets/style/home.css
 
 @media (max-width: 500px) { /* Small Mobile */
     .hero-section {
-        background-size: 220%;
+        background-size: cover; /* GEÄNDERT: 'cover' statt Prozentwerte */
         background-position: center bottom;
         min-height: 70vh;
-        padding-top: calc(var(--header-height) + var(--spacing-md)); /* GEÄNDERT: Padding-top anpassen */
+        padding-top: calc(var(--header-height) + var(--spacing-md));
         padding-bottom: var(--spacing-md);
     }
     .hero-content h1 { font-size: 2.2em; }
@@ -1183,8 +1615,8 @@ DATEINAME: src/assets/style/home.css
     .hero-content .mission-highlight { font-size: 1.1em; }
     .hero-button { padding: var(--spacing-xs) var(--spacing-md); font-size: 1em; }
     .home-section h2 { font-size: 1.6em; }
-    .home-page-content-wrapper { /* Dieser Wrapper wird nicht mehr direkt in index.php verwendet */
-        margin: var(--spacing-lg) auto var(--spacing-md) auto; /* Angepasst */
+    .home-page-content-wrapper {
+        margin: var(--spacing-lg) auto var(--spacing-md) auto;
         padding: 0 var(--spacing-xs);
     }
 }
@@ -1241,6 +1673,7 @@ DATEINAME: src/assets/style/main.css
 @import '/.admin.css';
 @import '/.home.css';
 @import '/.success.css';
+@import '/.disclaimer.css';
 @import '/.responsive.css';
 
 ==================================================
@@ -1510,10 +1943,9 @@ DATEINAME: src/assets/style/responsive.css
 --------------------------------------------------
 /* Responsive Anpassungen */
 @media (max-width: 1400px) {
-    /* Diese Regeln bleiben, um auf kleineren Bildschirmen responsive zu sein */
     .site-content-wrapper,
     .google-search-like-nav,
-    .google-header-wrapper, /* google-header-wrapper selbst bleibt 100% Breite */
+    .google-header-wrapper,
     .footer-content-wrapper,
     .admin-container {
         max-width: 100%;
@@ -1521,72 +1953,25 @@ DATEINAME: src/assets/style/responsive.css
         padding-right: var(--spacing-md);
     }
 
-    /* Die transform-Eigenschaft sollte auf kleineren Bildschirmen, wo max-width: 100% aktiv wird, entfernt werden,
-       um keine horizontalen Scrollbalken zu verursachen oder das Layout zu stören. */
     .google-search-like-nav,
     .site-content-wrapper,
     .footer-content-wrapper {
-        transform: translateX(0); /* NEU: Verschiebung auf 0px zurücksetzen für kleinere Bildschirme */
+        transform: translateX(0);
     }
 }
 
-@media (max-width: 992px) { /* Tablet/Smaller Desktop */
-    .site-content-wrapper {
-        flex-direction: column;
-        padding: 0 var(--spacing-sm);
-        /* GEÄNDERT: Abstand oben angepasst */
-        margin-top: var(--spacing-md);
-        margin-bottom: var(--spacing-md);
-        transform: translateX(0); /* Verschiebung auf Tablets und Mobile entfernen */
-    }
-    main {
-        margin-right: 0;
-        margin-bottom: var(--spacing-md);
-        padding: var(--spacing-lg);
-        width: 100%;
-        border-radius: 0;
-        box-shadow: none;
-    }
-    .cart-sidebar {
-        position: static;
-        width: 100%;
-        max-height: 400px;
-        overflow-y: hidden;
-        padding: 0;
-        order: -1;
-        top: auto;
-        margin-bottom: var(--spacing-md);
-        background: transparent;
-        border: none;
-        border-radius: 0;
-        box-shadow: none;
-        display: flex;
-        flex-direction: column;
-        gap: var(--spacing-md);
-    }
-
-    /* Auf Tablets erhalten die inneren Elemente des Warenkorbs wieder ihre Karten-Struktur */
-    .cart-header-desktop, .cart-body-content {
-        background-color: var(--color-background-white);
-        border: 1px solid var(--color-border);
-        border-radius: var(--border-radius-md);
-        padding: var(--spacing-md);
-        box-shadow: 0 2px 5px var(--color-shadow-light);
-        margin-bottom: 0;
-    }
-    .cart-header-desktop h2 { text-align: center; }
-
-    .cart-items-scrollable-wrapper {
-        padding-right: var(--spacing-xs);
-        margin-right: calc(-1 * var(--spacing-xs));
-        mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-        -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-    }
-
-
+@media (max-width: 992px) { /* Tablet/Smaller Desktop (Dies betrifft noch den Desktop-Mode von Header) */
+    /* ... Desktop-Modus Regeln beibehalten ... */
+    /*
+        Hier wurden bereits mobile-ähnliche Regeln gesetzt, die sich jetzt mit den
+        neuen Regeln im @media (max-width: 768px)header.css überschneiden.
+        Ich bereinige das und entferne redundant/falsch hier stehende Mobile-Regeln
+        und lass die @media (max-width: 768px) aus header.css als primäre Quelle wirken.
+    */
     .admin-container {
         flex-direction: column;
         padding: 0 var(--spacing-sm);
+        /* Muss calc(header-height) nehmen */
         margin-top: calc(var(--header-height) + var(--spacing-md));
         margin-bottom: var(--spacing-md);
     }
@@ -1616,78 +2001,40 @@ DATEINAME: src/assets/style/responsive.css
     .footer-section {
         margin-bottom: 0;
     }
-
     .dashboard-stats {
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     }
-
     .google-header-wrapper {
-        transform: translateX(0); /* Sicherstellen, dass die Verschiebung auf Tablets und Mobile entfernt wird */
+        transform: translateX(0);
     }
 }
 
-@media (max-width: 768px) { /* Mobile Landscape & Portrait */
-    :root {
-        --header-height: 100px;
-        --header-height-mobile-collapsed: 60px;
-    }
-    header {
-        height: auto;
-        padding: var(--spacing-sm) var(--spacing-md);
-        box-shadow: 0 2px 10px var(--color-shadow-medium);
-    }
-    header.header-scrolled {
-        box-shadow: 0 2px 10px var(--color-shadow-medium);
-    }
+/* ALLE mobilen Header Regeln kommen JETZT NUR noch in header.css!
+   Hier im responsive.css kümmern wir uns um die main content container und cart,
+   sodass sie zum mobile header passen. */
 
-    .google-search-like-nav {
-        flex-wrap: wrap;
-        height: auto;
-        padding: var(--spacing-sm);
-        flex-direction: column;
-        align-items: flex-start;
-        transform: translateX(0); /* Sicherstellen, dass die Verschiebung auf Mobile entfernt wird */
-    }
-    .google-header-wrapper {
-        flex-direction: column;
-        align-items: flex-start;
-        width: 100%;
-        transform: translateX(0);
-    }
-    .logo {
-        margin-bottom: var(--spacing-sm);
-        margin-right: 0;
-    }
-    .nav-options {
-        gap: var(--spacing-md);
-        width: 100%;
-        justify-content: center;
-        margin-bottom: var(--spacing-sm);
-    }
-    .cart-button {
-        width: 100%;
-        text-align: center;
-        margin-top: var(--spacing-sm);
-        justify-content: center;
-    }
+@media (max-width: 768px) {
+    /* Header-bezogene Anpassungen in header.css! */
+
     .site-content-wrapper {
         flex-direction: column;
-        /* GEÄNDERT: Abstand oben angepasst */
-        margin-top: var(--spacing-md);
-        padding: 0;
+        margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-md));
+        padding: 0 var(--spacing-md); /* Feste padding Werte für Mobile-Seiten */
         transform: translateX(0);
     }
     main {
         order: 1;
+        margin-right: 0; /* Entfernt Desktop-Margin zum Warenkorb */
         margin-bottom: var(--spacing-md);
+        padding: var(--spacing-md);
         border-radius: 0;
         box-shadow: none;
-        padding: var(--spacing-md);
     }
 
-    /* Mobiler Warenkorb unten fixiert und zusammenklappbar - CONTAINER SELBST IST WEISS */
+    /* Mobiler Warenkorb muss auf Mobile immer sticky sein und bleibt hier,
+       aber Top-Padding wird angepasst, da Header sich anders verhält */
     .cart-sidebar {
-        position: fixed;
+        position: fixed; /* Fixiert am Viewport */
         bottom: 0;
         left: 0;
         right: 0;
@@ -1696,36 +2043,31 @@ DATEINAME: src/assets/style/responsive.css
         top: auto;
         border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
         box-shadow: 0 -4px 15px var(--color-shadow-medium);
-        transform: translateY(calc(100% - var(--header-height-mobile-collapsed)));
+        transform: translateY(calc(100% - var(--header-height-mobile-collapsed))); /* Zusammengeklappt, nur Header sichtbar */
         transition: transform 0.3s ease-in-out;
         z-index: 100;
         display: flex;
         flex-direction: column;
-        padding: 0;
-        background-color: var(--color-background-white);
+        padding: 0; /* Padding im Sidebar-Wrapper entfernen */
+        background-color: var(--color-background-white); /* Weißer Hintergrund des Sidebar-Wrappers */
         border: none;
-        gap: 0;
+        gap: 0; /* Abstand zwischen inneren Elementen, falls zuvor definiert */
     }
-
     .cart-sidebar.is-expanded {
-        transform: translateY(0);
+        transform: translateY(0); /* Komplett sichtbar */
     }
     .cart-sidebar.is-collapsed {
         overflow-y: hidden;
     }
-
-    .cart-header-desktop {
-        display: none;
+    .cart-header-desktop { display: none; }
+    .cart-header-mobile { display: flex; } /* Sichtbar auf Mobile */
+    .cart-mobile-summary { flex-grow: 1; text-align: left; }
+    .cart-toggle-button {
+        background: none; border: none; color: white; font-size: 1.2em;
+        cursor: pointer; padding: 0 var(--spacing-xs); line-height: 1;
+        display: flex; align-items: center; gap: var(--spacing-xs);
+        margin-left: var(--spacing-sm);
     }
-    .cart-header-mobile {
-        display: flex;
-    }
-
-    .cart-mobile-summary {
-        flex-grow: 1;
-        text-align: left;
-    }
-
     .cart-body-content {
         max-height: calc(var(--cart-max-height-ratio) * 100vh - var(--header-height-mobile-collapsed));
         overflow-y: hidden;
@@ -1738,118 +2080,113 @@ DATEINAME: src/assets/style/responsive.css
         border-radius: 0;
         box-shadow: none;
     }
-    .cart-sidebar.is-collapsed .cart-body-content {
-        display: none;
-    }
-
+    .cart-sidebar.is-collapsed .cart-body-content { display: none; }
     .cart-items-scrollable-wrapper {
-        flex-grow: 1;
-        overflow-y: auto;
-        padding-right: var(--spacing-xs);
-        margin-right: calc(-1 * var(--spacing-xs));
+        flex-grow: 1; overflow-y: auto;
+        padding-right: var(--spacing-xs); margin-right: calc(-1 * var(--spacing-xs));
         mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
         -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
     }
-
-    #cart-total-container {
-        flex-shrink: 0;
-    }
-    .checkout-button {
-        flex-shrink: 0;
-    }
+    #cart-total-container { flex-shrink: 0; }
+    .checkout-button { flex-shrink: 0; }
 
 
-    /* Allgemeine Anpassungen für Mobile Admin-Panel */
-    .admin-container {
-        margin-top: calc(var(--header-height) + var(--spacing-md));
-        padding: 0 var(--spacing-xs);
+    .admin-container { /* Auch hier Top-Margin anpassen */
+        margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-md));
+        padding: 0 var(--spacing-md);
     }
     .admin-sidebar {
+        width: 100%; order: -1; margin-bottom: var(--spacing-md);
+    }
+    .admin-content { padding: var(--spacing-lg); }
+
+    /* Footer sollte sich normal verhalten */
+    .footer-content-wrapper {
+        padding: var(--spacing-lg) var(--spacing-md);
+    }
+    .footer-container {
+        grid-template-columns: 1fr; /* Eine Spalte auf Mobile */
+        gap: var(--spacing-md);
+    }
+    .footer-section { margin-bottom: var(--spacing-md); } /* Abstand zwischen Footer-Sektionen */
+    .footer-section:last-child { margin-bottom: 0; }
+
+} /* End of @media (max-width: 768px) */
+
+
+/* Kleinste Mobilgeräte */
+@media (max-width: 500px) {
+    /* Header-bezogene Anpassungen in header.css! */
+
+    .site-content-wrapper {
+        margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-sm));
+        padding: 0 var(--spacing-sm);
+    }
+    main {
         padding: var(--spacing-md);
     }
-    .admin-content {
-        padding: var(--spacing-md);
-        border-radius: var(--border-radius-sm);
+    .cart-sidebar { /* Cart sidebar padding angepasst */
+        padding: 0;
     }
-    .category-section h2 {
-        font-size: 1.8em;
-    }
-    .product-item h3 {
-        font-size: 1.2em;
-    }
-    .product-quantity-price-line {
-        font-size: 1.1em;
-        margin-bottom: var(--spacing-sm);
-    }
-    .admin-sidebar h2 {
-        font-size: 1.4em;
-    }
-    .admin-sidebar a {
-        padding: var(--spacing-xs) var(--spacing-sm);
-        font-size: 0.9em;
-    }
-    .dashboard-stats {
-        grid-template-columns: 1fr;
+    .admin-container {
+        margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-sm));
+        padding: 0 var(--spacing-sm);
     }
     .footer-content-wrapper {
         margin: 0 var(--spacing-sm) var(--spacing-sm) var(--spacing-sm);
         padding: var(--spacing-md);
-        transform: translateX(0);
     }
-    .footer-container {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-md);
-    }
-}
 
-@media (max-width: 500px) { /* Small Mobile */
-    :root {
-        --font-size-base: 15px;
-    }
-    .cart-header-mobile {
-        font-size: 1em;
-    }
-    .cart-mobile-summary {
-        font-size: 0.9em;
-    }
-    .cart-toggle-button {
-        font-size: 1em;
-    }
-    .site-content-wrapper,
-    .admin-container {
-        padding: 0 var(--spacing-xs);
-    }
-    main, .admin-content {
-        border-radius: 0;
-    }
-    .footer-content-wrapper {
-        margin: 0 var(--spacing-xs) var(--spacing-xs) var(--spacing-xs);
-        width: calc(100% - (2 * var(--spacing-xs)));
-        padding: var(--spacing-md);
-        border-radius: var(--border-radius-md);
-    }
+        /* Shop-spezifische Anpassungen für sehr kleine Bildschirme */
     .product-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Eine Spalte auf kleinsten Mobilgeräten */
         gap: var(--spacing-md);
     }
-    .modal-content {
-        padding: var(--spacing-md);
-        max-width: 95%;
+
+    .product-item {
+        padding: var(--spacing-sm); /* Etwas weniger Padding */
     }
-    .cart-item-image {
-        width: 40px;
-        height: 40px;
+
+    .product-item img {
+        height: 70px; /* Bilder etwas kleiner */
+        margin-bottom: var(--spacing-sm);
     }
-    .cart-item-info h4 {
-        font-size: 0.9em;
+
+    .product-item h3 {
+        font-size: 1.1em; /* Kleinere Titel */
+        line-height: 1.2;
     }
-    .cart-item-info p {
-        font-size: 0.75em;
+
+    .product-quantity-price-line {
+        font-size: 0.85em; /* Kleinere Schrift für Einheit/Preis */
     }
-    .cart-item-controls input[type="number"] {
-        width: 35px;
-        padding: 3px;
+
+    .product-quantity-price-line .product-price-value {
+        font-size: 1.2em; /* Kleinerer Preiswert */
+        white-space: normal; /* Erlaubt dem Preis das Umbrechen */
+    }
+
+    .product-controls {
+        flex-direction: column; /* Steuerelemente vertikal stapeln */
+        gap: var(--spacing-xs);
+    }
+
+    .product-controls input[type="number"] {
+        width: 60px; /* Etwas mehr Breite, wenn gestapelt */
+        padding: var(--spacing-xs);
         font-size: 0.85em;
+    }
+
+    .product-controls .add-to-cart-btn {
+        width: 100%; /* Volle Breite, wenn gestapelt */
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: 0.85em;
+    }
+
+    .category-section h2 {
+        font-size: 1.6em; /* Kleinere Kategorie-Titel */
+        margin-bottom: var(--spacing-md);
+        padding-bottom: var(--spacing-xs);
     }
 }
 
@@ -2002,8 +2339,12 @@ DATEINAME: src/assets/style/success.css
 --------------------------------------------------
 /* src/assets/style/success.css */
 
+/* Layout Container, nicht das <main>-Element selbst */
 .success-page-wrapper {
-    /* Main-Wrapper, der die globalen Layout-Regeln beibehält */
+    /* Behält die Layout-Regeln bei */
+    width: 100%;
+    margin: 0 auto; /* Zentrieren innerhalb von main, wenn main keinen bestimmten Margin hat */
+    padding: 0; /* Padding wird von inneren Elementen gesetzt */
 }
 
 /* Header des Erfolgsseite */
@@ -2012,14 +2353,12 @@ DATEINAME: src/assets/style/success.css
     padding: var(--spacing-xl) var(--spacing-md) var(--spacing-lg) var(--spacing-md);
     background-color: var(--color-background-white);
     border-bottom: 1px solid var(--color-border);
-    margin-bottom: var(--spacing-xl);
     box-shadow: 0 2px 10px var(--color-shadow-light);
     border-radius: var(--border-radius-md);
     width: 100%;
     max-width: var(--content-max-width);
-    margin: var(--spacing-lg) auto 0 auto;
+    margin: var(--spacing-lg) auto var(--spacing-xl) auto; /* Margin angepasst für bündige Ausrichtung */
     box-sizing: border-box;
-    margin-bottom: var(--spacing-xl);
 }
 
 .success-header h1 {
@@ -2031,25 +2370,69 @@ DATEINAME: src/assets/style/success.css
     text-shadow: 1px 1px 3px rgba(0,0,0,0.05);
 }
 
+/* Anpassung des standard alert, für Header alerts */
 .success-header .alert {
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
     border-radius: var(--border-radius-sm);
     padding: var(--spacing-md);
-    border: none;
     font-size: 1.05em;
     font-weight: 500;
+    display: flex; /* Für Icon/Gap falls Standard-Alerts Icons haben */
+    align-items: center;
+    gap: var(--spacing-xs);
+    border: none; /* Alerts haben ihre eigenen Border, nicht extra Border-Bottom vom Header */
+    margin-top: var(--spacing-md);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 .success-header .alert.success {
-    background-color: var(--color-secondary-light);
-    color: var(--color-secondary-dark);
-    border: 1px solid var(--color-secondary);
+    background-color: #D4EDDA; /* Klassisches Success-Grün, wie im alerts.css */
+    color: #155724;
+    border-color: #C3E6CB;
 }
 .success-header .alert.error {
+    background-color: #F8D7DA; /* Klassisches Error-Rot */
+    color: #721C24;
+    border-color: #F5C6CB;
+}
+
+/* Fallback-Alerts für fehlende Daten */
+.fallback-alert {
+    margin-top: var(--spacing-xl) !important; /* Extra Abstand, wenn dies die Hauptnachricht ist */
+    background-color: #FFF3CD; /* Warmes Orange/Gelb als Warnung */
+    color: #856404;
+    border: 1px solid #FFEEDB;
+    padding: var(--spacing-lg);
+    border-left: 5px solid #FFC107; /* Deutliche Akzentleiste */
+    text-align: left; /* Text linksbündig */
+    font-size: 1.1em;
+    line-height: 1.5;
+}
+.fallback-details-alert {
     background-color: #FEEBEB;
     color: #CC0000;
     border: 1px solid #FF5050;
+    padding: var(--spacing-md);
+    margin-top: var(--spacing-lg); /* Abstand zum Titel */
+    border-radius: var(--border-radius-sm);
+    text-align: left;
+    font-size: 1em;
+}
+.fallback-details-alert p {
+    margin-bottom: var(--spacing-xs);
+    line-height: 1.5;
+    color: inherit;
+}
+.fallback-details-alert p:last-child {
+    margin-bottom: 0;
+}
+.fallback-details-alert strong {
+    color: inherit;
+}
+.fallback-details-alert a {
+    color: #CC0000;
+    text-decoration: underline;
 }
 
 
@@ -2090,7 +2473,7 @@ DATEINAME: src/assets/style/success.css
     font-weight: 700;
     line-height: 1.2;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.02);
-    border-bottom: 1px solid var(--color-border); /* hinzugefügt */
+    border-bottom: 1px solid var(--color-border);
 }
 
 .success-sections-container h3 {
@@ -2151,9 +2534,15 @@ DATEINAME: src/assets/style/success.css
     background-color: #E0FFEE;
     color: var(--color-text-dark);
 }
+.success-info-card.whatsapp-qr h2 {
+    color: var(--color-secondary);
+}
+.success-info-card.whatsapp-qr p {
+    color: var(--color-text-dark);
+    line-height: 1.6;
+}
 
 /* Details Zahlungsinformationen (BANK TRANSFER) */
-/* NEU: Neue Klasse für das Intro des Überweisungsbereichs */
 .payment-details .details-intro {
     font-size: 1.05em;
     margin-bottom: var(--spacing-lg);
@@ -2161,7 +2550,7 @@ DATEINAME: src/assets/style/success.css
     line-height: 1.6;
 }
 .payment-details .highlight-total {
-    font-size: 1.2em; /* Größer für den Gesamtbetrag */
+    font-size: 1.2em;
     color: var(--color-accent);
     font-weight: 700;
 }
@@ -2170,24 +2559,24 @@ DATEINAME: src/assets/style/success.css
 .bank-details-list {
     list-style: none;
     padding: 0;
-    margin: 0 0 var(--spacing-lg) 0; /* Abstand nach unten */
+    margin: 0 0 var(--spacing-lg) 0;
     background-color: var(--color-background-white);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius-sm);
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    overflow: hidden; /* Für abgerundete Ecken */
+    overflow: hidden;
 }
 
 .bank-details-list .detail-item {
     display: flex;
-    justify-content: space-between; /* Label links, Wert rechts */
+    justify-content: space-between;
     align-items: center;
     padding: var(--spacing-sm) var(--spacing-md);
     border-bottom: 1px solid var(--color-border);
     font-size: 0.95em;
     color: var(--color-text-medium);
     transition: background-color 0.15s ease;
-    cursor: pointer; /* Signalisiert, dass es anklickbar/kopierbar ist */
+    cursor: pointer;
 }
 .bank-details-list .detail-item:last-child {
     border-bottom: none;
@@ -2199,31 +2588,31 @@ DATEINAME: src/assets/style/success.css
 .bank-details-list .detail-item .detail-label {
     font-weight: 500;
     color: var(--color-text-dark);
-    white-space: nowrap; /* Label bleibt in einer Zeile */
-    margin-right: var(--spacing-md); /* Abstand zum Wert */
+    white-space: nowrap;
+    margin-right: var(--spacing-md);
 }
 
 .bank-details-list .detail-item .detail-value {
-    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; /* Monospace-Font für Nummern */
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
     font-size: 1em;
     color: var(--color-primary-dark);
     font-weight: 600;
-    flex-grow: 1; /* Nimmt den restlichen Platz ein */
-    text-align: right; /* Rechtsbündig für Zahlen */
-    user-select: all; /* Macht es einfacher, den Text auszuwählen */
-    overflow-wrap: break-word; /* Lange IBANs brechen um */
+    flex-grow: 1;
+    text-align: right;
+    user-select: all;
+    overflow-wrap: break-word;
     word-break: break-all;
 }
 
 .bank-details-list .detail-item .detail-value.reference-number {
-    color: var(--color-accent); /* Akzentfarbe für Verwendungszweck */
+    color: var(--color-accent);
     font-size: 1.05em;
     font-weight: 700;
 }
 
 /* Optional: Visuelles Feedback beim Kopieren */
 .bank-details-list .detail-item.copied {
-    background-color: var(--color-secondary-light); /* Leicht grüner Hintergrund */
+    background-color: var(--color-secondary-light);
     box-shadow: inset 0 0 5px var(--color-secondary);
 }
 
@@ -2253,7 +2642,7 @@ DATEINAME: src/assets/style/success.css
 
 /* Abholung Details */
 .pickup-details {
-    margin-top: var(--spacing-xl); /* Startet mit gutem Abstand */
+    margin-top: var(--spacing-xl);
 }
 .pickup-details p {
     margin-bottom: var(--spacing-xs);
@@ -2268,26 +2657,55 @@ DATEINAME: src/assets/style/success.css
     color: var(--color-text-dark) !important;
 }
 
-/* WhatsApp QR-Code */
-.qr-code-container {
+
+/* WhatsApp QR-Code Block - KOMPLETT NEU STRUKTURIERT */
+.success-info-card.whatsapp-qr {
     text-align: center;
-    margin-top: var(--spacing-xl);
+    background-color: var(--color-secondary-light); /* Angenehmes Hellgrün */
+    padding-bottom: var(--spacing-lg); /* Etwas weniger padding unten */
+}
+.success-info-card.whatsapp-qr h2 {
+    color: var(--color-secondary-dark); /* Grüner Titel */
+    border-bottom-color: var(--color-secondary-light);
+    margin-bottom: var(--spacing-md);
+    line-height: 1.3;
+}
+.whatsapp-intro {
+    font-size: 1em;
+    color: var(--color-text-medium); /* Weniger prominent */
+    line-height: 1.6;
+    margin-bottom: var(--spacing-xl); /* Deutlicher Abstand zum QR-Code */
+    max-width: 400px; /* Begrenzte Breite für bessere Lesbarkeit */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.qr-code-section { /* Neuer Wrapper für QR-Code und Button */
     display: flex;
     flex-direction: column;
     align-items: center;
-    flex-grow: 1;
+    gap: var(--spacing-xl); /* Abstand zwischen QR und Button */
+    flex-grow: 1; /* Nimmt restlichen Platz ein, Button schiebt sich nach unten */
     justify-content: space-between;
 }
-.qr-code-img {
-    width: 180px;
-    height: 180px;
-    object-fit: contain;
-    margin-bottom: var(--spacing-xl);
-    border: 5px solid var(--color-background-white);
-    border-radius: var(--border-radius-md);
-    padding: var(--spacing-xs);
+
+.qr-code-container {
+    padding: var(--spacing-md); /* Inneres Padding im QR-Bereich */
     background-color: var(--color-background-white);
-    box-shadow: 0 4px 10px var(--color-shadow-medium);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    display: inline-block; /* Für korrekte Zentrierung der Box */
+}
+.qr-code-img {
+    width: 200px; /* Größerer QR-Code für bessere Scannbarkeit */
+    height: 200px;
+    object-fit: contain;
+    margin-bottom: 0; /* Keine eigene Margin */
+    border: none; /* Entfernen der inneren Border */
+    border-radius: var(--border-radius-sm); /* Leichte Rundung */
+    padding: 0;
+    box-shadow: none;
 }
 .whatsapp-button {
     background-color: #25D366;
@@ -2296,21 +2714,25 @@ DATEINAME: src/assets/style/success.css
     padding: var(--spacing-md) var(--spacing-xl);
     border-radius: var(--border-radius-lg);
     font-weight: 700;
-    font-size: 1.1em;
+    font-size: 1.2em; /* Größerer Button Text */
     transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
     width: auto;
+    min-width: 250px; /* Mindestbreite für den Button */
     display: inline-flex;
+    justify-content: center; /* Zentriert Inhalt */
     align-items: center;
     gap: var(--spacing-sm);
-    margin-top: auto;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    margin-top: auto; /* Nach unten schieben, falls vertikaler Platz */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25); /* Deutlicherer Schatten */
 }
 .whatsapp-button:hover {
     background-color: #1FAF59;
-    transform: translateY(-3px) scale(1.01);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    transform: translateY(-4px) scale(1.02); /* Stärkerer Hover-Effekt */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
 }
 .whatsapp-icon { /* WhatsApp Icon für den Button */
+    width: 24px; /* Größeres Icon */
+    height: 24px;
     margin-right: var(--spacing-xs);
     display: inline-block;
     vertical-align: middle;
@@ -2325,17 +2747,15 @@ DATEINAME: src/assets/style/success.css
 .success-order-details-card h2 {
     color: var(--color-text-dark);
     border-bottom: 1px solid var(--color-border);
-    /* padding-right: var(--spacing-xl); Nicht mehr benötigt, da Link jetzt im Flex liegt */
     display: flex;
-    justify-content: space-between; /* Für Platz zwischen H2 und Link */
+    justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    margin-bottom: var(--spacing-lg); /* Einheitlicher Abstand zum folgenden Inhalt */
+    margin-bottom: var(--spacing-lg);
 }
 
 
 .edit-order-link {
-    /* position: static; Ist schon korrekt so */
     margin-left: var(--spacing-sm);
     display: inline-flex;
     align-items: center;
@@ -2344,20 +2764,20 @@ DATEINAME: src/assets/style/success.css
     transition: color 0.2s ease, transform 0.2s ease;
     cursor: pointer;
     line-height: 1;
-    font-size: 0.9em; /* Leicht kleinerer Text im Link */
+    font-size: 0.9em;
     font-weight: 500;
-    text-decoration: none; /* Als Link getarnt */
+    text-decoration: none;
 }
 .edit-order-link:hover {
     color: var(--color-accent);
-    transform: scale(1.05); /* Leichtere Animation */
+    transform: scale(1.05);
 }
 .edit-order-link .edit-icon {
     width: 22px;
     height: 22px;
     margin-left: var(--spacing-xs);
     stroke-width: 2px;
-    flex-shrink: 0; /* Verhindert das Schrumpfen des Icons */
+    flex-shrink: 0;
 }
 
 .success-order-details-card table {
@@ -2460,6 +2880,14 @@ DATEINAME: src/assets/style/success.css
     .success-info-card:first-child, .success-info-card:last-child {
         border-radius: var(--border-radius-md);
     }
+    .success-info-card.payment-info, .success-info-card.whatsapp-qr {
+        padding-top: var(--spacing-xl); /* Behält Header Padding bei */
+        padding-bottom: var(--spacing-lg); /* Etwas weniger für gestapelte Elemente */
+    }
+    .success-info-card.whatsapp-qr .whatsapp-intro {
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
 
 
@@ -2475,13 +2903,11 @@ DATEINAME: src/assets/style/success.css
     .success-mission-card {
         padding: var(--spacing-lg);
     }
-    /* .edit-order-link Positionierung */
     .edit-order-link {
-        font-size: 0.85em; /* Kleinerer Text im Link auf Mobilgeräten */
-        /* display: flex; Wird oft als Flexitem nebeneinander sein */
+        font-size: 0.85em;
     }
     .edit-order-link .edit-icon {
-        width: 18px; /* Kleineres Icon auf Mobilgeräten */
+        width: 18px;
         height: 18px;
     }
     .mission-links {
@@ -2494,17 +2920,20 @@ DATEINAME: src/assets/style/success.css
     }
 
     .bank-details-list .detail-item {
-        flex-direction: column; /* Details untereinander stapeln */
+        flex-direction: column;
         align-items: flex-start;
         padding: var(--spacing-sm);
     }
     .bank-details-list .detail-item .detail-label {
-        width: 100%; /* Label nimmt ganze Breite ein */
-        margin-bottom: var(--spacing-xs); /* Abstand nach unten */
+        width: 100%;
+        margin-bottom: var(--spacing-xs);
     }
     .bank-details-list .detail-item .detail-value {
-        width: 100%; /* Wert nimmt ganze Breite ein */
-        text-align: left; /* Text linksbündig */
+        width: 100%;
+        text-align: left;
+    }
+    .qr-code-section {
+        gap: var(--spacing-lg); /* Abstand zwischen QR und Button verringern */
     }
 
 }
@@ -2552,10 +2981,13 @@ DATEINAME: src/assets/style/success.css
         padding: var(--spacing-xs);
     }
 
+    .qr-code-container { /* Anpassung für Container auf sehr kleinen Screens */
+        padding: var(--spacing-xs);
+    }
     .qr-code-img {
-        width: 120px;
-        height: 120px;
-        margin-bottom: var(--spacing-md);
+        width: 140px; /* Etwas kleiner für sehr kleine Screens */
+        height: 140px;
+        margin-bottom: var(--spacing-lg); /* Mehr Abstand für sehr kleine Screens */
     }
     .whatsapp-button {
         font-size: 1em;
@@ -2563,12 +2995,12 @@ DATEINAME: src/assets/style/success.css
         gap: var(--spacing-xs);
     }
     .whatsapp-button .whatsapp-icon {
-        width: 16px;
-        height: 16px;
-        margin-right: 0;
+        width: 18px;
+        height: 18px;
+        margin-right: var(--spacing-xs);
     }
     .edit-order-link {
-        font-size: 0.8em; /* Noch kleinerer Text auf kleinen Mobilgeräten */
+        font-size: 0.8em;
     }
     .edit-order-link .edit-icon {
         width: 16px;
@@ -2640,7 +3072,7 @@ DATEINAME: src/assets/style/variables.css
 
     /* Header Höhe */
     --header-height: 70px;
-    --header-height-mobile-collapsed: 60px;
+    --header-height-mobile-collapsed: 60px; /* NEU: Höhe des mobilen Warenkorb-Headers, wenn zusammengeklappt */
 
     /* Warenkorb Höhe (2/3 der Viewport-Höhe) */
     --cart-max-height-ratio: 0.66;
@@ -3068,15 +3500,25 @@ DATEINAME: src/include/asset_handler.php
 
 /**
  * Behandelt Anfragen für statische Assets, die mit einem Unterstrich (_), Bindestrich (-) oder Punkt (.) beginnen.
- * Anfragen mit '_' werden aus dem 'assets/'-Ordner bedient.
- * Anfragen mit '-' werden aus dem 'assets/img/'-Ordner bedient.
- * Anfragen mit '.' werden aus dem 'assets/style/'-Ordner bedient.
+ * Diese Datei darf KEINE weiteren PHP-Dateien einbinden, da sie sehr früh im Request-Zyklus geladen wird.
  *
  * @param string $page_name Der bereinigte Seitenname aus der URL (das erste Segment nach dem Root).
  * @return void
  */
 function handleAssetRequest(string $page_name): void
 {
+    // ROOT_PATH muss bereits definiert sein (z.B. in config/config.php)
+    // Wenn config/config.php nicht geladen ist, würde ROOT_PATH hier einen Fehler verursachen.
+    // Daher muss config/config.php VOR asset_handler.php geladen werden.
+    if (!defined('ROOT_PATH')) {
+        // Dies sollte nicht passieren, wenn index.php korrekt ist.
+        // Aber als Fallback oder Debug-Hinweis.
+        error_log("ROOT_PATH not defined before asset_handler.php. Check index.php load order.");
+        http_response_code(500);
+        echo "Server configuration error.";
+        exit();
+    }
+
     $assets_folder_base_path = ROOT_PATH . 'assets/';
     $file_name_without_prefix = '';
     $target_folder_path = '';
@@ -3084,15 +3526,21 @@ function handleAssetRequest(string $page_name): void
     // 1. Überprüfen, ob eine Asset-Anfrage vorliegt (beginnt mit '_', '-' oder '.')
     if (str_starts_with($page_name, '_')) {
         $file_name_without_prefix = substr($page_name, 1);
-        $target_folder_path = $assets_folder_base_path; // Für '_' direkt im assets-Root
+        // Wenn es sich um eine JS-Datei handelt, den Pfad anpassen
+        if (str_ends_with($file_name_without_prefix, '.js')) {
+            $target_folder_path = $assets_folder_base_path . 'js/';
+        } else {
+            $target_folder_path = $assets_folder_base_path; // Für '_' direkt im assets-Root
+        }
     } elseif (str_starts_with($page_name, '-')) {
         $file_name_without_prefix = substr($page_name, 1);
         $target_folder_path = $assets_folder_base_path . 'img/'; // Für '-' im assets/img-Unterordner
-    } elseif (str_starts_with($page_name, '.')) { // NEU: Für Punkt-Präfix
+    } elseif (str_starts_with($page_name, '.')) { // Für Punkt-Präfix
         $file_name_without_prefix = substr($page_name, 1);
         $target_folder_path = $assets_folder_base_path . 'style/'; // Für '.' im assets/style-Unterordner
     } else {
         // Keine Asset-Anfrage, die von dieser Funktion behandelt wird
+        // Das Skript wird in index.php fortgesetzt.
         return;
     }
 
@@ -3131,14 +3579,13 @@ function handleAssetRequest(string $page_name): void
         case 'svg':
             header('Content-Type: image/svg+xml');
             break;
-        case 'webp': // Häufig für optimierte Bilder
+        case 'webp':
             header('Content-Type: image/webp');
             break;
-        case 'avif': // NEU: Modernes AVIF-Format
+        case 'avif':
             header('Content-Type: image/avif');
             break;
         default:
-            // Standardmäßig als Binärdaten senden oder Fehlerbehandlung
             header('Content-Type: application/octet-stream');
             break;
     }
@@ -3147,6 +3594,7 @@ function handleAssetRequest(string $page_name): void
     readfile($file_path);
     exit(); // Wichtig: Beende das Skript nach dem Senden des Assets
 }
+?>
 
 ==================================================
 DATEINAME: src/include/db.php
@@ -3201,6 +3649,36 @@ function getDbConnection(): PDO {
     global $pdo;
     return $pdo;
 }
+?>
+
+==================================================
+DATEINAME: src/include/disclaimer_modal.php
+--------------------------------------------------
+<?php
+// include/disclaimer_modal.php
+
+// Diese Datei enthält nur die PHP-Logik, die entscheidet, ob das Disclaimer-Modal angezeigt werden soll.
+// Sie gibt KEIN HTML aus. Das HTML wird von templates/header.php gerendert,
+// basierend auf der hier gesetzten Variable $show_disclaimer_modal.
+
+// Prüfen, ob der Disclaimer-Cookie bereits gesetzt ist.
+if (!isset($_COOKIE['disclaimer_accepted'])) {
+    // Wenn der Cookie NICHT gesetzt ist, bereite das Modal zur Anzeige vor.
+    // Wir setzen eine Session-Variable, damit das Modal nur einmal pro Session gerendert wird,
+    // selbst wenn der User das Modal offen lässt und andere Seiten aufruft (ohne es zu akzeptieren).
+    // Der "disclaimer_accepted" Cookie bleibt das finale Kriterium.
+    if (!isset($_SESSION['disclaimer_shown'])) {
+        $_SESSION['disclaimer_shown'] = true;
+        $show_disclaimer_modal = true;
+    } else {
+        $show_disclaimer_modal = false;
+    }
+} else {
+    $show_disclaimer_modal = false;
+}
+
+// Die Variable $show_disclaimer_modal ist nun im globalen Scope verfügbar
+// und kann von templates/header.php abgefragt werden.
 ?>
 
 ==================================================
@@ -3430,7 +3908,7 @@ DATEINAME: src/modules/404.php
     </div>
 
 ==================================================
-DATEINAME: src/modules/admin.php
+DATEINAME: src/modules/admin__archiv.php
 --------------------------------------------------
 <?php
 // modules/admin.php
@@ -4669,6 +5147,11 @@ if (!$isAdminLoggedIn) {
 ?>
 
 ==================================================
+DATEINAME: src/modules/geschichte.php
+--------------------------------------------------
+Geschichte
+
+==================================================
 DATEINAME: src/modules/home.php
 --------------------------------------------------
 <?php
@@ -4828,7 +5311,7 @@ if (!function_exists('formatEuroCurrency')) {
 ==================================================
 DATEINAME: src/modules/kontakt.php
 --------------------------------------------------
-meins
+Kontakt
 
 ==================================================
 DATEINAME: src/modules/shop.php
@@ -4901,7 +5384,6 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
         <div class="product-list">
             <?php if (empty($products_by_category)): ?>
                 <p>Derzeit sind keine Produkte verfügbar.</p>
-            <?辍>
             <?php else: ?>
                 <?php foreach ($products_by_category as $category_name => $products): ?>
                     <section class="category-section">
@@ -4912,7 +5394,8 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
                                 $is_sold_out = ((int)$product['stock_quantity'] <= 0);
                                 $button_text = $is_sold_out ? 'Ausverkauft' : 'In den Warenkorb';
                                 $disabled_attr = $is_sold_out ? 'disabled' : '';
-                                $input_value = $is_sold_out ? '0' : '1';
+                                // ACHTUNG: '0' ist hier korrekt, nicht 0, da es als String-Attribut übergeben wird
+                                $input_value = $is_sold_out ? '0' : '1'; 
                                 $input_disabled_attr = $is_sold_out ? 'disabled' : '';
                             ?>
                                 <div class="product-item">
@@ -5001,19 +5484,20 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Holen der Session-Nachricht, falls vorhanden
+// Holen der Session-Nachrichten und -Daten
 $success_message = $_SESSION['checkout_success_message'] ?? '';
-unset($_SESSION['checkout_success_message']); // Nachricht nur einmal anzeigen
+unset($_SESSION['checkout_success_message']);
 
-// Hier holen wir die Bestelldetails aus der Session, die von checkout_process.php
-// gesetzt wurden (dies müssen wir eventuell anpassen, falls sie nicht im checkout_process.php gesetzt wurden,
-// siehe Abschnitt "Hinweis: Bestelldetails in der Session").
+$email_status_message = $_SESSION['checkout_email_status_message'] ?? '';
+unset($_SESSION['checkout_email_status_message']);
+
 $orderId = $_SESSION['last_order_id'] ?? null;
 $orderDetails = $_SESSION['last_order_details'] ?? null;
 $pickupInfo = $_SESSION['last_pickup_info'] ?? null;
 $paymentInfo = $_SESSION['last_payment_info'] ?? null;
-$customerInfo = $_SESSION['customer_info'] ?? null; // Auch Kundeninfo abrufen
+$customerInfo = $_SESSION['customer_info'] ?? null;
 
+// Unsetten, um sicherzustellen, dass sie bei erneutem direkten Aufruf leer sind
 unset($_SESSION['last_order_id']);
 unset($_SESSION['last_order_details']);
 unset($_SESSION['last_pickup_info']);
@@ -5021,11 +5505,20 @@ unset($_SESSION['last_payment_info']);
 unset($_SESSION['customer_info']);
 
 
-// Fallback falls Session-Daten fehlen
+// Robuste Fallback-Prüfung: Wenn keine vollständigen Daten vorhanden sind, aktiviere den Fallback-Modus
+$fallback_mode = false;
 if (!$orderId || !$orderDetails || !$pickupInfo || !$paymentInfo || !$customerInfo) {
-    error_log("FEHLER: Session-Daten für Bestellbestätigungsseite fehlen.");
-    $error_fallback_message = "Bestelldetails konnten leider nicht geladen werden. Bitte kontaktieren Sie uns umgehend unter <a href='mailto:info@früch.de'>info@früch.de</a> mit dem Betreff 'Fehlende Bestellbestätigung'.";
+    error_log("FEHLER: Session-Daten für Bestellbestätigungsseite fehlen. Möglicherweise direkter Aufruf oder Session-Verlust.");
+    $fallback_mode = true;
+    $error_message_header = "Bestelldetails konnten leider nicht geladen werden.";
+    if (empty($orderId)) {
+        $error_message_header .= " Es konnte keine Bestellnummer ermittelt werden.";
+    } else {
+        $error_message_header .= " Ihre Bestellnummer war eventuell: " . htmlspecialchars($orderId) . ".";
+    }
+    $error_message_header .= " Bitte kontaktieren Sie uns umgehend unter <a href='mailto:info@früch.de'>info@früch.de</a> mit dem Betreff 'Fehlende Bestellbestätigung' (referenziert Bestellung Nr. " . ($orderId ? htmlspecialchars($orderId) : 'N/A') . ").";
 }
+
 
 // Hilfsfunktion zur Formatierung
 if (!function_exists('formatEuroCurrency')) {
@@ -5045,167 +5538,154 @@ $bank_iban = "DE12 3456 7890 1234 5678 90"; // Dummy-IBAN, ANPASSEN!
 $bank_bic = "DUMMYBICXXX"; // Dummy-BIC, ANPASSEN!
 ?>
 
-<div class="site-content-wrapper success-page-wrapper">
-    <main>
-        <div class="success-header">
-            <h1>Ihre Bestellung ist unterwegs!</h1>
-            <?php if (!empty($success_message)): ?>
-                <div class="alert success" style="margin-top: var(--spacing-md);">
-                    <?php echo htmlspecialchars($success_message); ?>
-                </div>
-            <?php elseif (isset($error_fallback_message)): ?>
-                 <div class="alert error" style="margin-top: var(--spacing-md);">
-                    <?php echo $error_fallback_message; // HTML-Tags hier erlaubt ?>
-                </div>
-            <?php endif; ?>
-        </div>
+<!-- success-page-wrapper umgibt die Inhalte der Success-Seite innerhalb von <main> -->
+<div class="success-page-wrapper">
+    <div class="success-header">
+        <h1>Ihre Bestellung ist unterwegs!</h1>
+        <?php if (!$fallback_mode && !empty($success_message)): ?>
+            <div class="alert success">
+                <?php echo htmlspecialchars($success_message); ?>
+            </div>
+        <?php elseif ($fallback_mode): ?>
+             <div class="alert error fallback-alert">
+                <?php echo $error_message_header; // HTML-Tags hier erlaubt ?>
+            </div>
+        <?php endif; ?>
+    </div>
 
-        <div class="success-sections-container">
+    <div class="success-sections-container">
 
-            <!-- Erster Block: Zahlung & Kontakt / QR-Code -->
-            <section class="success-info-card-group">
-                <div class="success-info-card payment-info">
-                    <h2>Zahlung & Abholung</h2>
-                    <?php if (isset($paymentInfo) && isset($orderDetails) && isset($pickupInfo) && isset($customerInfo)): ?>
-                        <h3>Zahlung: <?php echo htmlspecialchars(ucfirst(str_replace('_', ' ', $paymentInfo['payment_method']))); ?></h3>
-                        <p class="payment-amount">Gesamtbetrag: <strong><?php echo formatEuroCurrency($orderDetails['total_amount']); ?></strong></p>
+        <!-- Erster Block: Zahlung & Kontakt / QR-Code -->
+        <section class="success-info-card-group">
+            <div class="success-info-card payment-info">
+                <h2>Zahlung & Abholung</h2>
+                <?php if ($fallback_mode): ?>
+                    <div class="alert error fallback-details-alert">
+                        <p>Detaillierte Zahlungs- und Abholinformationen sind derzeit nicht verfügbar. Bitte prüfen Sie Ihre E-Mails oder kontaktieren Sie uns.</p>
+                        <p>Ihre Bestellnummer war eventuell: <strong><?php echo htmlspecialchars($orderId ?? 'N/A'); ?></strong>.</p>
+                    </div>
+                <?php else: ?>
+                    <h3>Zahlung: <?php echo htmlspecialchars(ucfirst(str_replace('_', ' ', $paymentInfo['payment_method']))); ?></h3>
+                    <!-- GEÄNDERT: "Gesamtbetrag" P-Tag entfernt -->
+                    <?php if ($paymentInfo['payment_method'] === 'bank_transfer'): ?>
+                        <div class="payment-details bank-transfer">
+                            <p class="details-intro">Bitte überweisen Sie den Betrag von <strong class="highlight-total"><?php echo formatEuroCurrency($orderDetails['total_amount']); ?></strong> unter Angabe des Verwendungszwecks:</p>
+                            <ul class="bank-details-list">
+                                <li class="detail-item copy-to-clipboard">
+                                    <span class="detail-label">Empfänger:</span>
+                                    <span class="detail-value"><?php echo htmlspecialchars($bank_account_holder); ?></span>
+                                </li>
+                                <li class="detail-item copy-to-clipboard">
+                                    <span class="detail-label">Verwendungszweck:</span>
+                                    <strong class="detail-value reference-number"><?php echo htmlspecialchars($paymentInfo['transaction_id'] ?? 'N/A'); ?></strong>
+                                </li>
+                                <li class="detail-item copy-to-clipboard">
+                                    <span class="detail-label">IBAN:</span>
+                                    <strong class="detail-value iban-value"><?php echo htmlspecialchars($bank_iban); ?></strong>
+                                </li>
+                                <li class="detail-item copy-to-clipboard">
+                                    <span class="detail-label">BIC:</span>
+                                    <span class="detail-value bic-value"><?php echo htmlspecialchars($bank_bic); ?></span>
+                                </li>
+                            </ul>
+                            <p class="processing-note">Ihre Bestellung Nr. <strong><?php echo htmlspecialchars($orderDetails['order_id'] ?? 'N/A'); ?></strong> wird nach Zahlungseingang bearbeitet. Eine Versandbestätigung erhalten Sie separat.</p>
+                        </div>
+                    <?php else: // Barzahlung ?>
+                        <div class="payment-details cash-on-pickup">
+                            <p class="details-intro">Bezahlen Sie bequem <strong class="highlight-total"><?php echo formatEuroCurrency($orderDetails['total_amount']); ?></strong> bei Abholung Ihrer Bestellung Nr. <strong><?php echo htmlspecialchars($orderDetails['order_id'] ?? 'N/A'); ?></strong>.</p>
+                        </div>
+                    <?php endif; ?>
 
-                        <?php if ($paymentInfo['payment_method'] === 'bank_transfer'): ?>
-                            <div class="payment-details bank-transfer">
-                                <p class="details-intro">Bitte überweisen Sie den Betrag von <strong class="highlight-total"><?php echo formatEuroCurrency($orderDetails['total_amount']); ?></strong> unter Angabe des Verwendungszwecks:</p>
-                                <ul class="bank-details-list">
-                                    <li class="detail-item">
-                                        <span class="detail-label">Empfänger:</span>
-                                        <span class="detail-value"><?php echo htmlspecialchars($bank_account_holder); ?></span>
-                                    </li>
-                                    <li class="detail-item">
-                                        <span class="detail-label">Verwendungszweck:</span>
-                                        <strong class="detail-value reference-number"><?php echo htmlspecialchars($paymentInfo['transaction_id']); ?></strong>
-                                    </li>
-                                    <li class="detail-item">
-                                        <span class="detail-label">IBAN:</span>
-                                        <strong class="detail-value iban-value"><?php echo htmlspecialchars($bank_iban); ?></strong>
-                                    </li>
-                                    <li class="detail-item">
-                                        <span class="detail-label">BIC:</span>
-                                        <span class="detail-value bic-value"><?php echo htmlspecialchars($bank_bic); ?></span>
-                                    </li>
-                                </ul>
-                                <p class="processing-note">Ihre Bestellung Nr. <strong><?php echo htmlspecialchars($orderDetails['order_id']); ?></strong> wird nach Zahlungseingang bearbeitet. Eine Versandbestätigung erhalten Sie separat.</p>
-                            </div>
-                        <?php else: // Barzahlung ?>
-                            <div class="payment-details cash-on-pickup">
-                                <p class="details-intro">Bezahlen Sie bequem <strong class="highlight-total"><?php echo formatEuroCurrency($orderDetails['total_amount']); ?></strong> bei Abholung Ihrer Bestellung Nr. <strong><?php echo htmlspecialchars($orderDetails['order_id']); ?></strong>.</p>
+                    <h3>Abholung</h3>
+                    <div class="pickup-details">
+                        <p>Bereit zur Abholung am:</p>
+                        <p class="pickup-datetime"><strong><?php echo (new DateTime($pickupInfo['pickup_datetime']))->format('d.m.Y H:i') . ' Uhr'; ?></strong></p>
+                        <p class="pickup-location">Ort: <strong><?php echo htmlspecialchars($pickupInfo['location']); ?></strong></p>
+                        <?php if (!empty($email_status_message)): ?>
+                            <div class="alert error" style="margin-top: var(--spacing-md);">
+                                <?php echo htmlspecialchars($email_status_message); ?>
                             </div>
                         <?php endif; ?>
+                    </div>
+                <?php endif; /* Ende des if (!fallback_mode) für Zahlungs- & Abholdetails */ ?>
+            </div>
 
-                        <h3>Abholung</h3>
-                        <div class="pickup-details">
-                            <p>Bereit zur Abholung am:</p>
-                            <p class="pickup-datetime"><strong><?php echo (new DateTime($pickupInfo['pickup_datetime']))->format('d.m.Y H:i'); ?> Uhr</strong></p>
-                            <p class="pickup-location">Ort: <strong><?php echo htmlspecialchars($pickupInfo['location']); ?></strong></p>
-                            <?php if (!empty($_SESSION['checkout_email_status_message'])): ?>
-                                <div class="alert error" style="margin-top: var(--spacing-md);">
-                                    <?php echo htmlspecialchars($_SESSION['checkout_email_status_message']); unset($_SESSION['checkout_email_status_message']); ?>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                    <?php else: ?>
-                        <p>Zahlungs- und Abholdetails konnten nicht vollständig geladen werden.</p>
-                        <p>Ihre Bestellnummer ist <strong><?php echo htmlspecialchars($orderId); ?></strong>. Bei Fragen kontaktieren Sie uns unter <a href="mailto:info@früch.de">info@früch.de</a>.</p>
-                    <?php endif; ?>
-                </div>
-
-                <div class="success-info-card whatsapp-qr">
-                    <h2>Immer auf dem Laufenden</h2>
-                    <p>Für Updates zu Ihrer Bestellung, neue Produkte und Abholtermine treten Sie unserer WhatsApp-Gruppe bei!</p>
+            <div class="success-info-card whatsapp-qr">
+                <h2>Kontakt & Updates</h2>
+                <p class="whatsapp-intro">Verpassen Sie keine Neuigkeiten! Treten Sie unserer WhatsApp-Gruppe bei für Echtzeit-Updates zu Ihrer Bestellung, neuen Produkten und wichtigen Abholinformationen.</p>
+                <div class="qr-code-section"> <!-- GEÄNDERT: Neue Sektion für QR und Button -->
                     <div class="qr-code-container">
+                        <!-- Annahme: QR-Code Bild liegt als /_whatsapp-qr.svg im assets-img-Ordner -->
                         <img src="/-whatsapp-qr.svg" alt="WhatsApp Gruppen QR Code" class="qr-code-img" loading="lazy" decoding="async">
                         <a href="https://chat.whatsapp.com/BaBd04yeoGvDkcGZcRNkTI" target="_blank" class="whatsapp-button hero-button">
+                            <!-- SVG Icon ist jetzt direkt hier und kein php-generated HTML -->
+                            <svg class="whatsapp-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M12.04 2C7.34 2 3.58 5.76 3.58 10.46c0 1.54.4 3.01 1.09 4.31L3.02 21.01l6.19-1.63a8.557 8.557 0 005.15 1.63c4.7 0 8.46-3.76 8.46-8.46S16.74 2 12.04 2zM17 15.6c-.19.34-.84.66-1.16.71-.31.05-.69.04-1.04-.08a10.875 10.875 0 01-5.71-3.69c-.31-.4-.69-.93-.69-1.29s.21-.49.33-.62c.1-.11.23-.29.35-.39.11-.11.16-.1.29.08.13.19.82 2 1.34 2.37.52.37.89.43 1.2.14.33-.3.49-.6.64-.81s.49-1.28.66-1.7.35-.74.45-.71.25.1.5.25c.23.14.93.43 1.08.52.14.1.25.16.27.27-.01.1-.09.33-.18.52z"/></svg>
                             WhatsApp Gruppe beitreten
                         </a>
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <!-- Zweiter Block: Bestellzusammenfassung -->
-            <section class="success-order-details-card">
-                <h2>Ihre Bestellung #<?php echo htmlspecialchars($orderId ?? 'N/A'); ?></h2>
-                <a href="mailto:info@früch.de?subject=Frage%20zu%20Bestellung%20%23<?php echo urlencode($orderId ?? 'N/A'); ?>" class="edit-order-link" aria-label="Bestellung ändern oder nachfragen">
-                    <span class="edit-order-text">Anfrage / Bearbeiten</span>
-                    <svg class="edit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                </a>
-                <?php if (isset($orderDetails) && !empty($orderDetails['items'])): ?>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Produkt</th>
-                                <th>Menge</th>
-                                <th>Einzelpreis</th>
-                                <th>Summe</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($orderDetails['items'] as $item): ?>
-                                <tr>
-                                    <td><?php echo htmlspecialchars($item['name']); ?></td>
-                                    <td><?php echo htmlspecialchars($item['quantity']); ?></td>
-                                    <td><?php echo formatEuroCurrency($item['price_at_order']); ?></td>
-                                    <td><?php echo formatEuroCurrency($item['quantity'] * $item['price_at_order']); ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="3"><strong>Gesamtsumme:</strong></td>
-                                <td><strong><?php echo formatEuroCurrency($orderDetails['total_amount']); ?></strong></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                <?php else: ?>
-                    <p>Bestellartikel konnten nicht geladen werden.</p>
-                <?php endif; ?>
-            </section>
-
-            <!-- Dritter Block: Mission / Projektinformationen -->
-            <section class="success-mission-card">
-                <h2>Ihre Hilfe macht einen Unterschied!</h2>
-                <p>Mit Ihrer Bestellung unterstützen Sie direkt unsere Missionsarbeit in Portugal. <strong>100% des Gewinnes</strong> aus dem Verkauf dieser Früchte fließt in Projekte, die Not lindern und Menschen eine Perspektive geben.</p>
-                <p>Jeder Bissen dieser sonnengereiften Früchte hilft, Gutes zu tun und positive Veränderungen in der Welt zu bewirken.</p>
-                <p>Vielen Dank für Ihre Großzügigkeit und Ihr Vertrauen in unser Projekt.</p>
-                <div class="mission-links">
-                    <a href="/geschichte" class="hero-button">Mehr über unsere Mission</a>
-                    <a href="/spenden" class="hero-button">Direkt spenden</a>
+        <!-- Zweiter Block: Bestellzusammenfassung -->
+        <section class="success-order-details-card">
+            <h2>Ihre Bestellung #<?php echo htmlspecialchars($orderId ?? 'N/A'); ?></h2>
+            <a href="mailto:info@früch.de?subject=Frage%20zu%20Bestellung%20%23<?php echo urlencode($orderId ?? 'N/A'); ?>" class="edit-order-link" aria-label="Bestellung ändern oder nachfragen">
+                <span class="edit-order-text">Anfrage / Bearbeiten</span>
+                <svg class="edit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </a>
+            <?php if ($fallback_mode): ?>
+                <div class="alert error fallback-details-alert">
+                    <p>Details zur Bestellung können nicht angezeigt werden.</p>
                 </div>
-            </section>
-        </div>
+            <?php elseif (isset($orderDetails) && !empty($orderDetails['items'])): ?>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Produkt</th>
+                            <th>Menge</th>
+                            <th>Einzelpreis</th>
+                            <th>Summe</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($orderDetails['items'] as $item): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($item['name']); ?></td>
+                                <td><?php echo htmlspecialchars($item['quantity']); ?></td>
+                                <td><?php echo formatEuroCurrency($item['price_at_order']); ?></td>
+                                <td><?php echo formatEuroCurrency($item['quantity'] * $item['price_at_order']); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3"><strong>Gesamtsumme:</strong></td>
+                            <td><strong><?php echo formatEuroCurrency($orderDetails['total_amount']); ?></strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            <?php else: ?>
+                <div class="alert error fallback-details-alert">
+                    <p>Bestellartikel konnten nicht geladen werden.</p>
+                </div>
+            <?php endif; ?>
+        </section>
 
-    </main>
+        <!-- Dritter Block: Mission / Projektinformationen -->
+        <section class="success-mission-card">
+            <h2>Ihre Hilfe macht einen Unterschied!</h2>
+            <p>Mit Ihrer Bestellung unterstützen Sie direkt unsere Missionsarbeit in Portugal. <strong>100% des Gewinnes</strong> aus dem Verkauf dieser Früchte fließt in Projekte, die Not lindern und Menschen eine Perspektive geben.</p>
+            <p>Jeder Bissen dieser sonnengereiften Früchte hilft, Gutes zu tun und positive Veränderungen in der Welt zu bewirken.</p>
+            <p>Vielen Dank für Ihre Großzügigkeit und Ihr Vertrauen in unser Projekt.</p>
+            <div class="mission-links">
+                <a href="/geschichte" class="hero-button">Mehr über unsere Mission</a>
+                <a href="/spenden" class="hero-button">Direkt spenden</a>
+            </div>
+        </section>
+    </div>
+
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Skript für "Copy to clipboard"
-        const copyToClipboardElements = document.querySelectorAll('.copy-to-clipboard');
-        copyToClipboardElements.forEach(element => {
-            element.addEventListener('click', function(event) {
-                event.preventDefault(); // Verhindert standardmäßiges Linkverhalten, falls es ein Link ist
-                const textToCopy = this.querySelector('.detail-value').innerText.trim();
-                navigator.clipboard.writeText(textToCopy).then(() => {
-                    const originalText = this.querySelector('.detail-value').innerText;
-                    this.querySelector('.detail-value').innerText = 'Kopiert!';
-                    this.classList.add('copied');
-                    setTimeout(() => {
-                        this.querySelector('.detail-value').innerText = originalText;
-                        this.classList.remove('copied');
-                    }, 1500);
-                }).catch(err => {
-                    console.error('Fehler beim Kopieren: ', err);
-                });
-            });
-        });
-    });
-</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -5735,8 +6215,47 @@ DATEINAME: src/templates/header.php
     <link rel="apple-touch-icon" href="/-apple-touch-icon.png">
 </head>
 <body>
+    <?php
+    require_once ROOT_PATH . 'include/disclaimer_modal.php';
+
+    if ($show_disclaimer_modal):
+    ?>
+    <div id="disclaimerModal" class="disclaimer-modal">
+        <div class="disclaimer-modal-content">
+            <h2>Wichtiger Hinweis: Testumgebung!</h2>
+            <p>Dies ist eine <strong>TESTUMGEBUNG</strong> für den Online-Shop "Früchte aus Portugal".</p>
+            <p>Bitte beachten Sie Folgendes:</p>
+            <ul>
+                <li><strong>Kein bindender Kauf:</strong> Ihre Bestellung ist <strong>nicht bindend</strong>. Es werden keine realen Produkte versandt, und es wird kein Geld abgebucht.</li>
+                <li><strong>Dummy-Zahlungen:</strong> Alle Zahlungsoptionen sind nur zu Testzwecken.</li>
+                <li><strong>Testdaten:</strong> Alle angezeigten Preise und Produktinformationen sind fiktiv.</li>
+                <li><strong>Feedback willkommen:</strong> Melden Sie Fehler und Anregungen gerne an <a href="mailto:info@früch.de">info@früch.de</a>.</li>
+            </ul>
+            <p>Mit der Bestätigung dieses Hinweises verstehen Sie, dass dies keine produktive Seite ist und keine echten Transaktionen durchgeführt werden.</p>
+            
+            <div class="disclaimer-button-wrapper">
+                <button id="disclaimer-accept-button" class="disclaimer-accept-btn" disabled>
+                    Verstanden (<span id="disclaimer-countdown">5</span>)
+                </button>
+            </div>
+            <p class="disclaimer-bottom-note">Sie müssen den Hinweis akzeptieren, um die Webseite zu nutzen.</p>
+        </div>
+    </div>
+    <?php endif; ?>
+
     <header>
         <div class="google-header-wrapper">
+            <!-- Hamburger Icon für Mobile -->
+            <button class="menu-toggle" aria-label="Menü öffnen" style="display: none;">
+                <span class="hamburger"></span>
+            </button>
+            
+            <!-- Logo, das auf Mobile im Header Wrapper sichtbar ist -->
+            <a href="/" class="site-logo-link">
+                <img src="/-full_logo.png" alt="Früchte aus Portugal Logo" class="site-logo-image" loading="eager">
+            </a>
+
+            <!-- Der eigentliche Navigationsbereich (der ausklappt) -->
             <nav class="google-search-like-nav">
                 <ul class="nav-options">
                     <li><a href="/">Home</a></li>
@@ -5744,13 +6263,59 @@ DATEINAME: src/templates/header.php
                     <li><a href="/geschichte">Geschichte</a></li>
                     <li><a href="/kontakt">Kontakt</a></li>
                 </ul>
-                <a href="/spenden" class="cart-button">Spenden</a>
             </nav>
+
+            <!-- Spenden Button, der sowohl für Desktop als auch Mobile dient und bei Mobile immer angezeigt wird -->
+            <a href="/spenden" class="cart-button donate-button">Spenden</a>
         </div>
     </header>
 
-    <!-- NEU: Dieser Wrapper umschließt den gesamten Seiteninhalt zwischen Header und Footer -->
     <div id="page-content-wrapper">
+
+    <?php if ($show_disclaimer_modal ?? false): ?>
+        <script src="/_disclaimer.js" defer></script>
+    <?php endif; ?>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const menuToggle = document.querySelector('.menu-toggle');
+        const googleHeaderWrapper = document.querySelector('.google-header-wrapper');
+        // NEU: Das korrekte Element für die Navigation auswählen
+        const googleSearchLikeNav = document.querySelector('.google-search-like-nav');
+
+        // Prüfen, ob alle benötigten Elemente existieren
+        if (menuToggle && googleSearchLikeNav && googleHeaderWrapper) {
+            menuToggle.addEventListener('click', () => {
+                // Die Klasse 'is-open' auf das Navigations-Container-Element anwenden
+                googleSearchLikeNav.classList.toggle('is-open');
+                menuToggle.classList.toggle('is-active');
+                googleHeaderWrapper.classList.toggle('nav-expanded');
+                menuToggle.blur();
+            });
+
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 768) { // Desktop-Breakpoint
+                    // Klasse entfernen, wenn zur Desktop-Ansicht gewechselt wird
+                    googleSearchLikeNav.classList.remove('is-open');
+                    menuToggle.classList.remove('is-active');
+                    googleHeaderWrapper.classList.remove('nav-expanded');
+                    document.body.style.overflow = '';
+                }
+            });
+
+            document.addEventListener('keydown', (event) => {
+                // Menü mit ESC schließen
+                if (event.key === 'Escape' && googleSearchLikeNav.classList.contains('is-open')) {
+                    googleSearchLikeNav.classList.remove('is-open');
+                    menuToggle.classList.remove('is-active');
+                    googleHeaderWrapper.classList.remove('nav-expanded');
+                    document.body.style.overflow = '';
+                    menuToggle.focus();
+                }
+            });
+        }
+    });
+</script>
 
 ==================================================
 DATEINAME: src/index.php
@@ -5762,17 +6327,29 @@ DATEINAME: src/index.php
  * Diese Datei verarbeitet alle Anfragen dank .htaccess
  */
 
-// --- SETUP PHASE ---
+// --- PHASE 1: ABSOLUT NOTWENDIGE KONFIGURATION UND ASSET-HANDLING ---
 // Konfigurationsdatei einbinden (Bleibt hier, da sie grundlegende Konstanten wie ROOT_PATH definiert)
 require_once __DIR__ . '/config/config.php';
 
-// Alle Hilfsdateien und Initialisierungen aus dem 'include'-Ordner laden
-// Dies bindet startup.php, asset_handler.php, db.php, email.php, helpers.php und alle anderen hinzugefügten Dateien ein.
-require_once __DIR__ . '/include/loader.php';
+// Angeforderte URI extrahieren
+$request_uri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+$segments = explode('/', $request_uri);
+$page = !empty($segments[0]) ? $segments[0] : 'home';
 
-// Composer Autoload einbinden. Dies ist essenziell für PHPMailer.
-// Stelle sicher, dass der 'vendor'-Ordner direkt unter deinem ROOT_PATH liegt.
-require_once __DIR__  . '/vendor/autoload.php';
+// Asset Handler Funktion definieren (NICHT die ganze Loader-Datei laden!)
+// Wir definieren die Funktion hier direkt oder laden nur die asset_handler.php
+// ohne die anderen Loader, um Performance zu sparen.
+// Die asset_handler.php muss so umgeschrieben werden, dass sie keine anderen Includes hat.
+require_once ROOT_PATH . 'include/asset_handler.php';
+
+// Prüfen, ob eine Asset-Anfrage vorliegt und diese behandeln
+// Wenn handleAssetRequest() ein Asset findet und ausliefert, beendet es das Skript.
+handleAssetRequest($page);
+
+// --- PHASE 2: LADEN ALLER WEITEREN INCLUDES NUR FÜR NICHT-ASSET-ANFRAGEN ---
+// Wenn das Skript hier ankommt, ist es KEIN Asset. Jetzt können wir alle anderen Loader laden.
+require_once ROOT_PATH . 'include/loader.php'; // Lädt startup.php, db.php, email.php, helpers.php etc.
+require_once ROOT_PATH . 'vendor/autoload.php'; // Composer Autoload für PHPMailer etc.
 
 // Session starten (wichtig für den Warenkorb und Admin-Login)
 if (session_status() == PHP_SESSION_NONE) {
@@ -5780,33 +6357,14 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 
 
-// --- REQUEST PARSING PHASE ---
-// Angeforderte URI extrahieren
-// Beispiel: /ueber-uns -> ueber-uns
-$request_uri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+// --- PHASE 3: ROUTING FÜR API, ADMIN UND REGULÄRE SEITEN ---
 
-// Segmente der URI aufteilen
-$segments = explode('/', $request_uri);
-
-// Das erste Segment als Modul-/Seitennamen verwenden, Standard ist 'home'
-$page = !empty($segments[0]) ? $segments[0] : 'home';
-
-
-// --- ASSET HANDLING PHASE ---
-// Prüfen, ob eine Asset-Anfrage vorliegt und diese behandeln
-// Die Funktion handleAssetRequest() ist in include/asset_handler.php definiert.
-// Sie wird nur aktiv, wenn $page_name mit '_' beginnt (z.B. /_favicon.ico).
-// Eine Anfrage wie /api/cart_process.php oder /admin wird hier nicht behandelt.
-handleAssetRequest($page);
-
-
-// --- API ROUTING PHASE ---
-// Wenn das erste Segment 'api' ist, versuchen wir, die entsprechende API-Datei zu laden.
+// API ROUTING
 if ($page === 'api' && isset($segments[1])) {
     $api_file = ROOT_PATH . 'api/' . $segments[1];
     if (file_exists($api_file)) {
         require_once $api_file;
-        exit(); // Wichtig: Beende das Skript nach dem Ausführen der API-Datei
+        exit();
     } else {
         header("HTTP/1.0 404 Not Found");
         require_once ROOT_PATH . 'modules/404.php';
@@ -5814,16 +6372,14 @@ if ($page === 'api' && isset($segments[1])) {
     }
 }
 
-// --- ADMIN ROUTING PHASE ---
-// Wenn das erste Segment 'admin' ist, laden wir den Admin-Einstiegspunkt.
+// ADMIN ROUTING
 if ($page === 'admin') {
-    // Admin-Modul wird direkt geladen und hat seinen eigenen Container-Stil
-    require_once ROOT_PATH . 'modules/admin.php';
-    exit(); // Wichtig: Beende das Skript nach dem Ausführen der Admin-Seite
+    require_once ROOT_PATH . 'modules/admin.php'; // Pfad korrigiert, falls es nicht in einem Unterordner ist
+    exit();
 }
 
 
-// --- PAGE / MODULE LOADING PHASE ---
+// --- PHASE 4: RENDERING DER REGULÄREN SEITEN ---
 // Seitennamen bereinigen, um nur alphanumerische Zeichen, Bindestriche, Unterstriche zu erlauben
 $page = preg_replace('/[^a-zA-Z0-9\-_.]/', '', $page);
 
@@ -5836,22 +6392,13 @@ require_once ROOT_PATH . 'templates/header.php';
 // Modul laden oder 404-Fehler anzeigen
 if (file_exists($module_path)) {
     if ($page === 'home') {
-        // Die Homepage hat eine spezielle Hero-Sektion und der Inhalt
-        // wird direkt in #page-content-wrapper gerendert.
         require_once $module_path;
     } else {
-        // Für alle anderen Seiten: Inhalt in .site-content-wrapper wrappen.
         echo '<div class="site-content-wrapper">';
-        // Wenn es die Success-Seite ist, rufen wir sie auf
-        // Falls wir allgemeine Nachrichten in success.php anzeigen wollen, könnten wir sie hier abrufen.
-        if ($page === 'success') {
-             // success.php kümmert sich um seine eigene Meldungsanzeige über Session oder direktes Output.
-        }
         require_once $module_path;
         echo '</div>';
     }
 } else {
-    // Wenn das Modul nicht existiert, 404-Status senden
     header("HTTP/1.0 404 Not Found");
     echo '<div class="site-content-wrapper">';
     require_once ROOT_PATH . 'modules/404.php';
