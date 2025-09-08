@@ -55,7 +55,7 @@ define('MAIL_FROM_EMAIL', getenv('MAIL_FROM_EMAIL') ?: 'noreply@example.com');
 define('MAIL_FROM_NAME', getenv('MAIL_FROM_NAME') ?: 'Your Application');
 
 // Für den Login auf der Admin Seite
-define('ADMIN_PASSWORD_HASH', getenv('ADMIN_PASSWORD_HASH') ?: ''); // Wichtige Umgebungsvariable
+define('ADMIN_PASSWORD', getenv('ADMIN_PASSWORD') ?: ''); // Wichtige Umgebungsvariable
 
 ?>
 EOF
