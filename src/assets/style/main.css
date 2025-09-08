@@ -3,7 +3,7 @@
 @import '/.base.css';
 @import '/.header.css';
 @import '/.layout.css';
-@import '/.cart.css';
+
 @import '/.shop.css';
 @import '/.footer.css';
 @import '/.modal.css';
@@ -13,3 +13,5 @@
 @import '/.success.css';
 @import '/.disclaimer.css';
 @import '/.responsive.css';
+
+@import '/.cart.css';

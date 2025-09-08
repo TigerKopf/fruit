@@ -18,17 +18,9 @@
 }
 
 @media (max-width: 992px) { /* Tablet/Smaller Desktop (Dies betrifft noch den Desktop-Mode von Header) */
-    /* ... Desktop-Modus Regeln beibehalten ... */
-    /*
-        Hier wurden bereits mobile-ähnliche Regeln gesetzt, die sich jetzt mit den
-        neuen Regeln im @media (max-width: 768px)header.css überschneiden.
-        Ich bereinige das und entferne redundant/falsch hier stehende Mobile-Regeln
-        und lass die @media (max-width: 768px) aus header.css als primäre Quelle wirken.
-    */
     .admin-container {
         flex-direction: column;
         padding: 0 var(--spacing-sm);
-        /* Muss calc(header-height) nehmen */
         margin-top: calc(var(--header-height) + var(--spacing-md));
         margin-bottom: var(--spacing-md);
     }
@@ -45,7 +37,7 @@
         gap: var(--spacing-md);
     }
     .product-item img {
-        height: 90px;
+        height: 200px;
     }
     .footer-content-wrapper {
         padding: var(--spacing-lg) var(--spacing-md);
@@ -66,89 +58,90 @@
     }
 }
 
-/* ALLE mobilen Header Regeln kommen JETZT NUR noch in header.css!
-   Hier im responsive.css kümmern wir uns um die main content container und cart,
-   sodass sie zum mobile header passen. */
-
 @media (max-width: 768px) {
     /* Header-bezogene Anpassungen in header.css! */
 
+    /* NEU: Wichtiger Abstandshalter für den Body, damit der fixe Warenkorb nichts verdeckt! */
+    body {
+        padding-bottom: calc(var(--header-height-mobile-collapsed) + var(--spacing-sm));
+    }
+    
     .site-content-wrapper {
         flex-direction: column;
         margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-md));
-        padding: 0 var(--spacing-md); /* Feste padding Werte für Mobile-Seiten */
+        padding: 0 var(--spacing-md);
         transform: translateX(0);
     }
     main {
         order: 1;
-        margin-right: 0; /* Entfernt Desktop-Margin zum Warenkorb */
+        margin-right: 0;
         margin-bottom: var(--spacing-md);
         padding: var(--spacing-md);
         border-radius: 0;
         box-shadow: none;
     }
 
-    /* Mobiler Warenkorb muss auf Mobile immer sticky sein und bleibt hier,
-       aber Top-Padding wird angepasst, da Header sich anders verhält */
+    /* NEU: Komplette Neugestaltung des mobilen Warenkorbs */
     .cart-sidebar {
         position: fixed; /* Fixiert am Viewport */
         bottom: 0;
         left: 0;
         right: 0;
         width: 100%;
-        max-height: calc(var(--cart-max-height-ratio) * 100vh);
-        top: auto;
+        max-height: calc(var(--cart-max-height-ratio) * 100vh); /* Nimmt max. 2/3 des Bildschirms ein */
+        top: auto; /* `top` wird nicht mehr benötigt */
         border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
         box-shadow: 0 -4px 15px var(--color-shadow-medium);
-        transform: translateY(calc(100% - var(--header-height-mobile-collapsed))); /* Zusammengeklappt, nur Header sichtbar */
+        /* Standardmäßig zusammengeklappt, sodass nur der Header sichtbar ist */
+        transform: translateY(calc(100% - var(--header-height-mobile-collapsed))); 
         transition: transform 0.3s ease-in-out;
         z-index: 100;
         display: flex;
         flex-direction: column;
-        padding: 0; /* Padding im Sidebar-Wrapper entfernen */
-        background-color: var(--color-background-white); /* Weißer Hintergrund des Sidebar-Wrappers */
+        background-color: var(--color-background-white); /* Hintergrund für den ganzen Container */
+        padding: 0;
         border: none;
-        gap: 0; /* Abstand zwischen inneren Elementen, falls zuvor definiert */
+        gap: 0;
     }
     .cart-sidebar.is-expanded {
-        transform: translateY(0); /* Komplett sichtbar */
+        transform: translateY(0); /* Komplett sichtbar im aufgeklappten Zustand */
     }
     .cart-sidebar.is-collapsed {
-        overflow-y: hidden;
+        overflow-y: hidden; /* Verhindert Scrollen im geschlossenen Zustand */
     }
+
     .cart-header-desktop { display: none; }
     .cart-header-mobile { display: flex; } /* Sichtbar auf Mobile */
-    .cart-mobile-summary { flex-grow: 1; text-align: left; }
-    .cart-toggle-button {
-        background: none; border: none; color: white; font-size: 1.2em;
-        cursor: pointer; padding: 0 var(--spacing-xs); line-height: 1;
-        display: flex; align-items: center; gap: var(--spacing-xs);
-        margin-left: var(--spacing-sm);
-    }
+
     .cart-body-content {
         max-height: calc(var(--cart-max-height-ratio) * 100vh - var(--header-height-mobile-collapsed));
-        overflow-y: hidden;
+        overflow-y: hidden; /* Der Container selbst scrollt nicht */
         flex-grow: 1;
         display: flex;
         flex-direction: column;
         padding: var(--spacing-md);
+        /* Unnötige Stile entfernt, da der Wrapper (.cart-sidebar) das Styling übernimmt */
         background-color: transparent;
         border: none;
         border-radius: 0;
         box-shadow: none;
     }
-    .cart-sidebar.is-collapsed .cart-body-content { display: none; }
-    .cart-items-scrollable-wrapper {
-        flex-grow: 1; overflow-y: auto;
-        padding-right: var(--spacing-xs); margin-right: calc(-1 * var(--spacing-xs));
-        mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-        -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+    
+    /* Der Inhalt wird ausgeblendet, wenn der Warenkorb zu ist */
+    .cart-sidebar.is-collapsed .cart-body-content { 
+        display: none; 
     }
-    #cart-total-container { flex-shrink: 0; }
-    .checkout-button { flex-shrink: 0; }
 
+    /* Diese Stile stellen sicher, dass der Inhalt innerhalb des Body scrollbar ist */
+    .cart-items-scrollable-wrapper {
+        flex-grow: 1; 
+        overflow-y: auto;
+    }
+    #cart-total-container, .checkout-button { 
+        flex-shrink: 0; 
+    }
 
-    .admin-container { /* Auch hier Top-Margin anpassen */
+    .admin-container {
         margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-md));
         padding: 0 var(--spacing-md);
     }
@@ -157,35 +150,17 @@
     }
     .admin-content { padding: var(--spacing-lg); }
 
-    /* Footer sollte sich normal verhalten */
-    .footer-content-wrapper {
-        padding: var(--spacing-lg) var(--spacing-md);
-    }
     .footer-container {
-        grid-template-columns: 1fr; /* Eine Spalte auf Mobile */
+        grid-template-columns: 1fr;
         gap: var(--spacing-md);
     }
-    .footer-section { margin-bottom: var(--spacing-md); } /* Abstand zwischen Footer-Sektionen */
+    .footer-section { margin-bottom: var(--spacing-md); }
     .footer-section:last-child { margin-bottom: 0; }
+}
 
-} /* End of @media (max-width: 768px) */
-
-
-/* Kleinste Mobilgeräte */
 @media (max-width: 500px) {
-    /* Header-bezogene Anpassungen in header.css! */
-
-    .site-content-wrapper {
-        margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-sm));
-        padding: 0 var(--spacing-sm);
-    }
-    main {
-        padding: var(--spacing-md);
-    }
-    .cart-sidebar { /* Cart sidebar padding angepasst */
-        padding: 0;
-    }
-    .admin-container {
+    main { padding: var(--spacing-md); }
+    .site-content-wrapper, .admin-container {
         margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-sm));
         padding: 0 var(--spacing-sm);
     }
@@ -193,56 +168,8 @@
         margin: 0 var(--spacing-sm) var(--spacing-sm) var(--spacing-sm);
         padding: var(--spacing-md);
     }
-
-        /* Shop-spezifische Anpassungen für sehr kleine Bildschirme */
-    .product-grid {
-        grid-template-columns: 1fr; /* Eine Spalte auf kleinsten Mobilgeräten */
-        gap: var(--spacing-md);
-    }
-
-    .product-item {
-        padding: var(--spacing-sm); /* Etwas weniger Padding */
-    }
-
-    .product-item img {
-        height: 70px; /* Bilder etwas kleiner */
-        margin-bottom: var(--spacing-sm);
-    }
-
-    .product-item h3 {
-        font-size: 1.1em; /* Kleinere Titel */
-        line-height: 1.2;
-    }
-
-    .product-quantity-price-line {
-        font-size: 0.85em; /* Kleinere Schrift für Einheit/Preis */
-    }
-
-    .product-quantity-price-line .product-price-value {
-        font-size: 1.2em; /* Kleinerer Preiswert */
-        white-space: normal; /* Erlaubt dem Preis das Umbrechen */
-    }
-
-    .product-controls {
-        flex-direction: column; /* Steuerelemente vertikal stapeln */
-        gap: var(--spacing-xs);
-    }
-
-    .product-controls input[type="number"] {
-        width: 60px; /* Etwas mehr Breite, wenn gestapelt */
-        padding: var(--spacing-xs);
-        font-size: 0.85em;
-    }
-
-    .product-controls .add-to-cart-btn {
-        width: 100%; /* Volle Breite, wenn gestapelt */
-        padding: var(--spacing-xs) var(--spacing-sm);
-        font-size: 0.85em;
-    }
-
-    .category-section h2 {
-        font-size: 1.6em; /* Kleinere Kategorie-Titel */
-        margin-bottom: var(--spacing-md);
-        padding-bottom: var(--spacing-xs);
-    }
-}
+    .product-grid { grid-template-columns: 1fr; }
+    .product-item img { height: 160px; }
+    .product-controls { flex-direction: column; }
+    .product-controls .add-to-cart-btn { width: 100%; }
+} 

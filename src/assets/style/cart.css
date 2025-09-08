@@ -1,91 +1,202 @@
-/* Warenkorb-Seitenleiste (rechts, sticky) für Desktop - ÄUSSERER CONTAINER TRANSPARENT */
+/* ==========================================================================
+   Shop & Warenkorb Komponenten-Stile (Desktop-First)
+   ========================================================================== */
+
+/* Spezifische Shop-Stile für Produktliste im Main */
+.category-section {
+    margin-bottom: var(--spacing-xl);
+}
+
+.category-section h2 {
+    font-size: 2em;
+    font-weight: 600;
+    color: var(--color-text-dark);
+    padding-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-lg);
+}
+
+.product-item {
+    background: var(--color-background-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    text-align: center;
+    box-shadow: 0 4px 12px var(--color-shadow-light);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.product-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px var(--color-shadow-medium);
+}
+
+.product-image-container {
+    position: relative;
+    margin-bottom: calc(var(--spacing-md) + 15px); /* Platz für überlappenden Titel */
+}
+
+.product-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: var(--border-radius-md);
+    display: block;
+}
+
+.product-item h3 {
+    position: absolute;
+    bottom: -15px; /* Hängt über den unteren Rand des Bildes */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--color-background-white);
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--border-radius-lg); /* Pillenform */
+    box-shadow: 0 3px 8px var(--color-shadow-medium);
+    font-size: 1.4em;
+    font-weight: 600;
+    color: var(--color-text-dark);
+    white-space: nowrap;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.product-quantity-price-line {
+    color: var(--color-text-medium);
+    font-size: 0.95em;
+    line-height: 1.4;
+    margin-bottom: var(--spacing-md);
+}
+
+.product-quantity-price-line .product-price-value {
+    font-size: 1.4em;
+    font-weight: 700;
+    color: var(--color-accent);
+    margin-left: 4px;
+    white-space: nowrap;
+}
+
+.product-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-top: auto; /* Sorgt dafür, dass Controls am unteren Rand bleiben */
+}
+
+.product-controls input[type="number"] {
+    width: 50px;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    text-align: center;
+    font-size: 1em;
+    color: var(--color-text-dark);
+    -moz-appearance: textfield;
+}
+
+.product-controls input::-webkit-outer-spin-button,
+.product-controls input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.product-controls .add-to-cart-btn {
+    background-color: var(--color-primary);
+    color: var(--color-background-white);
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--border-radius-lg);
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.product-controls .add-to-cart-btn:hover {
+    background-color: #2F5AA9;
+    box-shadow: 0 4px 10px var(--color-shadow-light);
+    transform: translateY(-2px);
+}
+
+.product-controls .add-to-cart-btn[disabled] {
+    background-color: var(--color-background-white);
+    color: var(--color-text-light);
+    border: 1px solid var(--color-border);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.product-controls .add-to-cart-btn[disabled]:hover {
+    box-shadow: none;
+    transform: none;
+}
+
+
+/* Warenkorb-Seitenleiste (Desktop) */
 .cart-sidebar {
     position: sticky;
-    top: calc(var(--header-height) + var(--spacing-lg)); /* Unter dem Header + Abstand */
+    top: calc(var(--header-height) + var(--spacing-lg));
     align-self: flex-start;
     flex-shrink: 0;
-    width: 320px; /* Etwas breiter für bessere Übersicht */
-    background: transparent; /* Geändert: Hintergrund des Wrappers transparent */
-    border: none; /* Geändert: Kein Rahmen */
-    border-radius: 0; /* Geändert: Keine Abrundung */
-    padding: 0; /* Geändert: Padding entfernt, wird auf innere Elemente verschoben */
-    box-shadow: none; /* Geändert: Kein Schatten */
-    max-height: calc(var(--cart-max-height-ratio) * 100vh - var(--spacing-xl)); /* Max-Höhe für Desktop */
-    overflow-y: hidden; /* Hauptcontainer scrollt nicht, scrollt nur der innere wrapper */
+    width: 320px;
+    max-height: calc(var(--cart-max-height-ratio) * 100vh - var(--spacing-xl));
     z-index: 10;
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-md); /* Abstand zwischen den Warenkorb-Karten auf Desktop */
+    gap: var(--spacing-md);
 }
 
-/* Titel für Desktop-Warenkorb - JETZT EINE SEPARATE KARTE */
 .cart-header-desktop {
-    display: block;
-    background-color: var(--color-background-white); /* Geändert: Weißer Hintergrund */
-    border: 1px solid var(--color-border); /* Geändert: Rahmen */
-    border-radius: var(--border-radius-md); /* Geändert: Abgerundete Ecken */
-    padding: var(--spacing-md); /* Geändert: Padding */
-    box-shadow: 0 2px 5px var(--color-shadow-light); /* Geändert: Dezenter Schatten */
-    margin-bottom: 0; /* Geändert: Kein externer Bodenabstand, da Gap im Sidebar-Container */
+    background-color: var(--color-background-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    box-shadow: 0 2px 5px var(--color-shadow-light);
 }
+
 .cart-header-desktop h2 {
     font-size: 1.8em;
-    margin-top: 0;
-    margin-bottom: 0; /* Geändert: Padding ist im Elternelement */
+    font-weight: 600;
     color: var(--color-text-dark);
-    text-align: left; /* Geändert: Standardmäßig linksbündig auf Desktop */
-    font-weight: 600;
+    margin: 0;
 }
 
-/* Mobiler Warenkorb Header standardmäßig verstecken, auf Mobile anzeigen */
-.cart-header-mobile {
-    display: none;
-    background-color: var(--color-primary); /* Blauer Hintergrund für mobile Ansicht */
-    color: white; /* Weißer Text */
-    border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 1.1em;
-    position: relative;
-    z-index: 101;
-    justify-content: space-between;
-    align-items: center;
-    padding: var(--spacing-sm) var(--spacing-md);
-}
+.cart-header-mobile { display: none; } /* Standardmäßig versteckt */
 
-.cart-sidebar.is-expanded .cart-header-mobile {
-    background-color: var(--color-primary); /* Bleibt blau, wenn ausgeklappt */
-}
-
-.cart-toggle-button {
-    background: none;
-    border: none;
-    color: white; /* Passend zum blauen Hintergrund */
-    font-size: 1.2em;
-    cursor: pointer;
-    padding: 0 var(--spacing-xs);
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-    margin-left: var(--spacing-sm);
-}
-
-/* Warenkorb Inhalt (klappt auf Mobile ein/aus) - INHALTSBEREICH ALS SEPARATE KARTE */
 .cart-body-content {
-    background-color: var(--color-background-white); /* Geändert: Weißer Hintergrund für den Inhalt */
-    border: 1px solid var(--color-border); /* Geändert: Rahmen */
-    border-radius: var(--border-radius-md); /* Geändert: Abgerundete Ecken */
-    box-shadow: 0 2px 8px var(--color-shadow-light); /* Geändert: Dezenter Schatten */
-    padding: var(--spacing-md); /* Geändert: Padding hier angewendet */
+    background-color: var(--color-background-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 2px 8px var(--color-shadow-light);
+    padding: var(--spacing-md);
     flex-grow: 1;
-    display: flex; /* Für interne Flex-Anordnung */
+    display: flex;
     flex-direction: column;
-    /* max-height für Mobile wird in responsive.css überschrieben */
-    overflow-y: hidden; /* Sicherstellen, dass der body-content selbst nicht scrollt, sondern der Wrapper darin */
+    overflow-y: hidden;
 }
 
-/* Restliche Stile bleiben unverändert */
+.cart-items-scrollable-wrapper {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: var(--spacing-xs);
+    margin-right: calc(-1 * var(--spacing-xs));
+    mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+}
+
 #cart-items {
     list-style: none;
     padding: 0;
@@ -96,11 +207,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: var(--spacing-md);
     padding-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
     border-bottom: 1px solid var(--color-border);
 }
-
 .cart-item:last-child {
     border-bottom: none;
     margin-bottom: 0;
@@ -114,28 +224,23 @@
     border-radius: var(--border-radius-sm);
     margin-right: var(--spacing-sm);
     flex-shrink: 0;
-    mask-image: radial-gradient(circle at center, black 70%, transparent 100%);
-    -webkit-mask-image: radial-gradient(circle at center, black 70%, transparent 100%);
-    background-color: #FDFEFE;
 }
 
 .cart-item-info {
     flex-grow: 1;
     margin-right: var(--spacing-sm);
 }
-
 .cart-item-info h4 {
     margin: 0;
     font-size: 1.05em;
-    color: var(--color-text-dark);
     font-weight: 500;
+    color: var(--color-text-dark);
 }
-
 .cart-item-info p {
     margin: 4px 0 0;
     font-size: 0.9em;
-    color: var(--color-accent);
     font-weight: 600;
+    color: var(--color-accent);
 }
 
 .cart-item-controls {
@@ -146,18 +251,18 @@
 }
 
 .cart-item-controls input[type="number"] {
-    width: 40px; /* Angepasst: Macht das Eingabefeld kleiner */
-    padding: var(--spacing-xs) 0; /* Minimales vertikales Padding, kein horizontales */
+    width: 40px;
+    padding: var(--spacing-xs) 0;
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius-sm);
     text-align: center;
-    font-size: 0.9em; /* Angepasst: Kleinere Schrift im Input-Feld */
+    font-size: 0.9em;
     color: var(--color-text-dark);
     -moz-appearance: textfield;
 }
 
-.cart-item-controls input[type="number"]::-webkit-outer-spin-button,
-.cart-item-controls input[type="number"]::-webkit-inner-spin-button {
+.cart-item-controls input::-webkit-outer-spin-button,
+.cart-item-controls input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
@@ -172,44 +277,30 @@
     line-height: 1;
     transition: color 0.2s ease, transform 0.2s ease;
 }
-
 .cart-item-controls .remove-item-btn:hover {
     color: var(--color-accent);
     transform: scale(1.1);
 }
 
-/* NEU: Wrapper für scrollbare Items - Übernimmt Scroll-Funktion und Maske */
-.cart-items-scrollable-wrapper {
-    flex-grow: 1; /* Nimmt den verfügbaren Platz ein */
-    overflow-y: auto; /* Nur dieser Bereich scrollt */
-    padding-right: var(--spacing-xs); /* Platz für Scrollbalken */
-    margin-right: calc(-1 * var(--spacing-xs)); /* Kompensiert padding-right */
-    mask-image: linear-gradient(to bottom, black 80%, transparent 100%); /* Verlauf am unteren Ende */
-    -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-}
-
 #cart-total-container {
     border-top: 1px solid var(--color-border);
     padding-top: var(--spacing-md);
-    margin-top: var(--spacing-md);
-    text-align: right;
+    margin-top: auto; /* Drückt den Footer-Teil nach unten */
     display: flex;
-    justify-content: space-between; /* Sorgt dafür, dass "Gesamt" links und der Betrag rechts ausgerichtet sind */
+    justify-content: space-between;
     align-items: baseline;
     flex-shrink: 0;
 }
-
 #cart-total-container span {
-    font-size: 1.1em; /* Angepasst: Leicht kleinere Schriftgröße für das "Gesamt"-Label */
+    font-size: 1.1em;
     font-weight: 500;
     color: var(--color-text-dark);
 }
-
 #cart-total {
-    font-size: 1.8em; /* Behält große und prominente Schrift bei */
+    font-size: 1.8em;
     font-weight: 700;
     color: var(--color-accent);
-    margin-left: var(--spacing-sm); /* Kleiner Linker Rand, um vom Label zu trennen */
+    margin-left: var(--spacing-sm);
 }
 
 .checkout-button {
@@ -226,9 +317,158 @@
     transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
     flex-shrink: 0;
 }
-
 .checkout-button:hover {
     background-color: #00A656;
     box-shadow: 0 4px 10px var(--color-shadow-light);
     transform: translateY(-2px);
+}
+
+
+/* ==========================================================================
+   Responsive Anpassungen
+   ========================================================================== */
+@media (max-width: 1400px) {
+    .site-content-wrapper,
+    .google-search-like-nav,
+    .google-header-wrapper,
+    .footer-content-wrapper,
+    .admin-container {
+        max-width: 100%;
+        padding-left: var(--spacing-md);
+        padding-right: var(--spacing-md);
+        transform: translateX(0); /* Gilt für mehrere Elemente */
+    }
+}
+
+@media (max-width: 992px) { /* Tablet / Kleinere Desktops */
+    .admin-container {
+        flex-direction: column;
+        margin-top: calc(var(--header-height) + var(--spacing-md));
+        margin-bottom: var(--spacing-md);
+    }
+    .admin-sidebar {
+        width: 100%;
+        order: -1;
+        margin-bottom: var(--spacing-md);
+    }
+    .admin-content { padding: var(--spacing-lg); }
+
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-md);
+    }
+
+    .footer-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-md);
+    }
+    .footer-section { margin-bottom: 0; }
+
+    .dashboard-stats {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+}
+
+@media (max-width: 768px) { /* Mobilgeräte */
+    body {
+        /* Wichtiger Abstandshalter, damit der fixe Warenkorb nichts verdeckt! */
+        padding-bottom: calc(var(--header-height-mobile-collapsed) + var(--spacing-sm));
+    }
+    
+    .site-content-wrapper, .admin-container {
+        flex-direction: column;
+        margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-md));
+        transform: none; /* KORREKTUR: Hebt das transform auf, damit position:fixed wieder funktioniert */
+    }
+    
+    main {
+        order: 1;
+        margin-right: 0;
+        margin-bottom: var(--spacing-md);
+        box-shadow: none; /* Auf Mobilgeräten oft überflüssig */
+    }
+
+    /* Mobile Warenkorb-Neugestaltung als Bottom-Drawer */
+    .cart-sidebar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        top: auto;
+        max-height: calc(var(--cart-max-height-ratio) * 100vh);
+        border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+        box-shadow: 0 -4px 15px var(--color-shadow-medium);
+        transform: translateY(calc(100% - var(--header-height-mobile-collapsed))); 
+        transition: transform 0.3s ease-in-out;
+        z-index: 100;
+        background-color: var(--color-background-white);
+        gap: 0;
+    }
+    .cart-sidebar.is-expanded {
+        transform: translateY(0); /* Komplett sichtbar */
+    }
+    .cart-sidebar.is-collapsed {
+        overflow-y: hidden; /* Verhindert Scrollen im geschlossenen Zustand */
+    }
+    .cart-sidebar.is-collapsed .cart-body-content { 
+        display: none; /* Inhalt ausblenden, wenn zugeklappt */
+    }
+
+    .cart-header-desktop { display: none; }
+    .cart-header-mobile {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: var(--color-primary);
+        color: white;
+        padding: var(--spacing-sm) var(--spacing-md);
+        border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1.1em;
+        position: relative;
+        z-index: 101;
+    }
+
+    .cart-toggle-button {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.2em;
+        cursor: pointer;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-xs);
+    }
+
+    .cart-body-content {
+        max-height: calc(var(--cart-max-height-ratio) * 100vh - var(--header-height-mobile-collapsed));
+        background-color: transparent;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        padding: var(--spacing-md);
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    .footer-section { margin-bottom: var(--spacing-md); }
+    .footer-section:last-child { margin-bottom: 0; }
+}
+
+@media (max-width: 500px) { /* Kleinere Mobilgeräte */
+    .site-content-wrapper, .admin-container {
+        margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-sm));
+        padding: 0 var(--spacing-sm);
+    }
+    main { padding: var(--spacing-md); }
+
+    .product-grid { grid-template-columns: 1fr; }
+    .product-item img { height: 160px; }
+    .product-controls { flex-direction: column; }
+    .product-controls .add-to-cart-btn { width: 100%; }
 }

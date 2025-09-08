@@ -175,7 +175,6 @@ if ($action === 'edit' && $id > 0) {
                 <th>Betrag</th>
                 <th>Status</th>
                 <th>Zahlung</th>
-                <th>Abholung</th>
                 <th>Aktionen</th>
             </tr>
         </thead>
@@ -188,7 +187,6 @@ if ($action === 'edit' && $id > 0) {
                     <td><?php echo formatEuroCurrency($order['total_amount']); ?></td>
                     <td><?php echo htmlspecialchars(ucfirst($order['status'])); ?></td>
                     <td><?php echo htmlspecialchars(ucfirst(str_replace('_', ' ', $order['payment_method']))); ?></td>
-                    <td><?php echo ($order['pickup_datetime'] ? (new DateTime($order['pickup_datetime']))->format('d.m.Y H:i') . ' - ' . htmlspecialchars($order['location']) : 'N/A'); ?></td>
                     <td class="action-buttons">
                         <a href="?section=orders&action=edit&id=<?php echo $order['order_id']; ?>" class="edit-btn">Details/Bearbeiten</a>
                     </td>

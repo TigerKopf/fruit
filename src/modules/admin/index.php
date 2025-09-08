@@ -40,7 +40,7 @@ if ($action === 'logout') {
 
 // 2. Login-Logik (POST-Anfrage)
 if (isset($_POST['admin_password']) && !$isAdminLoggedIn) {
-    if (password_verify($_POST['admin_password'], ADMIN_PASSWORD_HASH)) {
+    if ($_POST['admin_password'] === ADMIN_PASSWORD) {
         $_SESSION['admin_logged_in'] = true;
         header('Location: /admin'); // Redirect nach erfolgreichem Login, um POST-Daten zu vermeiden
         exit();

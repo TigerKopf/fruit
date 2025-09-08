@@ -184,8 +184,6 @@
                     document.body.style.overflow = 'hidden';
                     checkoutLoadingOverlay.style.display = 'none'; // Immer versteckt beim Öffnen
                 } else {
-                    // NEU: Zeige eine Fehlermeldung, wenn der Warenkorb (im Frontend) leer ist, obwohl der Button aktiv ist
-                    // Dies kann passieren, wenn z.B. alle Items gelöscht wurden, bevor der Checkout geklickt wurde.
                     checkoutModal.style.display = 'flex';
                     checkoutLoadingOverlay.style.display = 'none';
                     checkoutMessageDiv.classList.add('error');
@@ -208,16 +206,13 @@
         checkoutForm.addEventListener('submit', async (event) => {
             event.preventDefault();
 
-            // NEU: Client-seitige Warenkorb-Prüfung VOR dem Abschicken des Formulars.
-            // Der Warenkorb auf dem Client ist ein guter Indikator. Wenn der Warenkorb-Display
-            // 0 Artikel anzeigt, dann gar nicht erst abschicken.
             if (cartItemsList.querySelectorAll('.cart-item').length === 0) {
-                 checkoutLoadingOverlay.style.display = 'none'; // Loader ausblenden, falls er fälschlicherweise gestartet wurde
+                 checkoutLoadingOverlay.style.display = 'none';
                  checkoutMessageDiv.style.display = 'block';
                  checkoutMessageDiv.classList.add('error');
                  checkoutMessageDiv.classList.remove('success');
                  checkoutMessageDiv.textContent = 'Ihr Warenkorb ist leer. Bitte fügen Sie Produkte hinzu.';
-                 return; // Absenden verhindern
+                 return;
             }
 
             checkoutLoadingOverlay.style.display = 'flex';
@@ -233,7 +228,6 @@
                 const response = await fetch('api/checkout_process.php', {
                     method: 'POST',
                     body: formData,
-                    // NEU: Hinzufügen von credential-Handling, um Session-Cookies zuverlässiger zu senden
                     credentials: 'include' 
                 });
                 const data = await response.json();
@@ -265,7 +259,6 @@
             if (Object.keys(cart).length === 0) {
                 cartItemsList.innerHTML = '<li id="cart-empty-message">Ihr Warenkorb ist leer.</li>';
                 checkoutButton.disabled = true;
-                // NEU: Hier auch den Warenkorb-Button aus dem Modal ggf. deaktivieren
                 const checkoutSubmitButton = checkoutModal.querySelector('#checkout-submit-button');
                 if (checkoutSubmitButton) checkoutSubmitButton.disabled = true;
             } else {
@@ -323,7 +316,6 @@
                 const response = await fetch('api/cart_process.php', {
                     method: 'POST',
                     body: formData,
-                    // NEU: Hinzufügen von credential-Handling
                     credentials: 'include'
                 });
                 const data = await response.json();
@@ -388,44 +380,29 @@
 
         const isMobile = () => window.innerWidth <= 768;
 
+        // GEÄNDERT: Logik für das Auf- und Zuklappen des mobilen Warenkorbs
         const applyMobileCartState = () => {
-            const desktopHeader = cartSidebar.querySelector('.cart-header-desktop');
-            const mobileHeader = cartSidebar.querySelector('.cart-header-mobile');
-
-            const rootStyles = getComputedStyle(document.documentElement);
-            const mobileCollapsedHeight = parseFloat(rootStyles.getPropertyValue('--header-height-mobile-collapsed'));
-
-            if (isMobile()) {
-                if (desktopHeader) desktopHeader.style.display = 'none';
-                if (mobileHeader) mobileHeader.style.display = 'flex';
-
-                if (!cartSidebar.classList.contains('is-expanded')) {
-                    cartSidebar.classList.add('is-collapsed');
-                    cartSidebar.style.transform = `translateY(calc(100% - ${mobileCollapsedHeight}px))`;
-                }
-            } else {
-                if (desktopHeader) desktopHeader.style.display = 'block';
-                if (mobileHeader) mobileHeader.style.display = 'none';
-
-                cartSidebar.classList.remove('is-collapsed');
+            if (isMobile() && cartSidebar) {
+                // Standardmäßig zusammengeklappt
+                cartSidebar.classList.add('is-collapsed');
                 cartSidebar.classList.remove('is-expanded');
-                cartSidebar.style.transform = '';
+            } else if (cartSidebar) {
+                // Desktop-Ansicht: Klassen entfernen
+                cartSidebar.classList.remove('is-collapsed', 'is-expanded');
             }
         };
 
         if (cartToggleButton) {
             cartToggleButton.addEventListener('click', () => {
-                const rootStyles = getComputedStyle(document.documentElement);
-                const mobileCollapsedHeight = parseFloat(rootStyles.getPropertyValue('--header-height-mobile-collapsed'));
-
-                if (cartSidebar.classList.contains('is-collapsed')) {
+                const isCollapsed = cartSidebar.classList.contains('is-collapsed');
+                if (isCollapsed) {
                     cartSidebar.classList.remove('is-collapsed');
                     cartSidebar.classList.add('is-expanded');
-                    cartSidebar.style.transform = 'translateY(0)';
+                    document.body.style.overflow = 'hidden'; // Scrollen des Hintergrunds sperren
                 } else {
                     cartSidebar.classList.remove('is-expanded');
                     cartSidebar.classList.add('is-collapsed');
-                    cartSidebar.style.transform = `translateY(calc(100% - ${mobileCollapsedHeight}px))`;
+                    document.body.style.overflow = ''; // Scrollen wieder erlauben
                 }
             });
         }

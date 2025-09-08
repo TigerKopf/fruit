@@ -52,7 +52,7 @@ if ($page === 'api' && isset($segments[1])) {
 
 // ADMIN ROUTING
 if ($page === 'admin') {
-    require_once ROOT_PATH . 'modules/admin.php'; // Pfad korrigiert, falls es nicht in einem Unterordner ist
+    require_once ROOT_PATH . 'modules/admin/index.php'; // Pfad korrigiert, falls es nicht in einem Unterordner ist
     exit();
 }
 

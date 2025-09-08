@@ -22,7 +22,7 @@
     background: var(--color-background-white);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius-md);
-    padding: var(--spacing-sm);
+    padding: var(--spacing-md); /* Mehr Padding für luftigeres Design */
     text-align: center;
     box-shadow: 0 4px 12px var(--color-shadow-light);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -36,28 +36,49 @@
     box-shadow: 0 6px 20px var(--color-shadow-medium);
 }
 
+/* NEU: Container für Bild und überlappenden Titel */
+.product-image-container {
+    position: relative;
+    /* Platz für den überlappenden Titel (15px) + extra Abstand */
+    margin-bottom: calc(var(--spacing-md) + 15px);
+}
+
 .product-item img {
     max-width: 100%;
-    height: 110px;
-    object-fit: contain;
-    border-radius: var(--border-radius-sm);
-    margin-bottom: var(--spacing-md);
-    background-color: #FDFEFE;
-    padding: var(--spacing-sm);
-    mask-image: radial-gradient(circle at center, black 70%, transparent 100%);
-    -webkit-mask-image: radial-gradient(circle at center, black 70%, transparent 100%);
+    width: 100%;
+    /* GEÄNDERT: Höhe für besseres Seitenverhältnis */
+    height: 200px;
+    /* GEÄNDERT: 'cover' füllt den Bereich schön aus */
+    object-fit: cover;
+    /* GEÄNDERT: Größerer Radius, passt zum äußeren Container */
+    border-radius: var(--border-radius-md);
+    /* ENTFERNT: margin, background, padding und mask-image */
+    display: block; /* Verhindert untere Lücke */
 }
 
 .product-item h3 {
-    font-size: 1.3em;
-    margin: 0 0 var(--spacing-xs);
+    /* GEÄNDERT: Komplette Neupositionierung und Design als "Pille" */
+    position: absolute;
+    bottom: -15px; /* Hängt über den unteren Rand des Bildes */
+    left: 50%;
+    transform: translateX(-50%);
+
+    background-color: var(--color-background-white);
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--border-radius-lg); /* Pillenform */
+    box-shadow: 0 3px 8px var(--color-shadow-medium); /* Subtiler Schatten */
+    
+    font-size: 1.4em; /* Etwas größer und präsenter */
+    white-space: nowrap; /* Verhindert Umbruch des Titels */
+    
+    margin: 0; /* Alte Marge entfernen */
     color: var(--color-text-dark);
     font-weight: 600;
     line-height: 1.3;
 }
 
 .product-quantity-price-line {
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-md); /* Mehr Abstand zu den Controls */
     line-height: 1.4;
     text-align: center;
     color: var(--color-text-medium);
@@ -83,12 +104,14 @@
 }
 
 .product-controls input[type="number"] {
-    width: 45px;
-    padding: var(--spacing-xs) var(--spacing-sm);
+    width: 50px;
+    /* GEÄNDERT: Padding angepasst für quadratischeren Look */
+    padding: var(--spacing-sm);
     border: 1px solid var(--color-border);
-    border-radius: var(--border-radius-sm);
+    /* GEÄNDERT: Radius erhöht für weichere Ecken */
+    border-radius: var(--border-radius-md);
     text-align: center;
-    font-size: 0.9em;
+    font-size: 1em; /* Größere Ziffer */
     color: var(--color-text-dark);
     -moz-appearance: textfield;
 }
@@ -102,11 +125,12 @@
 .product-controls .add-to-cart-btn {
     background-color: var(--color-primary);
     color: var(--color-background-white);
-    border: none; /* Standardmäßig keine Border */
-    padding: var(--spacing-sm) var(--spacing-md);
+    border: none;
+    /* GEÄNDERT: Padding für höheres Aussehen wie im Bild */
+    padding: var(--spacing-sm) var(--spacing-lg);
     border-radius: var(--border-radius-lg);
     cursor: pointer;
-    font-size: 0.95em;
+    font-size: 1em; /* Schrift etwas größer */
     font-weight: 600;
     transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
     display: inline-flex;
