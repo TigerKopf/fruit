@@ -3821,6 +3821,128 @@ if (!isset($_COOKIE['disclaimer_accepted'])) {
 ?>
 
 ==================================================
+DATEINAME: src/include/discord.php
+--------------------------------------------------
+<?php
+// src/include/discord.php
+
+/**
+ * Holt die vollständige aktuelle URL.
+ * @return string Die aktuelle URL.
+ */
+if (!function_exists('getCurrentURL')) {
+    function getCurrentURL() {
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+        $host = $_SERVER['HTTP_HOST'];
+        $uri = $_SERVER['REQUEST_URI'];
+        return $protocol . $host . $uri;
+    }
+}
+
+/**
+ * Extrahiert die Domain aus einer vollständigen URL.
+ * @param string $url Die URL, aus der die Domain extrahiert werden soll.
+ * @return string Die Domain (z.B. "www.example.com").
+ */
+if (!function_exists('getDomain')) {
+    function getDomain($url) {
+        $parsedUrl = parse_url($url);
+        return $parsedUrl['host'] ?? '';
+    }
+}
+
+if (!function_exists('sendDiscordWebhook')) {
+    function sendDiscordWebhook($message, $title, $description, $sender, $type) {
+
+        $url = getCurrentURL();
+        $domain = getDomain($url);
+
+        // Environment-spezifische Webhook-URLs
+        if ($domain === 'www.xn--frch-1ra.de') { // Production URL
+            $webhookUrl = 'https://discord.com/api/webhooks/1205814879013961738/e9CVnoC04TTkc2Bfp2ePDp4aLYYUDIcvCpj5jqGS9LBvT9rGSj-FMLoTU50kcfSp-46y';
+        } else { // Development/Localhost/Other URL
+            $webhookUrl = 'https://discord.com/api/webhooks/1207046107113201754/0DOJTmmiOtbZHchtcfKhfKsrXbGsEkkcQU7w9LOJ3la3V5-2uLJ_Wkb-5_QhPF6AMzQV';
+        }
+
+        // Farben für verschiedene Nachrichtentypen definieren
+        $colors = [
+            'login' => 8454143, // Grün für Login
+            'register' => 255, // Blau für Registrierung
+            'order' => 65280, // Grün für Bestellungen
+            'reorder' => 16754432, // Rot für Reorder
+            'move' => 1118481, // Grau für Bewegt
+            'error' => 16711680, // Rot für Fehler
+            'warning' => 16776960, // Gelb für Warnungen
+            'info' => 3447003, // Hellblau für Infos
+        ];
+
+        // Prüfen, ob der Nachrichtentyp unterstützt wird
+        if (!array_key_exists($type, $colors)) {
+            // Fallback auf 'info' oder 'error' wenn unbekannter Typ
+            $type = 'info';
+            // Optional: Log this unexpected type somewhere
+        }
+
+        // Zeitstempel generieren
+        $timestamp = date('c');
+
+        // JSON-Daten für die Discord-Nachricht vorbereiten
+        $data = [
+            'username' => 'Jungeee', // Your bot's username on Discord
+            'content' => $message,
+            'embeds' => [
+                [
+                    'title' => $title,
+                    'description' => $description,
+                    'fields' => [
+                        [
+                            'name' => 'Absender',
+                            'value' => $sender,
+                            'inline' => true
+                        ],
+                        [
+                            'name' => 'Umgebung',
+                            'value' => ($domain === 'www.xn--frch-1ra.de' ? 'Produktion' : 'Entwicklung/Test'),
+                            'inline' => true
+                        ],
+                        [
+                            'name' => 'URL',
+                            'value' => $url,
+                            'inline' => false
+                        ]
+                    ],
+                    'color' => $colors[$type],
+                    'timestamp' => $timestamp
+                ]
+            ]
+        ];
+
+        // JSON in ein String-Format umwandeln
+        $jsonData = json_encode($data);
+
+        // HTTP-Anfrage vorbereiten
+        $ch = curl_init($webhookUrl);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+        // Anfrage ausführen
+        $response = curl_exec($ch);
+
+        // Antwort überprüfen (optional, für Debugging)
+        if ($response === false) {
+            error_log('Fehler beim Senden der Discord-Nachricht: ' . curl_error($ch));
+        }
+
+        // CURL-Verbindung schließen
+        curl_close($ch);
+    }
+}
+
+==================================================
 DATEINAME: src/include/email.php
 --------------------------------------------------
 <?php
@@ -4018,17 +4140,99 @@ foreach (glob($include_dir . '/*.php') as $filename) {
 DATEINAME: src/include/startup.php
 --------------------------------------------------
 <?php
-// include/startup.php
+// src/include/startup.php
 
 /**
  * Initialisierungs-Einstellungen für die Anwendung.
  */
 
-// Fehlerberichterstattung aktivieren für die Entwicklung
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-?>
+// Stellen Sie sicher, dass discord.php geladen ist, bevor wir es hier verwenden
+// (loader.php sollte dies bereits tun, aber defensive Programmierung schadet nicht)
+if (!function_exists('sendDiscordWebhook')) {
+    require_once ROOT_PATH . 'include/discord.php';
+}
+
+
+$is_localhost = (in_array($_SERVER['REMOTE_ADDR'], ['127.0.0.1', '::1']) || strpos($_SERVER['HTTP_HOST'], 'localhost') !== false);
+
+if ($is_localhost) {
+    // Auf localhost: detaillierte Fehler anzeigen
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+} else {
+    // In einer Live-Umgebung: Fehler nicht anzeigen, aber loggen und an Discord senden
+    ini_set('display_errors', 0);
+    ini_set('display_startup_errors', 0);
+    error_reporting(E_ALL); // Fehler trotzdem loggen und an Custom Handler senden
+    ini_set('log_errors', 1); // PHP soll Fehler trotzdem in das Log-File schreiben (zusätzlich zu Discord)
+    ini_set('error_log', ROOT_PATH . 'logs/php_errors.log'); // Stelle sicher, dass der logs-Ordner existiert und beschreibbar ist
+
+    // Benutzerdefinierten Fehlerhandler registrieren
+    set_error_handler(function($errno, $errstr, $errfile, $errline) {
+        // Ignoriere @-Suppressor oder bestimmte Fehlerlevel, falls gewünscht
+        if (!(error_reporting() & $errno)) {
+            return false; // PHP soll den internen Error-Handler weiter ausführen
+        }
+
+        $error_type = "Fehler";
+        switch ($errno) {
+            case E_ERROR:
+            case E_PARSE:
+            case E_CORE_ERROR:
+            case E_COMPILE_ERROR:
+            case E_USER_ERROR:
+                $error_type = "Kritischer Fehler";
+                break;
+            case E_WARNING:
+            case E_USER_WARNING:
+            case E_COMPILE_WARNING:
+            case E_RECOVERABLE_ERROR:
+                $error_type = "Warnung";
+                break;
+            case E_NOTICE:
+            case E_USER_NOTICE:
+            case E_STRICT:
+                $error_type = "Hinweis";
+                break;
+            case E_DEPRECATED:
+            case E_USER_DEPRECATED:
+                $error_type = "Veraltet";
+                break;
+        }
+
+        $title = "PHP " . $error_type . " im Backend";
+        $description = "**Meldung:** " . htmlspecialchars($errstr) . "\n"
+                     . "**Datei:** `" . htmlspecialchars($errfile) . "`\n"
+                     . "**Zeile:** `" . $errline . "`\n"
+                     . "**Fehlernummer:** `" . $errno . "`";
+
+        // Sende nur relevante Fehler an Discord (z.B. keine Notices in Prod)
+        if ($errno !== E_NOTICE && $errno !== E_USER_NOTICE && $errno !== E_DEPRECATED && $errno !== E_USER_DEPRECATED) {
+             sendDiscordWebhook("Ein Problem ist aufgetreten!", $title, $description, "PHP Error Handler", "error");
+        }
+
+        // Rückgabe false, damit der PHP-Standardfehlerhandler auch ausgeführt wird,
+        // um z.B. das Logging in 'php_errors.log' zu gewährleisten.
+        return false;
+    });
+
+    // Benutzerdefinierten Exception-Handler registrieren
+    set_exception_handler(function($exception) {
+        $title = "Unerwartete Exception im Backend";
+        $description = "**Meldung:** " . htmlspecialchars($exception->getMessage()) . "\n"
+                     . "**Datei:** `" . htmlspecialchars($exception->getFile()) . "`\n"
+                     . "**Zeile:** `" . $exception->getLine() . "`\n"
+                     . "**Code:** `" . $exception->getCode() . "`";
+
+        sendDiscordWebhook("Ein unerwarteter Fehler ist aufgetreten!", $title, $description, "PHP Exception Handler", "error");
+
+        // Optional: Hier könnte man eine generische Fehlerseite anzeigen
+        // error_log("Uncaught exception: " . $exception->getMessage() . " in " . $exception->getFile() . ":" . $exception->getLine());
+        // http_response_code(500);
+        // echo "Ein unerwarteter Fehler ist aufgetreten.";
+    });
+}
 
 ==================================================
 DATEINAME: src/modules/404.php
@@ -6755,5 +6959,198 @@ DATEINAME: composer.json
             }
         }
     }
+
+
+==================================================
+DATEINAME: Datenbank.sql
+--------------------------------------------------
+/*M!999999\- enable the sandbox mode */ 
+-- MariaDB dump 10.19-12.0.2-MariaDB, for Linux (x86_64)
+--
+-- Host: 147.189.175.36    Database: default
+-- ------------------------------------------------------
+-- Server version	11.8.3-MariaDB-ubu2404
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*M!100616 SET @OLD_NOTE_VERBOSITY=@@NOTE_VERBOSITY, NOTE_VERBOSITY=0 */;
+
+--
+-- Table structure for table `categories`
+--
+
+DROP TABLE IF EXISTS `categories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `categories` (
+  `category_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `description` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`category_id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `email_logs`
+--
+
+DROP TABLE IF EXISTS `email_logs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `email_logs` (
+  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` int(11) DEFAULT NULL,
+  `to_email` varchar(255) NOT NULL,
+  `subject` varchar(255) DEFAULT NULL,
+  `body_snippet` text DEFAULT NULL,
+  `sent_at` timestamp NULL DEFAULT current_timestamp(),
+  `status` enum('sent','failed') NOT NULL,
+  `error_message` text DEFAULT NULL,
+  PRIMARY KEY (`log_id`),
+  KEY `order_id` (`order_id`),
+  CONSTRAINT `email_logs_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `orders`
+--
+
+DROP TABLE IF EXISTS `orders`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `orders` (
+  `order_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `pickup_date_id` int(11) DEFAULT NULL,
+  `order_date` timestamp NULL DEFAULT current_timestamp(),
+  `total_amount` decimal(10,2) NOT NULL,
+  `status` enum('pending','confirmed','completed','cancelled') DEFAULT 'pending',
+  `payment_method` enum('bank_transfer','cash') NOT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`order_id`),
+  KEY `user_id` (`user_id`),
+  KEY `pickup_date_id` (`pickup_date_id`),
+  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
+  CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`pickup_date_id`) REFERENCES `pickup_dates` (`pickup_date_id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `payments`
+--
+
+DROP TABLE IF EXISTS `payments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `payments` (
+  `payment_id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` int(11) NOT NULL,
+  `payment_date` timestamp NULL DEFAULT current_timestamp(),
+  `amount` decimal(10,2) NOT NULL,
+  `payment_method` enum('bank_transfer','cash') NOT NULL,
+  `transaction_id` varchar(255) DEFAULT NULL,
+  `status` enum('pending','completed','refunded','failed') DEFAULT 'pending',
+  `notes` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`payment_id`),
+  KEY `order_id` (`order_id`),
+  CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pickup_dates`
+--
+
+DROP TABLE IF EXISTS `pickup_dates`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `pickup_dates` (
+  `pickup_date_id` int(11) NOT NULL AUTO_INCREMENT,
+  `pickup_datetime` datetime NOT NULL,
+  `location` varchar(255) DEFAULT 'Standard Abholort',
+  `is_active` tinyint(1) DEFAULT 1,
+  `notes` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`pickup_date_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `products`
+--
+
+DROP TABLE IF EXISTS `products`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `products` (
+  `product_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `stock_quantity` int(11) NOT NULL DEFAULT 0,
+  `image_url` varchar(255) DEFAULT NULL,
+  `category_id` int(11) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`product_id`),
+  KEY `category_id` (`category_id`),
+  CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `users` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `first_name` varchar(50) DEFAULT NULL,
+  `last_name` varchar(50) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `city` varchar(100) DEFAULT NULL,
+  `zip_code` varchar(10) DEFAULT NULL,
+  `country` varchar(100) DEFAULT NULL,
+  `phone_number` varchar(20) DEFAULT NULL,
+  `is_admin` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `username` (`username`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
+
+-- Dump completed on 2025-09-09 18:00:59
 
 

@@ -16,6 +16,7 @@ TARGETS=(
     "src/.htaccess"
     "Dockerfile"
     "composer.json"
+    "Datenbank.sql"
 )
 
 # NEU: Eine Liste von Mustern (Dateien oder Verzeichnisse), die ignoriert werden sollen.
