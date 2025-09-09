@@ -293,94 +293,205 @@ html, body {
 ==================================================
 DATEINAME: src/assets/style/cart.css
 --------------------------------------------------
-/* Warenkorb-Seitenleiste (rechts, sticky) für Desktop - ÄUSSERER CONTAINER TRANSPARENT */
+/* ==========================================================================
+   Shop & Warenkorb Komponenten-Stile (Desktop-First)
+   ========================================================================== */
+
+/* Spezifische Shop-Stile für Produktliste im Main */
+.category-section {
+    margin-bottom: var(--spacing-xl);
+}
+
+.category-section h2 {
+    font-size: 2em;
+    font-weight: 600;
+    color: var(--color-text-dark);
+    padding-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-lg);
+}
+
+.product-item {
+    background: var(--color-background-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    text-align: center;
+    box-shadow: 0 4px 12px var(--color-shadow-light);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.product-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px var(--color-shadow-medium);
+}
+
+.product-image-container {
+    position: relative;
+    margin-bottom: calc(var(--spacing-md) + 15px); /* Platz für überlappenden Titel */
+}
+
+.product-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: var(--border-radius-md);
+    display: block;
+}
+
+.product-item h3 {
+    position: absolute;
+    bottom: -15px; /* Hängt über den unteren Rand des Bildes */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--color-background-white);
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--border-radius-lg); /* Pillenform */
+    box-shadow: 0 3px 8px var(--color-shadow-medium);
+    font-size: 1.4em;
+    font-weight: 600;
+    color: var(--color-text-dark);
+    white-space: nowrap;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.product-quantity-price-line {
+    color: var(--color-text-medium);
+    font-size: 0.95em;
+    line-height: 1.4;
+    margin-bottom: var(--spacing-md);
+}
+
+.product-quantity-price-line .product-price-value {
+    font-size: 1.4em;
+    font-weight: 700;
+    color: var(--color-accent);
+    margin-left: 4px;
+    white-space: nowrap;
+}
+
+.product-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-top: auto; /* Sorgt dafür, dass Controls am unteren Rand bleiben */
+}
+
+.product-controls input[type="number"] {
+    width: 50px;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    text-align: center;
+    font-size: 1em;
+    color: var(--color-text-dark);
+    -moz-appearance: textfield;
+}
+
+.product-controls input::-webkit-outer-spin-button,
+.product-controls input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.product-controls .add-to-cart-btn {
+    background-color: var(--color-primary);
+    color: var(--color-background-white);
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--border-radius-lg);
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.product-controls .add-to-cart-btn:hover {
+    background-color: #2F5AA9;
+    box-shadow: 0 4px 10px var(--color-shadow-light);
+    transform: translateY(-2px);
+}
+
+.product-controls .add-to-cart-btn[disabled] {
+    background-color: var(--color-background-white);
+    color: var(--color-text-light);
+    border: 1px solid var(--color-border);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.product-controls .add-to-cart-btn[disabled]:hover {
+    box-shadow: none;
+    transform: none;
+}
+
+
+/* Warenkorb-Seitenleiste (Desktop) */
 .cart-sidebar {
     position: sticky;
-    top: calc(var(--header-height) + var(--spacing-lg)); /* Unter dem Header + Abstand */
+    top: calc(var(--header-height) + var(--spacing-lg));
     align-self: flex-start;
     flex-shrink: 0;
-    width: 320px; /* Etwas breiter für bessere Übersicht */
-    background: transparent; /* Geändert: Hintergrund des Wrappers transparent */
-    border: none; /* Geändert: Kein Rahmen */
-    border-radius: 0; /* Geändert: Keine Abrundung */
-    padding: 0; /* Geändert: Padding entfernt, wird auf innere Elemente verschoben */
-    box-shadow: none; /* Geändert: Kein Schatten */
-    max-height: calc(var(--cart-max-height-ratio) * 100vh - var(--spacing-xl)); /* Max-Höhe für Desktop */
-    overflow-y: hidden; /* Hauptcontainer scrollt nicht, scrollt nur der innere wrapper */
+    width: 320px;
+    max-height: calc(var(--cart-max-height-ratio) * 100vh - var(--spacing-xl));
     z-index: 10;
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-md); /* Abstand zwischen den Warenkorb-Karten auf Desktop */
+    gap: var(--spacing-md);
 }
 
-/* Titel für Desktop-Warenkorb - JETZT EINE SEPARATE KARTE */
 .cart-header-desktop {
-    display: block;
-    background-color: var(--color-background-white); /* Geändert: Weißer Hintergrund */
-    border: 1px solid var(--color-border); /* Geändert: Rahmen */
-    border-radius: var(--border-radius-md); /* Geändert: Abgerundete Ecken */
-    padding: var(--spacing-md); /* Geändert: Padding */
-    box-shadow: 0 2px 5px var(--color-shadow-light); /* Geändert: Dezenter Schatten */
-    margin-bottom: 0; /* Geändert: Kein externer Bodenabstand, da Gap im Sidebar-Container */
+    background-color: var(--color-background-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    box-shadow: 0 2px 5px var(--color-shadow-light);
 }
+
 .cart-header-desktop h2 {
     font-size: 1.8em;
-    margin-top: 0;
-    margin-bottom: 0; /* Geändert: Padding ist im Elternelement */
+    font-weight: 600;
     color: var(--color-text-dark);
-    text-align: left; /* Geändert: Standardmäßig linksbündig auf Desktop */
-    font-weight: 600;
+    margin: 0;
 }
 
-/* Mobiler Warenkorb Header standardmäßig verstecken, auf Mobile anzeigen */
-.cart-header-mobile {
-    display: none;
-    background-color: var(--color-primary); /* Blauer Hintergrund für mobile Ansicht */
-    color: white; /* Weißer Text */
-    border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 1.1em;
-    position: relative;
-    z-index: 101;
-    justify-content: space-between;
-    align-items: center;
-    padding: var(--spacing-sm) var(--spacing-md);
-}
+.cart-header-mobile { display: none; } /* Standardmäßig versteckt */
 
-.cart-sidebar.is-expanded .cart-header-mobile {
-    background-color: var(--color-primary); /* Bleibt blau, wenn ausgeklappt */
-}
-
-.cart-toggle-button {
-    background: none;
-    border: none;
-    color: white; /* Passend zum blauen Hintergrund */
-    font-size: 1.2em;
-    cursor: pointer;
-    padding: 0 var(--spacing-xs);
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-    margin-left: var(--spacing-sm);
-}
-
-/* Warenkorb Inhalt (klappt auf Mobile ein/aus) - INHALTSBEREICH ALS SEPARATE KARTE */
 .cart-body-content {
-    background-color: var(--color-background-white); /* Geändert: Weißer Hintergrund für den Inhalt */
-    border: 1px solid var(--color-border); /* Geändert: Rahmen */
-    border-radius: var(--border-radius-md); /* Geändert: Abgerundete Ecken */
-    box-shadow: 0 2px 8px var(--color-shadow-light); /* Geändert: Dezenter Schatten */
-    padding: var(--spacing-md); /* Geändert: Padding hier angewendet */
+    background-color: var(--color-background-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 2px 8px var(--color-shadow-light);
+    padding: var(--spacing-md);
     flex-grow: 1;
-    display: flex; /* Für interne Flex-Anordnung */
+    display: flex;
     flex-direction: column;
-    /* max-height für Mobile wird in responsive.css überschrieben */
-    overflow-y: hidden; /* Sicherstellen, dass der body-content selbst nicht scrollt, sondern der Wrapper darin */
+    overflow-y: hidden;
 }
 
-/* Restliche Stile bleiben unverändert */
+.cart-items-scrollable-wrapper {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: var(--spacing-xs);
+    margin-right: calc(-1 * var(--spacing-xs));
+    mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+}
+
 #cart-items {
     list-style: none;
     padding: 0;
@@ -391,11 +502,10 @@ DATEINAME: src/assets/style/cart.css
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: var(--spacing-md);
     padding-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
     border-bottom: 1px solid var(--color-border);
 }
-
 .cart-item:last-child {
     border-bottom: none;
     margin-bottom: 0;
@@ -409,28 +519,23 @@ DATEINAME: src/assets/style/cart.css
     border-radius: var(--border-radius-sm);
     margin-right: var(--spacing-sm);
     flex-shrink: 0;
-    mask-image: radial-gradient(circle at center, black 70%, transparent 100%);
-    -webkit-mask-image: radial-gradient(circle at center, black 70%, transparent 100%);
-    background-color: #FDFEFE;
 }
 
 .cart-item-info {
     flex-grow: 1;
     margin-right: var(--spacing-sm);
 }
-
 .cart-item-info h4 {
     margin: 0;
     font-size: 1.05em;
-    color: var(--color-text-dark);
     font-weight: 500;
+    color: var(--color-text-dark);
 }
-
 .cart-item-info p {
     margin: 4px 0 0;
     font-size: 0.9em;
-    color: var(--color-accent);
     font-weight: 600;
+    color: var(--color-accent);
 }
 
 .cart-item-controls {
@@ -441,18 +546,18 @@ DATEINAME: src/assets/style/cart.css
 }
 
 .cart-item-controls input[type="number"] {
-    width: 40px; /* Angepasst: Macht das Eingabefeld kleiner */
-    padding: var(--spacing-xs) 0; /* Minimales vertikales Padding, kein horizontales */
+    width: 40px;
+    padding: var(--spacing-xs) 0;
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius-sm);
     text-align: center;
-    font-size: 0.9em; /* Angepasst: Kleinere Schrift im Input-Feld */
+    font-size: 0.9em;
     color: var(--color-text-dark);
     -moz-appearance: textfield;
 }
 
-.cart-item-controls input[type="number"]::-webkit-outer-spin-button,
-.cart-item-controls input[type="number"]::-webkit-inner-spin-button {
+.cart-item-controls input::-webkit-outer-spin-button,
+.cart-item-controls input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
@@ -467,44 +572,30 @@ DATEINAME: src/assets/style/cart.css
     line-height: 1;
     transition: color 0.2s ease, transform 0.2s ease;
 }
-
 .cart-item-controls .remove-item-btn:hover {
     color: var(--color-accent);
     transform: scale(1.1);
 }
 
-/* NEU: Wrapper für scrollbare Items - Übernimmt Scroll-Funktion und Maske */
-.cart-items-scrollable-wrapper {
-    flex-grow: 1; /* Nimmt den verfügbaren Platz ein */
-    overflow-y: auto; /* Nur dieser Bereich scrollt */
-    padding-right: var(--spacing-xs); /* Platz für Scrollbalken */
-    margin-right: calc(-1 * var(--spacing-xs)); /* Kompensiert padding-right */
-    mask-image: linear-gradient(to bottom, black 80%, transparent 100%); /* Verlauf am unteren Ende */
-    -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-}
-
 #cart-total-container {
     border-top: 1px solid var(--color-border);
     padding-top: var(--spacing-md);
-    margin-top: var(--spacing-md);
-    text-align: right;
+    margin-top: auto; /* Drückt den Footer-Teil nach unten */
     display: flex;
-    justify-content: space-between; /* Sorgt dafür, dass "Gesamt" links und der Betrag rechts ausgerichtet sind */
+    justify-content: space-between;
     align-items: baseline;
     flex-shrink: 0;
 }
-
 #cart-total-container span {
-    font-size: 1.1em; /* Angepasst: Leicht kleinere Schriftgröße für das "Gesamt"-Label */
+    font-size: 1.1em;
     font-weight: 500;
     color: var(--color-text-dark);
 }
-
 #cart-total {
-    font-size: 1.8em; /* Behält große und prominente Schrift bei */
+    font-size: 1.8em;
     font-weight: 700;
     color: var(--color-accent);
-    margin-left: var(--spacing-sm); /* Kleiner Linker Rand, um vom Label zu trennen */
+    margin-left: var(--spacing-sm);
 }
 
 .checkout-button {
@@ -521,11 +612,160 @@ DATEINAME: src/assets/style/cart.css
     transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
     flex-shrink: 0;
 }
-
 .checkout-button:hover {
     background-color: #00A656;
     box-shadow: 0 4px 10px var(--color-shadow-light);
     transform: translateY(-2px);
+}
+
+
+/* ==========================================================================
+   Responsive Anpassungen
+   ========================================================================== */
+@media (max-width: 1400px) {
+    .site-content-wrapper,
+    .google-search-like-nav,
+    .google-header-wrapper,
+    .footer-content-wrapper,
+    .admin-container {
+        max-width: 100%;
+        padding-left: var(--spacing-md);
+        padding-right: var(--spacing-md);
+        transform: translateX(0); /* Gilt für mehrere Elemente */
+    }
+}
+
+@media (max-width: 992px) { /* Tablet / Kleinere Desktops */
+    .admin-container {
+        flex-direction: column;
+        margin-top: calc(var(--header-height) + var(--spacing-md));
+        margin-bottom: var(--spacing-md);
+    }
+    .admin-sidebar {
+        width: 100%;
+        order: -1;
+        margin-bottom: var(--spacing-md);
+    }
+    .admin-content { padding: var(--spacing-lg); }
+
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-md);
+    }
+
+    .footer-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-md);
+    }
+    .footer-section { margin-bottom: 0; }
+
+    .dashboard-stats {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+}
+
+@media (max-width: 768px) { /* Mobilgeräte */
+    body {
+        /* Wichtiger Abstandshalter, damit der fixe Warenkorb nichts verdeckt! */
+        padding-bottom: calc(var(--header-height-mobile-collapsed) + var(--spacing-sm));
+    }
+    
+    .site-content-wrapper, .admin-container {
+        flex-direction: column;
+        margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-md));
+        transform: none; /* KORREKTUR: Hebt das transform auf, damit position:fixed wieder funktioniert */
+    }
+    
+    main {
+        order: 1;
+        margin-right: 0;
+        margin-bottom: var(--spacing-md);
+        box-shadow: none; /* Auf Mobilgeräten oft überflüssig */
+    }
+
+    /* Mobile Warenkorb-Neugestaltung als Bottom-Drawer */
+    .cart-sidebar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        top: auto;
+        max-height: calc(var(--cart-max-height-ratio) * 100vh);
+        border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+        box-shadow: 0 -4px 15px var(--color-shadow-medium);
+        transform: translateY(calc(100% - var(--header-height-mobile-collapsed))); 
+        transition: transform 0.3s ease-in-out;
+        z-index: 100;
+        background-color: var(--color-background-white);
+        gap: 0;
+    }
+    .cart-sidebar.is-expanded {
+        transform: translateY(0); /* Komplett sichtbar */
+    }
+    .cart-sidebar.is-collapsed {
+        overflow-y: hidden; /* Verhindert Scrollen im geschlossenen Zustand */
+    }
+    .cart-sidebar.is-collapsed .cart-body-content { 
+        display: none; /* Inhalt ausblenden, wenn zugeklappt */
+    }
+
+    .cart-header-desktop { display: none; }
+    .cart-header-mobile {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: var(--color-primary);
+        color: white;
+        padding: var(--spacing-sm) var(--spacing-md);
+        border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1.1em;
+        position: relative;
+        z-index: 101;
+    }
+
+    .cart-toggle-button {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.2em;
+        cursor: pointer;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-xs);
+    }
+
+    .cart-body-content {
+        max-height: calc(var(--cart-max-height-ratio) * 100vh - var(--header-height-mobile-collapsed));
+        background-color: transparent;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        padding: var(--spacing-md);
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    .footer-section { margin-bottom: var(--spacing-md); }
+    .footer-section:last-child { margin-bottom: 0; }
+}
+
+@media (max-width: 500px) { /* Kleinere Mobilgeräte */
+    .site-content-wrapper, .admin-container {
+        margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-sm));
+        padding: 0 var(--spacing-sm);
+    }
+    main { padding: var(--spacing-md); }
+
+    .product-grid { grid-template-columns: 1fr; }
+    .product-item img { height: 160px; }
+    .product-controls { flex-direction: column; }
+    .product-controls .add-to-cart-btn { width: 100%; }
 }
 
 ==================================================
@@ -1459,58 +1699,8 @@ DATEINAME: src/assets/style/home.css
 }
 
 /* Produkt Teaser Sektion */
-.product-teaser-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--spacing-lg);
-    margin-top: var(--spacing-xl);
-}
+/* ENTFERNT: Alle .product-teaser-* Regeln, da sie nicht mehr verwendet werden */
 
-.product-teaser-item {
-    background-color: var(--color-background-white);
-    padding: var(--spacing-sm);
-    border-radius: var(--border-radius-md);
-    box-shadow: 0 4px 12px var(--color-shadow-light);
-    text-align: center;
-    border: 1px solid var(--color-border);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    text-decoration: none;
-    color: inherit;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.product-teaser-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px var(--color-shadow-medium);
-}
-
-.product-teaser-item img {
-    max-width: 100%;
-    height: 150px;
-    object-fit: contain;
-    margin-bottom: var(--spacing-md);
-    border-radius: var(--border-radius-sm); /* Behält leichte Abrundung bei */
-    background-color: #FDFEFE; /* Behält weißen Hintergrund bei */
-    padding: var(--spacing-xs); /* Behält Padding bei */
-    /* ENTFERNT: mask-image und -webkit-mask-image für rechteckige Form */
-}
-
-
-.product-teaser-item h3 {
-    color: var(--color-text-dark);
-    font-size: 1.3em;
-    margin: 0 0 var(--spacing-xs) 0;
-    font-weight: 600;
-}
-
-.product-teaser-item p {
-    font-size: 1.1em;
-    color: var(--color-accent);
-    font-weight: 700;
-    margin-top: 0;
-}
 
 /* Call to Action Sektion */
 .cta-section {
@@ -1661,7 +1851,7 @@ DATEINAME: src/assets/style/main.css
 @import '/.base.css';
 @import '/.header.css';
 @import '/.layout.css';
-@import '/.cart.css';
+
 @import '/.shop.css';
 @import '/.footer.css';
 @import '/.modal.css';
@@ -1671,6 +1861,8 @@ DATEINAME: src/assets/style/main.css
 @import '/.success.css';
 @import '/.disclaimer.css';
 @import '/.responsive.css';
+
+@import '/.cart.css';
 
 ==================================================
 DATEINAME: src/assets/style/modal.css
@@ -1957,17 +2149,9 @@ DATEINAME: src/assets/style/responsive.css
 }
 
 @media (max-width: 992px) { /* Tablet/Smaller Desktop (Dies betrifft noch den Desktop-Mode von Header) */
-    /* ... Desktop-Modus Regeln beibehalten ... */
-    /*
-        Hier wurden bereits mobile-ähnliche Regeln gesetzt, die sich jetzt mit den
-        neuen Regeln im @media (max-width: 768px)header.css überschneiden.
-        Ich bereinige das und entferne redundant/falsch hier stehende Mobile-Regeln
-        und lass die @media (max-width: 768px) aus header.css als primäre Quelle wirken.
-    */
     .admin-container {
         flex-direction: column;
         padding: 0 var(--spacing-sm);
-        /* Muss calc(header-height) nehmen */
         margin-top: calc(var(--header-height) + var(--spacing-md));
         margin-bottom: var(--spacing-md);
     }
@@ -1984,7 +2168,7 @@ DATEINAME: src/assets/style/responsive.css
         gap: var(--spacing-md);
     }
     .product-item img {
-        height: 90px;
+        height: 200px;
     }
     .footer-content-wrapper {
         padding: var(--spacing-lg) var(--spacing-md);
@@ -2005,89 +2189,90 @@ DATEINAME: src/assets/style/responsive.css
     }
 }
 
-/* ALLE mobilen Header Regeln kommen JETZT NUR noch in header.css!
-   Hier im responsive.css kümmern wir uns um die main content container und cart,
-   sodass sie zum mobile header passen. */
-
 @media (max-width: 768px) {
     /* Header-bezogene Anpassungen in header.css! */
 
+    /* NEU: Wichtiger Abstandshalter für den Body, damit der fixe Warenkorb nichts verdeckt! */
+    body {
+        padding-bottom: calc(var(--header-height-mobile-collapsed) + var(--spacing-sm));
+    }
+    
     .site-content-wrapper {
         flex-direction: column;
         margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-md));
-        padding: 0 var(--spacing-md); /* Feste padding Werte für Mobile-Seiten */
+        padding: 0 var(--spacing-md);
         transform: translateX(0);
     }
     main {
         order: 1;
-        margin-right: 0; /* Entfernt Desktop-Margin zum Warenkorb */
+        margin-right: 0;
         margin-bottom: var(--spacing-md);
         padding: var(--spacing-md);
         border-radius: 0;
         box-shadow: none;
     }
 
-    /* Mobiler Warenkorb muss auf Mobile immer sticky sein und bleibt hier,
-       aber Top-Padding wird angepasst, da Header sich anders verhält */
+    /* NEU: Komplette Neugestaltung des mobilen Warenkorbs */
     .cart-sidebar {
         position: fixed; /* Fixiert am Viewport */
         bottom: 0;
         left: 0;
         right: 0;
         width: 100%;
-        max-height: calc(var(--cart-max-height-ratio) * 100vh);
-        top: auto;
+        max-height: calc(var(--cart-max-height-ratio) * 100vh); /* Nimmt max. 2/3 des Bildschirms ein */
+        top: auto; /* `top` wird nicht mehr benötigt */
         border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
         box-shadow: 0 -4px 15px var(--color-shadow-medium);
-        transform: translateY(calc(100% - var(--header-height-mobile-collapsed))); /* Zusammengeklappt, nur Header sichtbar */
+        /* Standardmäßig zusammengeklappt, sodass nur der Header sichtbar ist */
+        transform: translateY(calc(100% - var(--header-height-mobile-collapsed))); 
         transition: transform 0.3s ease-in-out;
         z-index: 100;
         display: flex;
         flex-direction: column;
-        padding: 0; /* Padding im Sidebar-Wrapper entfernen */
-        background-color: var(--color-background-white); /* Weißer Hintergrund des Sidebar-Wrappers */
+        background-color: var(--color-background-white); /* Hintergrund für den ganzen Container */
+        padding: 0;
         border: none;
-        gap: 0; /* Abstand zwischen inneren Elementen, falls zuvor definiert */
+        gap: 0;
     }
     .cart-sidebar.is-expanded {
-        transform: translateY(0); /* Komplett sichtbar */
+        transform: translateY(0); /* Komplett sichtbar im aufgeklappten Zustand */
     }
     .cart-sidebar.is-collapsed {
-        overflow-y: hidden;
+        overflow-y: hidden; /* Verhindert Scrollen im geschlossenen Zustand */
     }
+
     .cart-header-desktop { display: none; }
     .cart-header-mobile { display: flex; } /* Sichtbar auf Mobile */
-    .cart-mobile-summary { flex-grow: 1; text-align: left; }
-    .cart-toggle-button {
-        background: none; border: none; color: white; font-size: 1.2em;
-        cursor: pointer; padding: 0 var(--spacing-xs); line-height: 1;
-        display: flex; align-items: center; gap: var(--spacing-xs);
-        margin-left: var(--spacing-sm);
-    }
+
     .cart-body-content {
         max-height: calc(var(--cart-max-height-ratio) * 100vh - var(--header-height-mobile-collapsed));
-        overflow-y: hidden;
+        overflow-y: hidden; /* Der Container selbst scrollt nicht */
         flex-grow: 1;
         display: flex;
         flex-direction: column;
         padding: var(--spacing-md);
+        /* Unnötige Stile entfernt, da der Wrapper (.cart-sidebar) das Styling übernimmt */
         background-color: transparent;
         border: none;
         border-radius: 0;
         box-shadow: none;
     }
-    .cart-sidebar.is-collapsed .cart-body-content { display: none; }
-    .cart-items-scrollable-wrapper {
-        flex-grow: 1; overflow-y: auto;
-        padding-right: var(--spacing-xs); margin-right: calc(-1 * var(--spacing-xs));
-        mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-        -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+    
+    /* Der Inhalt wird ausgeblendet, wenn der Warenkorb zu ist */
+    .cart-sidebar.is-collapsed .cart-body-content { 
+        display: none; 
     }
-    #cart-total-container { flex-shrink: 0; }
-    .checkout-button { flex-shrink: 0; }
 
+    /* Diese Stile stellen sicher, dass der Inhalt innerhalb des Body scrollbar ist */
+    .cart-items-scrollable-wrapper {
+        flex-grow: 1; 
+        overflow-y: auto;
+    }
+    #cart-total-container, .checkout-button { 
+        flex-shrink: 0; 
+    }
 
-    .admin-container { /* Auch hier Top-Margin anpassen */
+    .admin-container {
         margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-md));
         padding: 0 var(--spacing-md);
     }
@@ -2096,35 +2281,17 @@ DATEINAME: src/assets/style/responsive.css
     }
     .admin-content { padding: var(--spacing-lg); }
 
-    /* Footer sollte sich normal verhalten */
-    .footer-content-wrapper {
-        padding: var(--spacing-lg) var(--spacing-md);
-    }
     .footer-container {
-        grid-template-columns: 1fr; /* Eine Spalte auf Mobile */
+        grid-template-columns: 1fr;
         gap: var(--spacing-md);
     }
-    .footer-section { margin-bottom: var(--spacing-md); } /* Abstand zwischen Footer-Sektionen */
+    .footer-section { margin-bottom: var(--spacing-md); }
     .footer-section:last-child { margin-bottom: 0; }
+}
 
-} /* End of @media (max-width: 768px) */
-
-
-/* Kleinste Mobilgeräte */
 @media (max-width: 500px) {
-    /* Header-bezogene Anpassungen in header.css! */
-
-    .site-content-wrapper {
-        margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-sm));
-        padding: 0 var(--spacing-sm);
-    }
-    main {
-        padding: var(--spacing-md);
-    }
-    .cart-sidebar { /* Cart sidebar padding angepasst */
-        padding: 0;
-    }
-    .admin-container {
+    main { padding: var(--spacing-md); }
+    .site-content-wrapper, .admin-container {
         margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-sm));
         padding: 0 var(--spacing-sm);
     }
@@ -2132,59 +2299,11 @@ DATEINAME: src/assets/style/responsive.css
         margin: 0 var(--spacing-sm) var(--spacing-sm) var(--spacing-sm);
         padding: var(--spacing-md);
     }
-
-        /* Shop-spezifische Anpassungen für sehr kleine Bildschirme */
-    .product-grid {
-        grid-template-columns: 1fr; /* Eine Spalte auf kleinsten Mobilgeräten */
-        gap: var(--spacing-md);
-    }
-
-    .product-item {
-        padding: var(--spacing-sm); /* Etwas weniger Padding */
-    }
-
-    .product-item img {
-        height: 70px; /* Bilder etwas kleiner */
-        margin-bottom: var(--spacing-sm);
-    }
-
-    .product-item h3 {
-        font-size: 1.1em; /* Kleinere Titel */
-        line-height: 1.2;
-    }
-
-    .product-quantity-price-line {
-        font-size: 0.85em; /* Kleinere Schrift für Einheit/Preis */
-    }
-
-    .product-quantity-price-line .product-price-value {
-        font-size: 1.2em; /* Kleinerer Preiswert */
-        white-space: normal; /* Erlaubt dem Preis das Umbrechen */
-    }
-
-    .product-controls {
-        flex-direction: column; /* Steuerelemente vertikal stapeln */
-        gap: var(--spacing-xs);
-    }
-
-    .product-controls input[type="number"] {
-        width: 60px; /* Etwas mehr Breite, wenn gestapelt */
-        padding: var(--spacing-xs);
-        font-size: 0.85em;
-    }
-
-    .product-controls .add-to-cart-btn {
-        width: 100%; /* Volle Breite, wenn gestapelt */
-        padding: var(--spacing-xs) var(--spacing-sm);
-        font-size: 0.85em;
-    }
-
-    .category-section h2 {
-        font-size: 1.6em; /* Kleinere Kategorie-Titel */
-        margin-bottom: var(--spacing-md);
-        padding-bottom: var(--spacing-xs);
-    }
-}
+    .product-grid { grid-template-columns: 1fr; }
+    .product-item img { height: 160px; }
+    .product-controls { flex-direction: column; }
+    .product-controls .add-to-cart-btn { width: 100%; }
+} 
 
 ==================================================
 DATEINAME: src/assets/style/shop.css
@@ -3947,7 +4066,8 @@ global $pdo;
 $featured_products = [];
 if (isset($pdo)) {
     try {
-        $stmt = $pdo->prepare("SELECT product_id, name, description, price, image_url FROM products WHERE is_active = TRUE ORDER BY created_at DESC LIMIT 3");
+        // GEÄNDERT: 'stock_quantity' zur Abfrage hinzugefügt
+        $stmt = $pdo->prepare("SELECT product_id, name, description, price, image_url, stock_quantity FROM products WHERE is_active = TRUE ORDER BY created_at DESC LIMIT 3");
         $stmt->execute();
         $featured_products = $stmt->fetchAll();
     } catch (PDOException $e) {
@@ -3957,7 +4077,6 @@ if (isset($pdo)) {
 }
 
 // Die Funktion formatEuroCurrency() wird über include/helpers.php geladen und ist global verfügbar.
-// Wir fügen sie hier sicherheitshalber nochmals hinzu, falls helper.php nicht überall geladen wird (was aber der loader.php tun sollte)
 if (!function_exists('formatEuroCurrency')) {
     function formatEuroCurrency(float $amount): string {
         if (fmod($amount, 1.0) == 0) {
@@ -4020,17 +4139,30 @@ if (!function_exists('formatEuroCurrency')) {
         <div class="home-section-content">
             <h2>Unsere beliebtesten Früchte</h2>
             <p>Entdecke eine Auswahl unserer exquisiten Produkte, die unsere Kunden lieben.</p>
-            <div class="product-teaser-grid">
+            <!-- GEÄNDERT: 'product-teaser-grid' wird zu 'product-grid' für Konsistenz -->
+            <div class="product-grid">
                 <?php if (!empty($featured_products)): ?>
-                    <?php foreach ($featured_products as $product): ?>
-                        <a href="/shop#product-<?php echo htmlspecialchars($product['product_id']); ?>" class="product-teaser-item">
-                            <img src="<?php echo htmlspecialchars($product['image_url'] ?: '/_placeholder.png'); ?>" alt="Bild von <?php echo htmlspecialchars($product['name']); ?>">
-                            <h3><?php echo htmlspecialchars($product['name']); ?></h3>
-                            <p><?php echo formatEuroCurrency($product['price']); ?></p>
-                            <!-- <div class="product-controls">
-                                // Hier könnte man einen "Zum Warenkorb"-Button hinzufügen, der direkt über JS arbeitet
-                            </div> -->
-                        </a>
+                    <?php foreach ($featured_products as $product):
+                        // GEÄNDERT: Komplette Struktur aus shop.php übernommen
+                        $is_sold_out = ((int)$product['stock_quantity'] <= 0);
+                        $button_text = $is_sold_out ? 'Ausverkauft' : 'In den Warenkorb';
+                        $is_disabled = $is_sold_out ? 'disabled' : '';
+                        $input_value = $is_sold_out ? '0' : '1';
+                    ?>
+                        <div class="product-item">
+                            <div class="product-image-container">
+                                <img src="<?php echo htmlspecialchars($product['image_url'] ?: '/_placeholder.png'); ?>" 
+                                     alt="Produktbild von <?php echo htmlspecialchars($product['name']); ?>" 
+                                     loading="lazy" decoding="async">
+                                <h3><?php echo htmlspecialchars($product['name']); ?></h3>
+                            </div>
+                            <p class="product-quantity-price-line">
+                                <span class="product-unit"><?php echo htmlspecialchars($product['description']); ?> für</span> 
+                                <span class="product-price-value"><?php echo formatEuroCurrency($product['price']); ?></span>
+                            </p>
+                            <div class="product-controls">
+                            </div>
+                        </div>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <p>Derzeit keine Produkte zum Anpreisen verfügbar. Besuchen Sie unseren <a href="/shop">Shop</a>!</p>
@@ -4100,66 +4232,64 @@ DATEINAME: src/modules/shop.php
 <?php
 // modules/shop.php
 
-// session_start() sollte in loader.php oder index.php aufgerufen werden.
-// Wenn nicht, hier aufrufen:
+// Stellt sicher, dass die Session gestartet ist.
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Warenkorb in der Session initialisieren, falls noch nicht vorhanden
+// Initialisiert den Warenkorb in der Session, falls nicht vorhanden.
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
 
-// Datenbankverbindung abrufen (wird über loader.php und getDbConnection() verfügbar sein)
-global $pdo; // Annahme, dass $pdo bereits global über include/db.php gesetzt ist
+// Stellt die Datenbankverbindung sicher.
+global $pdo;
 if (!isset($pdo)) {
-    // Fallback falls $pdo nicht global ist, aber getDbConnection() existiert
+    // Fallback, falls die globale Variable nicht gesetzt ist.
     require_once ROOT_PATH . 'include/db.php';
     $pdo = getDbConnection();
 }
 
-// HINWEIS: Die Funktion formatEuroCurrency() wird jetzt über include/helpers.php geladen und ist global verfügbar.
-
+// Initialisierung von Variablen
 $products_by_category = [];
 $error_message = '';
-$success_message = '';
 
 try {
-    // Produkte und Kategorien abrufen
-    // Sicherstellen, dass image_url und description auch abgerufen werden
-    // GEÄNDERT: Sortierung nach c.category_id ASC und p.product_id ASC
-    $stmt = $pdo->query("SELECT p.*, c.name as category_name FROM products p JOIN categories c ON p.category_id = c.category_id WHERE p.is_active = TRUE ORDER BY c.category_id ASC, p.product_id ASC");
+    // Ruft alle aktiven Produkte ab und sortiert sie nach Kategorie und Produkt-ID.
+    $stmt = $pdo->query(
+        "SELECT p.*, c.name as category_name 
+         FROM products p 
+         JOIN categories c ON p.category_id = c.category_id 
+         WHERE p.is_active = TRUE 
+         ORDER BY c.category_id ASC, p.product_id ASC"
+    );
     $all_products = $stmt->fetchAll();
 
+    // Gruppiert Produkte nach ihrem Kategorienamen.
     foreach ($all_products as $product) {
         $products_by_category[$product['category_name']][] = $product;
     }
 
 } catch (PDOException $e) {
-    error_log("Datenbankfehler auf Shop-Seite: " . $e->getMessage());
-    $error_message = "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.";
+    error_log("Datenbankfehler auf der Shop-Seite: " . $e->getMessage());
+    $error_message = "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.";
 }
 
-// Gesamtbetrag des Warenkorbs berechnen
+// Berechnet den initialen Gesamtbetrag und die Artikelanzahl des Warenkorbs.
 $cart_total = 0;
 $cart_item_count = 0;
-foreach ($_SESSION['cart'] as $item_id => $item) {
+foreach ($_SESSION['cart'] as $item) {
     $cart_total += $item['price'] * $item['quantity'];
     $cart_item_count += $item['quantity'];
 }
 ?>
 
-<!-- Begin site-content-wrapper, which now wraps both the main product content and the cart sidebar -->
+<!-- Wrapper für Hauptinhalt und Seitenleiste -->
 <div class="site-content-wrapper">
 
     <main>
-
         <?php if ($error_message): ?>
             <div class="alert error"><?php echo htmlspecialchars($error_message); ?></div>
-        <?php endif; ?>
-        <?php if ($success_message): ?>
-            <div class="alert success"><?php echo htmlspecialchars($success_message); ?></div>
         <?php endif; ?>
 
         <div class="product-list">
@@ -4171,31 +4301,35 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
                         <h2><?php echo htmlspecialchars($category_name); ?></h2>
                         <div class="product-grid">
                             <?php foreach ($products as $product):
-                                // Prüfen, ob das Produkt ausverkauft ist
+                                // Logik für ausverkaufte Produkte
                                 $is_sold_out = ((int)$product['stock_quantity'] <= 0);
                                 $button_text = $is_sold_out ? 'Ausverkauft' : 'In den Warenkorb';
-                                $disabled_attr = $is_sold_out ? 'disabled' : '';
-                                // ACHTUNG: '0' ist hier korrekt, nicht 0, da es als String-Attribut übergeben wird
-                                $input_value = $is_sold_out ? '0' : '1'; 
-                                $input_disabled_attr = $is_sold_out ? 'disabled' : '';
+                                $is_disabled = $is_sold_out ? 'disabled' : '';
+                                $input_value = $is_sold_out ? '0' : '1';
                             ?>
                                 <div class="product-item">
                                     <div class="product-image-container">
-                                        <img src="<?php echo htmlspecialchars($product['image_url'] ?: '/_placeholder.png'); ?>" alt="Bild von <?php echo htmlspecialchars($product['name']); ?> (<?php echo htmlspecialchars($product['description']); ?>)" loading="lazy" decoding="async">
+                                        <img src="<?php echo htmlspecialchars($product['image_url'] ?: '/_placeholder.png'); ?>" 
+                                             alt="Produktbild von <?php echo htmlspecialchars($product['name']); ?>" 
+                                             loading="lazy" decoding="async">
                                         <h3><?php echo htmlspecialchars($product['name']); ?></h3>
                                     </div>
                                     <p class="product-quantity-price-line">
-                                        <span class="product-unit"><?php echo htmlspecialchars($product['description']); ?> für</span> <span class="product-price-value"><?php echo formatEuroCurrency($product['price']); ?></span>
+                                        <span class="product-unit"><?php echo htmlspecialchars($product['description']); ?> für</span> 
+                                        <span class="product-price-value"><?php echo formatEuroCurrency($product['price']); ?></span>
                                     </p>
                                     <div class="product-controls">
-                                        <input type="number" class="quantity-input" value="<?php echo $input_value; ?>" min="0" max="<?php echo (int)$product['stock_quantity']; ?>" data-product-id="<?php echo (int)$product['product_id']; ?>" <?php echo $input_disabled_attr; ?>>
-                                        <button class="add-to-cart-btn" data-product-id="<?php echo (int)$product['product_id']; ?>"
+                                        <input type="number" class="quantity-input" value="<?php echo $input_value; ?>" min="0" 
+                                               max="<?php echo (int)$product['stock_quantity']; ?>" 
+                                               data-product-id="<?php echo (int)$product['product_id']; ?>" <?php echo $is_disabled; ?>>
+                                        <button class="add-to-cart-btn"
+                                                data-product-id="<?php echo (int)$product['product_id']; ?>"
                                                 data-product-name="<?php echo htmlspecialchars($product['name']); ?>"
                                                 data-product-price="<?php echo htmlspecialchars($product['price']); ?>"
                                                 data-product-stock="<?php echo (int)$product['stock_quantity']; ?>"
                                                 data-product-image="<?php echo htmlspecialchars($product['image_url'] ?: '/_placeholder.png'); ?>"
                                                 data-product-description="<?php echo htmlspecialchars($product['description']); ?>"
-                                                <?php echo $disabled_attr; ?>>
+                                                <?php echo $is_disabled; ?>>
                                             <?php echo $button_text; ?>
                                         </button>
                                     </div>
@@ -4209,24 +4343,23 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
     </main>
 
     <aside class="cart-sidebar">
-        <!-- Desktop Warenkorb Header -->
+        <!-- Warenkorb-Header für Desktop -->
         <div class="cart-header-desktop">
             <h2>Ihr Warenkorb</h2>
         </div>
 
-        <!-- Mobiler Warenkorb Header (zusammenklappbar) -->
+        <!-- Warenkorb-Header für Mobilgeräte (klappbar) -->
         <div class="cart-header-mobile">
             <span class="cart-mobile-summary">
-                Warenkorb (<span id="mobile-cart-item-count"><?php echo $cart_item_count; ?></span> Artikel) - <span id="mobile-cart-total-summary"><?php echo formatEuroCurrency($cart_total); ?></span>
+                Warenkorb (<span id="mobile-cart-item-count"><?php echo $cart_item_count; ?></span>) - <span id="mobile-cart-total-summary"><?php echo formatEuroCurrency($cart_total); ?></span>
             </span>
-            <button id="cart-toggle-mobile" class="cart-toggle-button">
+            <button id="cart-toggle-mobile" class="cart-toggle-button" aria-label="Warenkorb ein-/ausklappen">
                 <span class="toggle-text">Details</span> <span class="toggle-icon">▼</span>
             </button>
         </div>
 
-        <!-- Warenkorb Inhalt (klappt auf Mobile ein/aus) -->
+        <!-- Hauptinhalt des Warenkorbs -->
         <div class="cart-body-content">
-            <!-- NEU: Wrapper für scrollbare Items -->
             <div class="cart-items-scrollable-wrapper">
                 <ul id="cart-items">
                     <?php if (empty($_SESSION['cart'])): ?>
@@ -4234,14 +4367,17 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
                     <?php else: ?>
                         <?php foreach ($_SESSION['cart'] as $productId => $item): ?>
                             <li class="cart-item" data-product-id="<?php echo htmlspecialchars($productId); ?>">
-                                <img src="<?php echo htmlspecialchars($item['image_url'] ?: '/_placeholder.png'); ?>" alt="Bild von <?php echo htmlspecialchars($item['name']); ?>: <?php echo htmlspecialchars($item['description']); ?>" class="cart-item-image" loading="lazy" decoding="async">
+                                <img src="<?php echo htmlspecialchars($item['image_url'] ?: '/_placeholder.png'); ?>" 
+                                     alt="Bild von <?php echo htmlspecialchars($item['name']); ?>" class="cart-item-image" 
+                                     loading="lazy" decoding="async">
                                 <div class="cart-item-info">
                                     <h4><?php echo htmlspecialchars($item['name']); ?></h4>
-                                    <p><?php echo formatEuroCurrency(floatval($item['price']) * intval($item['quantity'])); ?></p>
+                                    <p><?php echo formatEuroCurrency((float)$item['price'] * (int)$item['quantity']); ?></p>
                                 </div>
                                 <div class="cart-item-controls">
-                                    <input type="number" class="cart-quantity-input" value="<?php echo htmlspecialchars($item['quantity']); ?>" min="1" max="<?php echo htmlspecialchars($item['stock']); ?>" data-product-id="<?php echo htmlspecialchars($productId); ?>">
-                                    <button class="remove-item-btn" data-product-id="<?php echo htmlspecialchars($productId); ?>">×</button>
+                                    <input type="number" class="cart-quantity-input" value="<?php echo (int)$item['quantity']; ?>" min="1" 
+                                           max="<?php echo (int)$item['stock']; ?>" data-product-id="<?php echo htmlspecialchars($productId); ?>">
+                                    <button class="remove-item-btn" data-product-id="<?php echo htmlspecialchars($productId); ?>" aria-label="Artikel entfernen">×</button>
                                 </div>
                             </li>
                         <?php endforeach; ?>
@@ -4251,11 +4387,13 @@ foreach ($_SESSION['cart'] as $item_id => $item) {
             <div id="cart-total-container">
                 <span>Gesamt:</span> <span id="cart-total"><?php echo formatEuroCurrency($cart_total); ?></span>
             </div>
-            <button class="checkout-button" id="open-checkout-modal" <?php echo empty($_SESSION['cart']) ? 'disabled' : ''; ?>>Weiter</button>
+            <button class="checkout-button" id="open-checkout-modal" <?php echo empty($_SESSION['cart']) ? 'disabled' : ''; ?>>
+                Weiter
+            </button>
         </div>
     </aside>
 
-</div>
+</div> <!-- Ende .site-content-wrapper -->
 
 ==================================================
 DATEINAME: src/modules/success.php
@@ -4495,6 +4633,1320 @@ $bank_bic = "DUMMYBICXXX"; // Dummy-BIC, ANPASSEN!
 </script>
 
 ==================================================
+DATEINAME: src/modules/admin/categories.php
+--------------------------------------------------
+<?php
+// modules/admin/categories.php
+// Wird von modules/admin/index.php geladen.
+// $pdo, formatEuroCurrency, $currentSection, $id, $action, $actionStatus, $actionMessage sind bereits verfügbar.
+
+// POST-Aktionen für Kategorien verarbeiten (Hinzufügen, Bearbeiten, Löschen)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    try {
+        if ($action === 'add' && isset($_POST['add_category'])) {
+            $stmt = $pdo->prepare("INSERT INTO categories (name, description) VALUES (:name, :description)");
+            $stmt->execute([
+                ':name' => $_POST['name'],
+                ':description' => $_POST['description']
+            ]);
+            header('Location: ?section=categories&status=success');
+            exit();
+        } elseif ($action === 'edit' && $id > 0 && isset($_POST['update_category'])) {
+            $stmt = $pdo->prepare("UPDATE categories SET name = :name, description = :description, updated_at = CURRENT_TIMESTAMP WHERE category_id = :id");
+            $stmt->execute([
+                ':name' => $_POST['name'],
+                ':description' => $_POST['description'],
+                ':id' => $id
+            ]);
+            header('Location: ?section=categories&status=success');
+            exit();
+        } elseif ($action === 'delete' && $id > 0 && isset($_POST['delete_category'])) {
+            // Überprüfen, ob Produkte dieser Kategorie zugeordnet sind, bevor gelöscht wird
+            $stmtCheck = $pdo->prepare("SELECT COUNT(*) FROM products WHERE category_id = :id");
+            $stmtCheck->execute([':id' => $id]);
+            if ($stmtCheck->fetchColumn() > 0) {
+                throw new Exception("Kategorie kann nicht gelöscht werden, da noch Produkte zugeordnet sind.");
+            }
+             $stmt = $pdo->prepare("DELETE FROM categories WHERE category_id = :id");
+             $stmt->execute([':id' => $id]);
+             header('Location: ?section=categories&status=success');
+             exit();
+        }
+    } catch (Exception $e) { // Fange auch die selbstgeworfene Exception
+        error_log("Admin-Kategorienaktion Fehler: " . $e->getMessage());
+        header('Location: ?section=categories&status=error&msg=' . urlencode($e->getMessage()));
+        exit();
+    } catch (PDOException $e) {
+         error_log("Admin-Kategorienaktion Fehler: " . $e->getMessage());
+         header('Location: ?section=categories&status=error&msg=' . urlencode('Datenbankfehler: ' . $e->getMessage()));
+         exit();
+    }
+}
+
+// HTML-Ausgabe für Kategorien
+if ($action === 'add' || ($action === 'edit' && $id > 0)) {
+    $categoryToEdit = null;
+    if ($action === 'edit') {
+        $stmtEdit = $pdo->prepare("SELECT * FROM categories WHERE category_id = :id");
+        $stmtEdit->execute([':id' => $id]);
+        $categoryToEdit = $stmtEdit->fetch();
+        if (!$categoryToEdit) {
+            echo '<p class="alert error">Kategorie nicht gefunden.</p>';
+            return;
+        }
+    }
+    ?>
+    <div class="admin-form-container">
+        <h3><?php echo ($action === 'add' ? 'Neue Kategorie hinzufügen' : 'Kategorie #' . htmlspecialchars($id) . ' bearbeiten'); ?></h3>
+        <form method="POST" action="?section=categories&action=<?php echo $action; ?><?php echo ($action === 'edit' ? '&id=' . $id : ''); ?>">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($categoryToEdit['name'] ?? ''); ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Beschreibung:</label>
+                <textarea id="description" name="description"><?php echo htmlspecialchars($categoryToEdit['description'] ?? ''); ?></textarea>
+            </div>
+            <button type="submit" name="<?php echo ($action === 'add' ? 'add_category' : 'update_category'); ?>"><?php echo ($action === 'add' ? 'Kategorie hinzufügen' : 'Kategorie aktualisieren'); ?></button>
+        </form>
+    </div>
+    <?php
+} else {
+    $stmt = $pdo->query("SELECT * FROM categories ORDER BY name");
+    $categories = $stmt->fetchAll();
+    ?>
+    <div class="action-buttons">
+        <a href="?section=categories&action=add" class="add-btn">Neue Kategorie hinzufügen</a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Beschreibung</th>
+                <th>Aktionen</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($categories as $category): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($category['category_id']); ?></td>
+                    <td><?php echo htmlspecialchars($category['name']); ?></td>
+                    <td><?php echo htmlspecialchars(substr($category['description'], 0, 100)); ?><?php echo (strlen($category['description']) > 100 ? '...' : ''); ?></td>
+                    <td class="action-buttons">
+                        <a href="?section=categories&action=edit&id=<?php echo $category['category_id']; ?>" class="edit-btn">Bearbeiten</a>
+                        <form method="POST" action="?section=categories&action=delete&id=<?php echo $category['category_id']; ?>" onsubmit="return confirm('Sicher? Dies löscht die Kategorie nur, wenn keine Produkte mehr zugeordnet sind!');" style="display:inline;">
+                            <button type="submit" name="delete_category" class="delete-btn">Löschen</button>
+                        </form>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <?php
+}
+
+==================================================
+DATEINAME: src/modules/admin/customers.php
+--------------------------------------------------
+<?php
+// modules/admin/customers.php
+// Wird von modules/admin/index.php geladen.
+// $pdo, formatEuroCurrency, $currentSection, $id, $action, $actionStatus, $actionMessage sind bereits verfügbar.
+
+// POST-Aktionen für Kunden verarbeiten (Update)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    try {
+        if ($action === 'edit' && $id > 0 && isset($_POST['update_customer'])) {
+            $firstName = $_POST['first_name'];
+            $lastName = $_POST['last_name'];
+            $email = $_POST['email'];
+            $phone = $_POST['phone_number'];
+            $stmtUpdate = $pdo->prepare("UPDATE users SET first_name = :first_name, last_name = :last_name, email = :email, phone_number = :phone_number, updated_at = CURRENT_TIMESTAMP WHERE user_id = :id");
+            $stmtUpdate->execute([
+                ':first_name' => $firstName,
+                ':last_name' => $lastName,
+                ':email' => $email,
+                ':phone_number' => $phone,
+                ':id' => $id
+            ]);
+            header('Location: ?section=customers&status=success');
+            exit();
+        }
+    } catch (Exception $e) {
+        error_log("Admin-Kundenaktion Fehler: " . $e->getMessage());
+        header('Location: ?section=customers&status=error&msg=' . urlencode($e->getMessage()));
+        exit();
+    }
+}
+
+// HTML-Ausgabe für Kunden
+if ($action === 'edit' && $id > 0) {
+    $stmtEdit = $pdo->prepare("SELECT * FROM users WHERE user_id = :id");
+    $stmtEdit->execute([':id' => $id]);
+    $customerToEdit = $stmtEdit->fetch();
+
+    if (!$customerToEdit) {
+        echo '<p class="alert error">Kunde nicht gefunden.</p>';
+        return;
+    }
+    ?>
+    <div class="admin-form-container">
+        <h3>Kunde #<?php echo htmlspecialchars($customerToEdit['user_id']); ?> bearbeiten</h3>
+        <form method="POST" action="?section=customers&action=edit&id=<?php echo $customerToEdit['user_id']; ?>">
+            <div class="form-group">
+                <label for="first_name">Vorname:</label>
+                <input type="text" id="first_name" name="first_name" value="<?php echo htmlspecialchars($customerToEdit['first_name']); ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="last_name">Nachname:</label>
+                <input type="text" id="last_name" name="last_name" value="<?php echo htmlspecialchars($customerToEdit['last_name']); ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="email">E-Mail:</label>
+                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($customerToEdit['email']); ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="phone_number">Telefon:</label>
+                <input type="text" id="phone_number" name="phone_number" value="<?php echo htmlspecialchars($customerToEdit['phone_number']); ?>">
+            </div>
+            <button type="submit" name="update_customer">Kunden aktualisieren</button>
+        </form>
+    </div>
+    <?php
+} else {
+    $stmt = $pdo->query("SELECT * FROM users ORDER BY created_at DESC");
+    $customers = $stmt->fetchAll();
+    ?>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>E-Mail</th>
+                <th>Telefon</th>
+                <th>Registriert am</th>
+                <th>Aktionen</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($customers as $customer): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($customer['user_id']); ?></td>
+                    <td><?php echo htmlspecialchars($customer['first_name'] . ' ' . $customer['last_name']); ?></td>
+                    <td><?php echo htmlspecialchars($customer['email']); ?></td>
+                    <td><?php echo htmlspecialchars($customer['phone_number'] ?: 'N/A'); ?></td>
+                    <td><?php echo (new DateTime($customer['created_at']))->format('d.m.Y H:i'); ?></td>
+                    <td class="action-buttons">
+                        <a href="?section=customers&action=edit&id=<?php echo $customer['user_id']; ?>" class="edit-btn">Bearbeiten</a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <?php
+}
+
+==================================================
+DATEINAME: src/modules/admin/dashboard.php
+--------------------------------------------------
+<?php
+// modules/admin/dashboard.php
+// Wird von modules/admin/index.php geladen, daher sind $pdo, formatEuroCurrency etc. bereits verfügbar
+
+// Dashboard-Statistiken abrufen
+$totalOrders = $pdo->query("SELECT COUNT(*) FROM orders")->fetchColumn();
+$pendingOrders = $pdo->query("SELECT COUNT(*) FROM orders WHERE status = 'pending'")->fetchColumn();
+$totalCustomers = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn();
+$totalProducts = $pdo->query("SELECT COUNT(*) FROM products")->fetchColumn();
+
+// Umsatzstatistiken
+$totalExpectedIncome = $pdo->query("SELECT SUM(total_amount) FROM orders")->fetchColumn();
+// Summe aller abgeschlossenen Zahlungen
+$totalReceivedIncome = $pdo->query("SELECT SUM(amount) FROM payments WHERE status = 'completed'")->fetchColumn();
+$totalOutstanding = $totalExpectedIncome - $totalReceivedIncome;
+
+?>
+<div class="dashboard-stats">
+    <div class="stat-card">
+        <h3>Gesamtbestellungen</h3>
+        <p><?php echo $totalOrders; ?></p>
+    </div>
+    <div class="stat-card">
+        <h3>Offene Bestellungen</h3>
+        <p><?php echo $pendingOrders; ?></p>
+    </div>
+    <div class="stat-card">
+        <h3>Registrierte Kunden</h3>
+        <p><?php echo $totalCustomers; ?></p>
+    </div>
+    <div class="stat-card">
+        <h3>Verfügbare Produkte</h3>
+        <p><?php echo $totalProducts; ?></p>
+    </div>
+</div>
+
+<h3>Finanzübersicht</h3>
+<div class="dashboard-stats">
+    <div class="stat-card">
+        <h3>Erwarteter Umsatz</h3>
+        <p><?php echo formatEuroCurrency($totalExpectedIncome); ?></p>
+    </div>
+    <div class="stat-card">
+        <h3>Eingegangener Umsatz</h3>
+        <p><?php echo formatEuroCurrency($totalReceivedIncome); ?></p>
+    </div>
+    <div class="stat-card <?php echo ($totalOutstanding > 0 ? 'income-negative' : 'income-positive'); ?>">
+        <h3>Offener Betrag</h3>
+        <p><?php echo formatEuroCurrency($totalOutstanding); ?></p>
+    </div>
+</div>
+
+<h3>Umsatzentwicklung (Platzhalter für Grafik)</h3>
+<div class="chart-container">
+    <canvas id="incomeChart" style="display: none;"></canvas>
+    <p id="chartFallback">Lade Grafik...</p>
+    <pre style="display: none;" id="chartData">
+        <?php
+        // Beispiel-Daten für eine Grafik (würden normalerweise komplexer abgefragt)
+        $monthlySales = $pdo->query("
+            SELECT
+                DATE_FORMAT(order_date, '%Y-%m') as month,
+                SUM(total_amount) as total_ordered
+            FROM orders
+            GROUP BY month
+            ORDER BY month ASC
+            LIMIT 12 -- Letzte 12 Monate
+        ")->fetchAll();
+
+        $monthlyPayments = $pdo->query("
+            SELECT
+                DATE_FORMAT(payment_date, '%Y-%m') as month,
+                SUM(amount) as total_paid
+            FROM payments
+            WHERE status = 'completed'
+            GROUP BY month
+            ORDER BY month ASC
+            LIMIT 12
+        ")->fetchAll();
+
+        $chartLabels = [];
+        $chartOrderedData = [];
+        $chartPaidData = [];
+
+        // Monate der letzten 12 Monate generieren
+        $period = new DatePeriod(
+            new DateTime('-11 months first day of this month'),
+            new DateInterval('P1M'),
+            new DateTime('first day of next month')
+        );
+
+        $allMonths = [];
+        foreach ($period as $dt) {
+            $allMonths[$dt->format('Y-m')] = 0;
+        }
+
+        // Daten zusammenführen
+        $mergedSales = $allMonths;
+        foreach ($monthlySales as $sale) {
+            $mergedSales[$sale['month']] = (float)$sale['total_ordered'];
+        }
+        $mergedPayments = $allMonths;
+        foreach ($monthlyPayments as $payment) {
+            $mergedPayments[$payment['month']] = (float)$payment['total_paid'];
+        }
+
+        foreach ($mergedSales as $month => $total) {
+            $chartLabels[] = (new DateTime($month . '-01'))->format('M Y');
+            $chartOrderedData[] = $total;
+            $chartPaidData[] = $mergedPayments[$month] ?? 0; // Sicherstellen, dass ein Wert existiert
+        }
+
+        echo json_encode([
+            'labels' => $chartLabels,
+            'ordered' => $chartOrderedData,
+            'paid' => $chartPaidData
+        ]);
+        ?>
+    </pre>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chartDataElement = document.getElementById('chartData');
+            const chartFallback = document.getElementById('chartFallback');
+            const canvas = document.getElementById('incomeChart');
+
+            if (chartDataElement && canvas) {
+                try {
+                    const chartConfig = JSON.parse(chartDataElement.textContent);
+
+                    if (chartConfig.labels && chartConfig.labels.length > 0) {
+                        chartFallback.style.display = 'none';
+                        canvas.style.display = 'block';
+
+                        const ctx = canvas.getContext('2d');
+                        new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: chartConfig.labels,
+                                datasets: [
+                                    {
+                                        label: 'Erwarteter Umsatz',
+                                        data: chartConfig.ordered,
+                                        backgroundColor: 'rgba(52, 104, 192, 0.7)', // var(--color-primary)
+                                        borderColor: 'rgba(52, 104, 192, 1)',
+                                        borderWidth: 1
+                                    },
+                                    {
+                                        label: 'Eingegangener Umsatz',
+                                        data: chartConfig.paid,
+                                        backgroundColor: 'rgba(0, 191, 99, 0.7)', // var(--color-secondary)
+                                        borderColor: 'rgba(0, 191, 99, 1)',
+                                        borderWidth: 1
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        title: {
+                                            display: true,
+                                            text: 'Betrag (€)'
+                                        }
+                                    },
+                                    x: {
+                                        title: {
+                                            display: true,
+                                            text: 'Monat'
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        chartFallback.textContent = 'Keine Umsatzdaten für die Darstellung verfügbar.';
+                    }
+                } catch (e) {
+                    console.error("Fehler beim Parsen der Chart-Daten oder Initialisieren von Chart.js:", e);
+                    chartFallback.textContent = 'Fehler beim Laden der Grafikdaten.';
+                }
+            } else {
+                chartFallback.textContent = 'Chart-Container oder Daten nicht gefunden.';
+            }
+        });
+    </script>
+</div>
+
+==================================================
+DATEINAME: src/modules/admin/email_logs.php
+--------------------------------------------------
+<?php
+// modules/admin/email_logs.php
+// Wird von modules/admin/index.php geladen.
+// $pdo, formatEuroCurrency, $currentSection, $id, $action, $actionStatus, $actionMessage sind bereits verfügbar.
+
+// HTML-Ausgabe für E-Mail-Logs
+$stmt = $pdo->query("SELECT * FROM email_logs ORDER BY sent_at DESC");
+$emailLogs = $stmt->fetchAll();
+?>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>An E-Mail</th>
+            <th>Betreff</th>
+            <th>Status</th>
+            <th>Versendet am</th>
+            <th>Fehlermeldung</th>
+            <th>Bestell-ID</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($emailLogs as $log): ?>
+            <tr>
+                <td><?php echo htmlspecialchars($log['log_id']); ?></td>
+                <td><?php echo htmlspecialchars($log['to_email']); ?></td>
+                <td><?php echo htmlspecialchars($log['subject']); ?></td>
+                <td><?php echo htmlspecialchars(ucfirst($log['status'])); ?></td>
+                <td><?php echo (new DateTime($log['sent_at']))->format('d.m.Y H:i'); ?></td>
+                <td><?php echo htmlspecialchars($log['error_message'] ?: 'N/A'); ?></td>
+                <td><?php echo ($log['order_id'] ? '<a href="?section=orders&action=edit&id=' . htmlspecialchars($log['order_id']) . '">' . htmlspecialchars($log['order_id']) . '</a>' : 'N/A'); ?></td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
+==================================================
+DATEINAME: src/modules/admin/index.php
+--------------------------------------------------
+<?php
+// modules/admin/index.php
+// Dies ist der Admin-Router
+
+// Da index.php bereits session_start() aufgerufen hat, ist es hier nicht nötig,
+// aber wir überprüfen vorsichtshalber.
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Benötigte Konfiguration und Funktionen laden (ROOT_PATH kommt von der Haupt-index.php)
+require_once ROOT_PATH . 'config/sensitive_config.php';
+require_once ROOT_PATH . 'include/db.php';
+require_once ROOT_PATH . 'include/email.php'; // Für mögliche E-Mail-Funktionen im Admin
+require_once ROOT_PATH . 'include/helpers.php'; // Für formatEuroCurrency
+
+global $pdo; // Sicherstellen, dass $pdo verfügbar ist
+if (!isset($pdo)) {
+    $pdo = getDbConnection();
+}
+
+// --- GLOBALE VARIABLEN FÜR ADMIN-KONTEXT ---
+$isAdminLoggedIn = (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true);
+$loginError = '';
+$currentSection = $_GET['section'] ?? 'dashboard';
+$actionStatus = $_GET['status'] ?? ''; // Für Erfolgs-/Fehlermeldungen nach Aktionen
+$actionMessage = $_GET['msg'] ?? ''; // Zusätzliche Nachricht bei Fehlern
+$id = (int)($_GET['id'] ?? 0); // Allgemeine ID für Aktionen
+$action = $_GET['action'] ?? '';
+
+
+// --- VORVERARBEITUNG VON POST- UND GET-ANFRAGEN (VOR JEDER HTML-AUSGABE) ---
+
+// 1. Logout-Logik (GET-Anfrage)
+if ($action === 'logout') {
+    session_destroy();
+    header('Location: /admin'); // Redirect zur Login-Seite
+    exit();
+}
+
+// 2. Login-Logik (POST-Anfrage)
+if (isset($_POST['admin_password']) && !$isAdminLoggedIn) {
+    if ($_POST['admin_password'] === ADMIN_PASSWORD) {
+        $_SESSION['admin_logged_in'] = true;
+        header('Location: /admin'); // Redirect nach erfolgreichem Login, um POST-Daten zu vermeiden
+        exit();
+    } else {
+        $loginError = 'Falsches Passwort.';
+    }
+}
+
+// Wenn nicht eingeloggt, zeige Login-Formular und beende
+if (!$isAdminLoggedIn) {
+    ?>
+    <!DOCTYPE html>
+    <html lang="de">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Admin Login</title>
+        <link rel="stylesheet" href="/.main.css"> <!-- Lade dein Haupt-CSS -->
+        <style>
+            /* Spezifische Login-Stile, falls sie nicht im Haupt-CSS sind */
+            body { font-family: 'Inter', Arial, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+            .login-container { background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; width: 350px; }
+            .login-container h2 { margin-bottom: 25px; color: #333; }
+            .login-container input[type="password"] { width: calc(100% - 24px); padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em; }
+            .login-container button { background-color: #4285f4; color: white; padding: 12px 25px; border: none; border-radius: 6px; cursor: pointer; font-size: 1em; transition: background-color 0.2s ease; }
+            .login-container button:hover { background-color: #357ae8; }
+            .login-container .error { color: #e44d26; margin-bottom: 15px; }
+        </style>
+    </head>
+    <body>
+        <div class="login-container">
+            <h2>Admin Login</h2>
+            <?php if ($loginError): ?>
+                <p class="error"><?php echo htmlspecialchars($loginError); ?></p>
+            <?php endif; ?>
+            <form method="POST">
+                <input type="password" name="admin_password" placeholder="Passwort" required>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </body>
+    </html>
+    <?php
+    exit(); // Beende Skript, wenn nicht eingeloggt
+}
+
+// --- Wenn eingeloggt, lade den Admin-Header und die spezifische Sektion ---
+// Admin Header (sidebar und oberer Teil des Contents)
+require_once ROOT_PATH . 'templates/header.php'; // Normaler Header des Shops
+
+// Admin-Layout-Wrapper öffnen
+echo '<div class="admin-container">';
+echo '<div class="admin-sidebar">';
+echo '<h2>Admin Panel</h2>';
+echo '<ul>';
+// Links für die Navigation
+$adminNavItems = [
+    'dashboard' => 'Dashboard',
+    'orders' => 'Bestellungen',
+    'customers' => 'Kunden',
+    'payments' => 'Zahlungen',
+    'products' => 'Produkte',
+    'categories' => 'Kategorien',
+    'pickup_dates' => 'Abholtermine',
+    'email_logs' => 'E-Mail Logs',
+];
+foreach ($adminNavItems as $key => $label) {
+    $activeClass = ($currentSection == $key) ? 'active' : '';
+    echo '<li><a href="?section=' . htmlspecialchars($key) . '" class="' . $activeClass . '">' . htmlspecialchars($label) . '</a></li>';
+}
+echo '<li><a href="?action=logout">Logout</a></li>';
+echo '</ul>';
+echo '</div>'; // .admin-sidebar schließen
+
+echo '<div class="admin-content">';
+echo '<h1>' . ucfirst(str_replace('_', ' ', $currentSection)) . ' Verwaltung</h1>';
+
+// Erfolgs-/Fehlermeldungen anzeigen
+if ($actionStatus === 'success'): ?>
+    <div class="alert success"><?php echo htmlspecialchars($actionMessage ?: 'Aktion erfolgreich ausgeführt.'); ?></div>
+<?php elseif ($actionStatus === 'error'): ?>
+    <div class="alert error"><?php echo htmlspecialchars($actionMessage ?: 'Fehler bei der Aktion.'); ?></div>
+<?php endif;
+
+// Lade die spezifische Admin-Sektion
+$adminSectionPath = ROOT_PATH . 'modules/admin/' . $currentSection . '.php';
+
+if (file_exists($adminSectionPath)) {
+    require_once $adminSectionPath;
+} else {
+    echo '<p class="alert error">Admin-Sektion nicht gefunden.</p>';
+}
+
+echo '</div>'; // .admin-content schließen
+echo '</div>'; // .admin-container schließen
+
+// Footer laden
+require_once ROOT_PATH . 'templates/footer.php';
+?>
+
+==================================================
+DATEINAME: src/modules/admin/orders.php
+--------------------------------------------------
+<?php
+// modules/admin/orders.php
+// Wird von modules/admin/index.php geladen.
+// $pdo, formatEuroCurrency, $currentSection, $id, $action, $actionStatus, $actionMessage sind bereits verfügbar.
+
+// POST-Aktionen für Bestellungen verarbeiten (Status-Update)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    try {
+        if ($action === 'edit' && $id > 0 && isset($_POST['update_order'])) {
+            $newStatus = $_POST['status'];
+
+            // Alten Status abrufen
+            $stmtOldStatus = $pdo->prepare("SELECT o.status, u.email, u.first_name, u.last_name FROM orders o JOIN users u ON o.user_id = u.user_id WHERE o.order_id = :id");
+            $stmtOldStatus->execute([':id' => $id]);
+            $oldOrderInfo = $stmtOldStatus->fetch();
+
+            if ($oldOrderInfo && $oldOrderInfo['status'] !== $newStatus) { // Nur senden, wenn Status sich wirklich ändert
+                $stmtUpdate = $pdo->prepare("UPDATE orders SET status = :status WHERE order_id = :id");
+                $stmtUpdate->execute([':status' => $newStatus, ':id' => $id]);
+
+                // E-Mail an den Kunden senden
+                $customerEmail = $oldOrderInfo['email'];
+                $customerName = $oldOrderInfo['first_name'] . ' ' . $oldOrderInfo['last_name'];
+                $emailSubject = "Status Ihrer Bestellung #{$id} bei " . MAIL_FROM_NAME . " aktualisiert";
+                $emailBody = "
+                    <p>Hallo {$customerName},</p>
+                    <p>der Status Ihrer Bestellung mit der Nummer <strong>#{$id}</strong> wurde aktualisiert.</p>
+                    <p>Alter Status: <strong>" . htmlspecialchars(ucfirst($oldOrderInfo['status'])) . "</strong></p>
+                    <p>Neuer Status: <strong>" . htmlspecialchars(ucfirst($newStatus)) . "</strong></p>
+                    <p>Sie können den aktuellen Status Ihrer Bestellungen jederzeit in Ihrem Kundenkonto einsehen.</p>
+                    <p>Vielen Dank für Ihr Vertrauen!</p>
+                    <p>Mit freundlichen Grüssen,<br>Ihr Team von " . MAIL_FROM_NAME . "</p>";
+
+                sendAppEmail($customerEmail, $emailSubject, $emailBody, $id);
+                header('Location: ?section=orders&status=success&msg=' . urlencode('Bestellstatus erfolgreich aktualisiert. Eine E-Mail wurde an den Kunden gesendet.'));
+            } else {
+                header('Location: ?section=orders&status=success&msg=' . urlencode('Bestellstatus war bereits aktuell. Keine Änderung vorgenommen.'));
+            }
+            exit();
+        }
+    } catch (Exception $e) {
+        error_log("Admin-Bestellaktion Fehler: " . $e->getMessage());
+        header('Location: ?section=orders&status=error&msg=' . urlencode($e->getMessage()));
+        exit();
+    }
+}
+
+// HTML-Ausgabe für Bestellungen
+if ($action === 'edit' && $id > 0) {
+    $stmtEdit = $pdo->prepare("SELECT o.*, u.first_name, u.last_name, u.email, u.phone_number, pd.pickup_datetime, pd.location FROM orders o JOIN users u ON o.user_id = u.user_id LEFT JOIN pickup_dates pd ON o.pickup_date_id = pd.pickup_date_id WHERE o.order_id = :id");
+    $stmtEdit->execute([':id' => $id]);
+    $orderToEdit = $stmtEdit->fetch();
+
+    if (!$orderToEdit) {
+         echo '<p class="alert error">Bestellung nicht gefunden.</p>';
+         return;
+    }
+
+    // Bestelldetails abrufen
+    $stmtItems = $pdo->prepare("SELECT oi.*, p.name as product_name FROM order_items oi JOIN products p ON oi.product_id = p.product_id WHERE oi.order_id = :order_id");
+    $stmtItems->execute([':order_id' => $id]);
+    $orderItems = $stmtItems->fetchAll();
+
+    // Zahlungen für diese Bestellung abrufen
+    $stmtPayments = $pdo->prepare("SELECT * FROM payments WHERE order_id = :order_id ORDER BY payment_date ASC");
+    $stmtPayments->execute([':order_id' => $id]);
+    $orderPayments = $stmtPayments->fetchAll();
+
+    $totalPaid = 0;
+    foreach($orderPayments as $payment) {
+        if ($payment['status'] === 'completed') { // Nur abgeschlossene Zahlungen zählen
+            $totalPaid += $payment['amount'];
+        }
+    }
+    $outstandingAmount = $orderToEdit['total_amount'] - $totalPaid;
+
+    ?>
+    <div class="admin-form-container">
+        <h3>Bestellung #<?php echo htmlspecialchars($orderToEdit['order_id']); ?> Details</h3>
+        <p><strong>Kunde:</strong> <?php echo htmlspecialchars($orderToEdit['first_name'] . ' ' . $orderToEdit['last_name']); ?> (<?php echo htmlspecialchars($orderToEdit['email']); ?>)</p>
+        <p><strong>Gesamtbestellwert:</strong> <?php echo formatEuroCurrency($orderToEdit['total_amount']); ?></p>
+        <p><strong>Gesamt bezahlt:</strong> <?php echo formatEuroCurrency($totalPaid); ?></p>
+        <p><strong>Offener Betrag:</strong> <span style="color: <?php echo ($outstandingAmount > 0 ? '#dc3545' : '#28a745'); ?>; font-weight: bold;"><?php echo formatEuroCurrency($outstandingAmount); ?></span></p>
+        <p><strong>Zahlungsmethode:</strong> <?php echo htmlspecialchars(ucfirst(str_replace('_', ' ', $orderToEdit['payment_method']))); ?></p>
+        <p><strong>Abholung:</strong> <?php echo ($orderToEdit['pickup_datetime'] ? (new DateTime($orderToEdit['pickup_datetime']))->format('d.m.Y H:i') . ' Uhr - ' . htmlspecialchars($orderToEdit['location']) : 'N/A'); ?></p>
+
+        <h4>Bestellte Artikel:</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Produkt</th>
+                    <th>Menge</th>
+                    <th>Einzelpreis bei Bestellung</th>
+                    <th>Summe</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($orderItems as $item): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($item['product_name']); ?></td>
+                        <td><?php echo htmlspecialchars($item['quantity']); ?></td>
+                        <td><?php echo formatEuroCurrency($item['price_at_order']); ?></td>
+                        <td><?php echo formatEuroCurrency($item['quantity'] * $item['price_at_order']); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+
+        <h4>Zahlungen für diese Bestellung:</h4>
+        <?php if (empty($orderPayments)): ?>
+            <p>Keine Zahlungen für diese Bestellung erfasst.</p>
+        <?php else: ?>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Betrag</th>
+                        <th>Datum</th>
+                        <th>Methode</th>
+                        <th>Transaktions ID</th>
+                        <th>Status</th>
+                        <th>Aktionen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($orderPayments as $payment): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($payment['payment_id']); ?></td>
+                            <td><?php echo formatEuroCurrency($payment['amount']); ?></td>
+                            <td><?php echo (new DateTime($payment['payment_date']))->format('d.m.Y H:i'); ?></td>
+                            <td><?php echo htmlspecialchars(ucfirst(str_replace('_', ' ', $payment['payment_method']))); ?></td>
+                            <td><?php echo htmlspecialchars($payment['transaction_id'] ?: 'N/A'); ?></td>
+                            <td><?php echo htmlspecialchars(ucfirst($payment['status'])); ?></td>
+                            <td class="action-buttons">
+                                <a href="?section=payments&action=edit&id=<?php echo $payment['payment_id']; ?>" class="edit-btn">Bearbeiten</a>
+                                <form method="POST" action="?section=payments&action=delete&id=<?php echo $payment['payment_id']; ?>&return_to_order_id=<?php echo $orderToEdit['order_id']; ?>" onsubmit="return confirm('Sicher? Diese Zahlung löschen?');" style="display:inline;">
+                                    <button type="submit" name="delete_payment" class="delete-btn">Löschen</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+        <div class="action-buttons" style="margin-top: 15px;">
+            <a href="?section=payments&action=add&order_id=<?php echo $orderToEdit['order_id']; ?>" class="add-btn">Neue Zahlung hinzufügen</a>
+        </div>
+
+
+        <h4 style="margin-top: 30px;">Bestellstatus ändern:</h4>
+        <form method="POST" action="?section=orders&action=edit&id=<?php echo $orderToEdit['order_id']; ?>">
+            <div class="form-group">
+                <label for="order_status">Status:</label>
+                <select id="order_status" name="status" required>
+                    <option value="pending" <?php echo ($orderToEdit['status'] == 'pending' ? 'selected' : ''); ?>>Ausstehend</option>
+                    <option value="confirmed" <?php echo ($orderToEdit['status'] == 'confirmed' ? 'selected' : ''); ?>>Bestätigt</option>
+                    <option value="completed" <?php echo ($orderToEdit['status'] == 'completed' ? 'selected' : ''); ?>>Abgeschlossen</option>
+                    <option value="cancelled" <?php echo ($orderToEdit['status'] == 'cancelled' ? 'selected' : ''); ?>>Storniert</option>
+                </select>
+            </div>
+            <button type="submit" name="update_order">Status aktualisieren</button>
+        </form>
+    </div>
+    <?php
+} else {
+    $stmt = $pdo->query("SELECT o.*, u.first_name, u.last_name, pd.pickup_datetime, pd.location FROM orders o JOIN users u ON o.user_id = u.user_id LEFT JOIN pickup_dates pd ON o.pickup_date_id = pd.pickup_date_id ORDER BY o.order_date DESC");
+    $orders = $stmt->fetchAll();
+    ?>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Kunde</th>
+                <th>Datum</th>
+                <th>Betrag</th>
+                <th>Status</th>
+                <th>Zahlung</th>
+                <th>Aktionen</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($orders as $order): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($order['order_id']); ?></td>
+                    <td><?php echo htmlspecialchars($order['first_name'] . ' ' . $order['last_name']); ?></td>
+                    <td><?php echo (new DateTime($order['order_date']))->format('d.m.Y H:i'); ?></td>
+                    <td><?php echo formatEuroCurrency($order['total_amount']); ?></td>
+                    <td><?php echo htmlspecialchars(ucfirst($order['status'])); ?></td>
+                    <td><?php echo htmlspecialchars(ucfirst(str_replace('_', ' ', $order['payment_method']))); ?></td>
+                    <td class="action-buttons">
+                        <a href="?section=orders&action=edit&id=<?php echo $order['order_id']; ?>" class="edit-btn">Details/Bearbeiten</a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <?php
+}
+
+==================================================
+DATEINAME: src/modules/admin/payments.php
+--------------------------------------------------
+<?php
+// modules/admin/payments.php
+// Wird von modules/admin/index.php geladen.
+// $pdo, formatEuroCurrency, $currentSection, $id, $action, $actionStatus, $actionMessage sind bereits verfügbar.
+
+// POST-Aktionen für Zahlungen verarbeiten (Hinzufügen, Bearbeiten, Löschen)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    try {
+        if ($action === 'add' && isset($_POST['add_payment'])) {
+            $order_id = (int)$_POST['order_id'];
+            $payment_date = $_POST['payment_date'];
+            $amount = (float)$_POST['amount'];
+            $payment_method = $_POST['payment_method'];
+            $transaction_id = $_POST['transaction_id'] ?: null;
+            $status = $_POST['status'];
+            $notes = $_POST['notes'] ?: null;
+
+            // Überprüfen, ob die Bestell-ID existiert
+            $stmtOrderCheck = $pdo->prepare("SELECT COUNT(*) FROM orders WHERE order_id = :order_id");
+            $stmtOrderCheck->execute([':order_id' => $order_id]);
+            if ($stmtOrderCheck->fetchColumn() == 0) {
+                throw new Exception("Bestell-ID existiert nicht.");
+            }
+
+            $stmt = $pdo->prepare("INSERT INTO payments (order_id, payment_date, amount, payment_method, transaction_id, status, notes) VALUES (:order_id, :payment_date, :amount, :payment_method, :transaction_id, :status, :notes)");
+            $stmt->execute([
+                ':order_id' => $order_id,
+                ':payment_date' => $payment_date,
+                ':amount' => $amount,
+                ':payment_method' => $payment_method,
+                ':transaction_id' => $transaction_id,
+                ':status' => $status,
+                ':notes' => $notes
+            ]);
+
+            // E-Mail an den Kunden senden, wenn Zahlung abgeschlossen
+            if ($status === 'completed') {
+                $stmtOrderUser = $pdo->prepare("SELECT u.email, u.first_name, u.last_name, o.total_amount FROM orders o JOIN users u ON o.user_id = u.user_id WHERE o.order_id = :order_id");
+                $stmtOrderUser->execute([':order_id' => $order_id]);
+                $orderUserInfo = $stmtOrderUser->fetch();
+
+                if ($orderUserInfo) {
+                    $customerEmail = $orderUserInfo['email'];
+                    $customerName = $orderUserInfo['first_name'] . ' ' . $orderUserInfo['last_name'];
+                    $emailSubject = "Zahlung für Bestellung #{$order_id} bei " . MAIL_FROM_NAME . " eingegangen";
+                    $emailBody = "
+                        <p>Hallo {$customerName},</p>
+                        <p>wir freuen uns, Ihnen mitteilen zu können, dass Ihre Zahlung von <strong>" . formatEuroCurrency($amount) . "</strong> für die Bestellung <strong>#{$order_id}</strong> erfolgreich bearbeitet und als 'Abgeschlossen' markiert wurde.</p>
+                        <p>Gesamtbetrag der Bestellung: <strong>" . formatEuroCurrency($orderUserInfo['total_amount']) . "</strong></p>
+                        <p>Wir bedanken uns für Ihre Bestellung!</p>
+                        <p>Mit freundlichen Grüssen,<br>Ihr Team von " . MAIL_FROM_NAME . "</p>";
+
+                    sendAppEmail($customerEmail, $emailSubject, $emailBody, $order_id);
+                }
+            }
+
+            // Redirect zurück zur Zahlungsliste oder zur Bestelldetailseite, wenn von dort gekommen
+            if (isset($_POST['return_to_order_id']) && (int)$_POST['return_to_order_id'] === $order_id) {
+                 header('Location: ?section=orders&action=edit&id=' . $order_id . '&status=success&msg=' . urlencode('Zahlung erfolgreich hinzugefügt.'));
+            } else {
+                header('Location: ?section=payments&status=success');
+            }
+            exit();
+        } elseif ($action === 'edit' && $id > 0 && isset($_POST['update_payment'])) {
+            // Alten Zahlungsstatus abrufen und User-Info holen
+            $stmtOldPayment = $pdo->prepare("SELECT p.status, p.order_id, u.email, u.first_name, u.last_name, o.total_amount FROM payments p JOIN orders o ON p.order_id = o.order_id JOIN users u ON o.user_id = u.user_id WHERE p.payment_id = :id");
+            $stmtOldPayment->execute([':id' => $id]);
+            $oldPaymentInfo = $stmtOldPayment->fetch();
+
+            $payment_date = $_POST['payment_date'];
+            $amount = (float)$_POST['amount'];
+            $payment_method = $_POST['payment_method'];
+            $transaction_id = $_POST['transaction_id'] ?: null;
+            $status = $_POST['status'];
+            $notes = $_POST['notes'] ?: null;
+
+            $stmtUpdate = $pdo->prepare("UPDATE payments SET payment_date = :payment_date, amount = :amount, payment_method = :payment_method, transaction_id = :transaction_id, status = :status, notes = :notes WHERE payment_id = :id");
+            $stmtUpdate->execute([
+                ':payment_date' => $payment_date,
+                ':amount' => $amount,
+                ':payment_method' => $payment_method,
+                ':transaction_id' => $transaction_id,
+                ':status' => $status,
+                ':notes' => $notes,
+                ':id' => $id
+            ]);
+
+            // E-Mail an den Kunden senden, wenn der Status sich geändert hat (besonders wichtig bei 'completed')
+            if ($oldPaymentInfo && $oldPaymentInfo['status'] !== $status) {
+                $customerEmail = $oldPaymentInfo['email'];
+                $customerName = $oldPaymentInfo['first_name'] . ' ' . $oldPaymentInfo['last_name'];
+                $orderId = $oldPaymentInfo['order_id'];
+                $emailSubject = "Status Ihrer Zahlung #{$id} für Bestellung #{$orderId} bei " . MAIL_FROM_NAME . " aktualisiert";
+                $emailBody = "
+                    <p>Hallo {$customerName},</p>
+                    <p>der Status Ihrer Zahlung mit der ID <strong>#{$id}</strong> für die Bestellung <strong>#{$orderId}</strong> wurde aktualisiert.</p>
+                    <p>Alter Status: <strong>" . htmlspecialchars(ucfirst($oldPaymentInfo['status'])) . "</strong></p>
+                    <p>Neuer Status: <strong>" . htmlspecialchars(ucfirst($status)) . "</strong></p>
+                    <p>Betrag der Zahlung: <strong>" . formatEuroCurrency($amount) . "</strong></p>
+                    <p>Bei Rückfragen stehen wir Ihnen gerne zur Verfügung.</p>
+                    <p>Mit freundlichen Grüssen,<br>Ihr Team von " . MAIL_FROM_NAME . "</p>";
+
+                sendAppEmail($customerEmail, $emailSubject, $emailBody, $orderId);
+            }
+
+            header('Location: ?section=payments&status=success');
+            exit();
+        } elseif ($action === 'delete' && $id > 0 && isset($_POST['delete_payment'])) {
+             $stmt = $pdo->prepare("DELETE FROM payments WHERE payment_id = :id");
+             $stmt->execute([':id' => $id]);
+             // Optional: E-Mail senden, dass Zahlung storniert/gelöscht wurde.
+             header('Location: ?section=payments&status=success');
+             exit();
+        }
+    } catch (Exception $e) {
+        error_log("Admin-Zahlungsaktion Fehler: " . $e->getMessage());
+        header('Location: ?section=' . $currentSection . '&status=error&msg=' . urlencode($e->getMessage()));
+        exit();
+    }
+}
+
+// HTML-Ausgabe für Zahlungen
+$orderIdFromGet = (int)($_GET['order_id'] ?? 0); // Optional, wenn von Bestellseite verlinkt
+
+if ($action === 'add' || ($action === 'edit' && $id > 0)) {
+    $paymentToEdit = null;
+    if ($action === 'edit') {
+        $stmtEdit = $pdo->prepare("SELECT * FROM payments WHERE payment_id = :id");
+        $stmtEdit->execute([':id' => $id]);
+        $paymentToEdit = $stmtEdit->fetch();
+        if (!$paymentToEdit) {
+            echo '<p class="alert error">Zahlung nicht gefunden.</p>';
+            return;
+        }
+    }
+
+    // Hole Bestelldetails, falls eine order_id vorhanden ist (für Anzeige)
+    $orderInfo = null;
+    $targetOrderId = $orderIdFromGet ?: ($paymentToEdit['order_id'] ?? 0);
+    if ($targetOrderId > 0) {
+        $stmtOrder = $pdo->prepare("SELECT o.order_id, o.total_amount, u.first_name, u.last_name FROM orders o JOIN users u ON o.user_id = u.user_id WHERE o.order_id = :order_id");
+        $stmtOrder->execute([':order_id' => $targetOrderId]);
+        $orderInfo = $stmtOrder->fetch();
+    }
+
+    ?>
+    <div class="admin-form-container">
+        <h3><?php echo ($action === 'add' ? 'Neue Zahlung hinzufügen' : 'Zahlung #' . htmlspecialchars($id) . ' bearbeiten'); ?></h3>
+        <?php if ($orderInfo): ?>
+            <p><strong>Bestellung:</strong> #<?php echo htmlspecialchars($orderInfo['order_id']); ?> (Kunde: <?php echo htmlspecialchars($orderInfo['first_name'] . ' ' . $orderInfo['last_name']); ?>, Gesamt: <?php echo formatEuroCurrency($orderInfo['total_amount']); ?>)</p>
+        <?php elseif ($action === 'add'): ?>
+            <div class="form-group">
+                <label for="order_id">Bestell-ID:</label>
+                <input type="number" id="order_id" name="order_id" value="<?php echo htmlspecialchars($orderIdFromGet); ?>" required min="1">
+            </div>
+        <?php endif; ?>
+
+        <form method="POST" action="?section=payments&action=<?php echo $action; ?><?php echo ($action === 'edit' ? '&id=' . $id : ''); ?>">
+            <?php if ($orderInfo): // Wenn von Bestellung aus hinzugefügt wird, die Order-ID übergeben ?>
+                <input type="hidden" name="order_id" value="<?php echo htmlspecialchars($orderInfo['order_id']); ?>">
+                <input type="hidden" name="return_to_order_id" value="<?php echo htmlspecialchars($orderInfo['order_id']); ?>">
+            <?php elseif ($action === 'add' && $orderIdFromGet): // Wenn direkt auf Payments-Seite hinzugefügt wird und order_id in GET ?>
+                <input type="hidden" name="order_id" value="<?php echo htmlspecialchars($orderIdFromGet); ?>">
+                <input type="hidden" name="return_to_order_id" value="<?php echo htmlspecialchars($orderIdFromGet); ?>">
+            <?php endif; ?>
+
+            <div class="form-group">
+                <label for="payment_date">Zahlungsdatum & Uhrzeit:</label>
+                <input type="datetime-local" id="payment_date" name="payment_date" value="<?php echo (new DateTime($paymentToEdit['payment_date'] ?? 'now'))->format('Y-m-d\TH:i'); ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="amount">Betrag (€):</label>
+                <input type="number" id="amount" name="amount" step="0.01" min="0" value="<?php echo htmlspecialchars($paymentToEdit['amount'] ?? ''); ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="payment_method">Zahlungsmethode:</label>
+                <select id="payment_method" name="payment_method" required>
+                    <option value="bank_transfer" <?php echo (isset($paymentToEdit['payment_method']) && $paymentToEdit['payment_method'] == 'bank_transfer' ? 'selected' : ''); ?>>Überweisung</option>
+                    <option value="cash" <?php echo (isset($paymentToEdit['payment_method']) && $paymentToEdit['payment_method'] == 'cash' ? 'selected' : ''); ?>>Barzahlung</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="transaction_id">Transaktions ID (optional):</label>
+                <input type="text" id="transaction_id" name="transaction_id" value="<?php echo htmlspecialchars($paymentToEdit['transaction_id'] ?? ''); ?>">
+            </div>
+            <div class="form-group">
+                <label for="payment_status">Status:</label>
+                <select id="payment_status" name="status" required>
+                    <option value="pending" <?php echo (isset($paymentToEdit['status']) && $paymentToEdit['status'] == 'pending' ? 'selected' : ''); ?>>Ausstehend</option>
+                    <option value="completed" <?php echo (isset($paymentToEdit['status']) && $paymentToEdit['status'] == 'completed' ? 'selected' : ''); ?>>Abgeschlossen</option>
+                    <option value="refunded" <?php echo (isset($paymentToEdit['status']) && $paymentToEdit['status'] == 'refunded' ? 'selected' : ''); ?>>Rückerstattet</option>
+                    <option value="failed" <?php echo (isset($paymentToEdit['status']) && $paymentToEdit['status'] == 'failed' ? 'selected' : ''); ?>>Fehlgeschlagen</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="notes">Notizen:</label>
+                <textarea id="notes" name="notes"><?php echo htmlspecialchars($paymentToEdit['notes'] ?? ''); ?></textarea>
+            </div>
+            <button type="submit" name="<?php echo ($action === 'add' ? 'add_payment' : 'update_payment'); ?>"><?php echo ($action === 'add' ? 'Zahlung hinzufügen' : 'Zahlung aktualisieren'); ?></button>
+        </form>
+    </div>
+    <?php
+} else {
+    $stmt = $pdo->query("SELECT p.*, o.order_id, u.first_name, u.last_name FROM payments p JOIN orders o ON p.order_id = o.order_id JOIN users u ON o.user_id = u.user_id ORDER BY p.payment_date DESC");
+    $payments = $stmt->fetchAll();
+    ?>
+    <div class="action-buttons">
+        <a href="?section=payments&action=add" class="add-btn">Neue Zahlung hinzufügen</a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Bestellung ID</th>
+                <th>Kunde</th>
+                <th>Datum</th>
+                <th>Betrag</th>
+                <th>Methode</th>
+                <th>Transaktions ID</th>
+                <th>Status</th>
+                <th>Aktionen</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($payments as $payment): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($payment['payment_id']); ?></td>
+                    <td><a href="?section=orders&action=edit&id=<?php echo htmlspecialchars($payment['order_id']); ?>"><?php echo htmlspecialchars($payment['order_id']); ?></a></td>
+                    <td><?php echo htmlspecialchars($payment['first_name'] . ' ' . $payment['last_name']); ?></td>
+                    <td><?php echo (new DateTime($payment['payment_date']))->format('d.m.Y H:i'); ?></td>
+                    <td><?php echo formatEuroCurrency($payment['amount']); ?></td>
+                    <td><?php echo htmlspecialchars(ucfirst(str_replace('_', ' ', $payment['payment_method']))); ?></td>
+                    <td><?php echo htmlspecialchars($payment['transaction_id'] ?: 'N/A'); ?></td>
+                    <td><?php echo htmlspecialchars(ucfirst($payment['status'])); ?></td>
+                    <td class="action-buttons">
+                        <a href="?section=payments&action=edit&id=<?php echo $payment['payment_id']; ?>" class="edit-btn">Bearbeiten</a>
+                        <form method="POST" action="?section=payments&action=delete&id=<?php echo $payment['payment_id']; ?>" onsubmit="return confirm('Sicher? Diese Zahlung löschen?');" style="display:inline;">
+                            <button type="submit" name="delete_payment" class="delete-btn">Löschen</button>
+                        </form>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <?php
+}
+
+==================================================
+DATEINAME: src/modules/admin/pickup_dates.php
+--------------------------------------------------
+<?php
+// modules/admin/pickup_dates.php
+// Wird von modules/admin/index.php geladen.
+// $pdo, formatEuroCurrency, $currentSection, $id, $action, $actionStatus, $actionMessage sind bereits verfügbar.
+
+// POST-Aktionen für Abholtermine verarbeiten (Hinzufügen, Bearbeiten, Löschen)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    try {
+        if ($action === 'add' && isset($_POST['add_pickup_date'])) {
+            $stmt = $pdo->prepare("INSERT INTO pickup_dates (pickup_datetime, location, is_active, notes) VALUES (:pickup_datetime, :location, :is_active, :notes)");
+            $stmt->execute([
+                ':pickup_datetime' => $_POST['pickup_datetime'],
+                ':location' => $_POST['location'],
+                ':is_active' => isset($_POST['is_active']) ? 1 : 0,
+                ':notes' => $_POST['notes']
+            ]);
+            header('Location: ?section=pickup_dates&status=success');
+            exit();
+        } elseif ($action === 'edit' && $id > 0 && isset($_POST['update_pickup_date'])) {
+            $stmt = $pdo->prepare("UPDATE pickup_dates SET pickup_datetime = :pickup_datetime, location = :location, is_active = :is_active, notes = :notes, updated_at = CURRENT_TIMESTAMP WHERE pickup_date_id = :id");
+            $stmt->execute([
+                ':pickup_datetime' => $_POST['pickup_datetime'],
+                ':location' => $_POST['location'],
+                ':is_active' => isset($_POST['is_active']) ? 1 : 0,
+                ':notes' => $_POST['notes'],
+                ':id' => $id
+            ]);
+            header('Location: ?section=pickup_dates&status=success');
+            exit();
+        } elseif ($action === 'delete' && $id > 0 && isset($_POST['delete_pickup_date'])) {
+             $stmt = $pdo->prepare("DELETE FROM pickup_dates WHERE pickup_date_id = :id");
+             $stmt->execute([':id' => $id]);
+             header('Location: ?section=pickup_dates&status=success');
+             exit();
+        }
+    } catch (Exception $e) {
+        error_log("Admin-Abholterminaktion Fehler: " . $e->getMessage());
+        header('Location: ?section=pickup_dates&status=error&msg=' . urlencode($e->getMessage()));
+        exit();
+    }
+}
+
+// HTML-Ausgabe für Abholtermine
+if ($action === 'add' || ($action === 'edit' && $id > 0)) {
+    $dateToEdit = null;
+    if ($action === 'edit') {
+        $stmtEdit = $pdo->prepare("SELECT * FROM pickup_dates WHERE pickup_date_id = :id");
+        $stmtEdit->execute([':id' => $id]);
+        $dateToEdit = $stmtEdit->fetch();
+        if (!$dateToEdit) {
+            echo '<p class="alert error">Abholtermin nicht gefunden.</p>';
+            return;
+        }
+    }
+    ?>
+    <div class="admin-form-container">
+        <h3><?php echo ($action === 'add' ? 'Neuen Abholtermin hinzufügen' : 'Abholtermin #' . htmlspecialchars($id) . ' bearbeiten'); ?></h3>
+        <form method="POST" action="?section=pickup_dates&action=<?php echo $action; ?><?php echo ($action === 'edit' ? '&id=' . $id : ''); ?>">
+            <div class="form-group">
+                <label for="pickup_datetime">Datum und Uhrzeit:</label>
+                <input type="datetime-local" id="pickup_datetime" name="pickup_datetime" value="<?php echo (new DateTime($dateToEdit['pickup_datetime'] ?? 'now'))->format('Y-m-d\TH:i'); ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="location">Ort:</label>
+                <input type="text" id="location" name="location" value="<?php echo htmlspecialchars($dateToEdit['location'] ?? 'Standard Abholort'); ?>" required>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="is_active" name="is_active" <?php echo (isset($dateToEdit['is_active']) && $dateToEdit['is_active'] ? 'checked' : ($action === 'add' ? 'checked' : '')); ?>>
+                <label for="is_active" style="display: inline;">Aktiv</label>
+            </div>
+             <div class="form-group">
+                <label for="notes">Notizen:</label>
+                <textarea id="notes" name="notes"><?php echo htmlspecialchars($dateToEdit['notes'] ?? ''); ?></textarea>
+            </div>
+            <button type="submit" name="<?php echo ($action === 'add' ? 'add_pickup_date' : 'update_pickup_date'); ?>"><?php echo ($action === 'add' ? 'Abholtermin hinzufügen' : 'Abholtermin aktualisieren'); ?></button>
+        </form>
+    </div>
+    <?php
+} else {
+    $stmt = $pdo->query("SELECT * FROM pickup_dates ORDER BY pickup_datetime DESC");
+    $pickupDates = $stmt->fetchAll();
+    ?>
+    <div class="action-buttons">
+        <a href="?section=pickup_dates&action=add" class="add-btn">Neuen Abholtermin hinzufügen</a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Datum/Uhrzeit</th>
+                <th>Ort</th>
+                <th>Aktiv</th>
+                <th>Notizen</th>
+                <th>Aktionen</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($pickupDates as $date): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($date['pickup_date_id']); ?></td>
+                    <td><?php echo (new DateTime($date['pickup_datetime']))->format('d.m.Y H:i'); ?></td>
+                    <td><?php echo htmlspecialchars($date['location']); ?></td>
+                    <td><?php echo ($date['is_active'] ? 'Ja' : 'Nein'); ?></td>
+                    <td><?php echo htmlspecialchars(substr($date['notes'], 0, 50)); ?><?php echo (strlen($date['notes']) > 50 ? '...' : ''); ?></td>
+                    <td class="action-buttons">
+                        <a href="?section=pickup_dates&action=edit&id=<?php echo $date['pickup_date_id']; ?>" class="edit-btn">Bearbeiten</a>
+                        <form method="POST" action="?section=pickup_dates&action=delete&id=<?php echo $date['pickup_date_id']; ?>" onsubmit="return confirm('Sicher? Dies löscht den Abholtermin!');" style="display:inline;">
+                            <button type="submit" name="delete_pickup_date" class="delete-btn">Löschen</button>
+                        </form>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <?php
+}
+
+==================================================
+DATEINAME: src/modules/admin/products.php
+--------------------------------------------------
+<?php
+// modules/admin/products.php
+// Wird von modules/admin/index.php geladen.
+// $pdo, formatEuroCurrency, $currentSection, $id, $action, $actionStatus, $actionMessage sind bereits verfügbar.
+
+// POST-Aktionen für Produkte verarbeiten (Hinzufügen, Bearbeiten, Löschen)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    try {
+        if ($action === 'add' && isset($_POST['add_product'])) {
+            $stmt = $pdo->prepare("INSERT INTO products (name, description, price, stock_quantity, image_url, category_id, is_active) VALUES (:name, :description, :price, :stock_quantity, :image_url, :category_id, :is_active)");
+            $stmt->execute([
+                ':name' => $_POST['name'],
+                ':description' => $_POST['description'],
+                ':price' => $_POST['price'],
+                ':stock_quantity' => $_POST['stock_quantity'],
+                ':image_url' => $_POST['image_url'],
+                ':category_id' => $_POST['category_id'],
+                ':is_active' => isset($_POST['is_active']) ? 1 : 0
+            ]);
+            header('Location: ?section=products&status=success');
+            exit();
+        } elseif ($action === 'edit' && $id > 0 && isset($_POST['update_product'])) {
+            $stmt = $pdo->prepare("UPDATE products SET name = :name, description = :description, price = :price, stock_quantity = :stock_quantity, image_url = :image_url, category_id = :category_id, is_active = :is_active, updated_at = CURRENT_TIMESTAMP WHERE product_id = :id");
+            $stmt->execute([
+                ':name' => $_POST['name'],
+                ':description' => $_POST['description'],
+                ':price' => $_POST['price'],
+                ':stock_quantity' => $_POST['stock_quantity'],
+                ':image_url' => $_POST['image_url'],
+                ':category_id' => $_POST['category_id'],
+                ':is_active' => isset($_POST['is_active']) ? 1 : 0,
+                ':id' => $id
+            ]);
+            header('Location: ?section=products&status=success');
+            exit();
+        } elseif ($action === 'delete' && $id > 0 && isset($_POST['delete_product'])) {
+             $stmt = $pdo->prepare("DELETE FROM products WHERE product_id = :id");
+             $stmt->execute([':id' => $id]);
+             header('Location: ?section=products&status=success');
+             exit();
+        }
+    } catch (Exception $e) {
+        error_log("Admin-Produktaktion Fehler: " . $e->getMessage());
+        header('Location: ?section=products&status=error&msg=' . urlencode($e->getMessage()));
+        exit();
+    }
+}
+
+// HTML-Ausgabe für Produkte
+if ($action === 'add' || ($action === 'edit' && $id > 0)) {
+    $productToEdit = null;
+    if ($action === 'edit') {
+        $stmtEdit = $pdo->prepare("SELECT * FROM products WHERE product_id = :id");
+        $stmtEdit->execute([':id' => $id]);
+        $productToEdit = $stmtEdit->fetch();
+        if (!$productToEdit) {
+             echo '<p class="alert error">Produkt nicht gefunden.</p>';
+             return;
+        }
+    }
+    $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
+    ?>
+    <div class="admin-form-container">
+        <h3><?php echo ($action === 'add' ? 'Neues Produkt hinzufügen' : 'Produkt #' . htmlspecialchars($id) . ' bearbeiten'); ?></h3>
+        <form method="POST" action="?section=products&action=<?php echo $action; ?><?php echo ($action === 'edit' ? '&id=' . $id : ''); ?>">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($productToEdit['name'] ?? ''); ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Beschreibung:</label>
+                <textarea id="description" name="description"><?php echo htmlspecialchars($productToEdit['description'] ?? ''); ?></textarea>
+            </div>
+            <div class="form-group">
+                <label for="price">Preis (€):</label>
+                <input type="number" id="price" name="price" step="0.01" min="0" value="<?php echo htmlspecialchars($productToEdit['price'] ?? ''); ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="stock_quantity">Lagerbestand:</label>
+                <input type="number" id="stock_quantity" name="stock_quantity" min="0" value="<?php echo htmlspecialchars($productToEdit['stock_quantity'] ?? ''); ?>" required>
+            </div>
+            <div class="form-group">
+                <label for="image_url">Bild-URL:</label>
+                <input type="text" id="image_url" name="image_url" value="<?php echo htmlspecialchars($productToEdit['image_url'] ?? ''); ?>">
+            </div>
+            <div class="form-group">
+                <label for="category_id">Kategorie:</label>
+                <select id="category_id" name="category_id" required>
+                    <?php foreach ($categories as $category): ?>
+                        <option value="<?php echo htmlspecialchars($category['category_id']); ?>" <?php echo (isset($productToEdit['category_id']) && $productToEdit['category_id'] == $category['category_id'] ? 'selected' : ''); ?>>
+                            <?php echo htmlspecialchars($category['name']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="is_active" name="is_active" <?php echo (isset($productToEdit['is_active']) && $productToEdit['is_active'] ? 'checked' : ($action === 'add' ? 'checked' : '')); ?>>
+                <label for="is_active" style="display: inline;">Aktiv</label>
+            </div>
+            <button type="submit" name="<?php echo ($action === 'add' ? 'add_product' : 'update_product'); ?>"><?php echo ($action === 'add' ? 'Produkt hinzufügen' : 'Produkt aktualisieren'); ?></button>
+        </form>
+    </div>
+    <?php
+} else {
+    $stmt = $pdo->query("SELECT p.*, c.name as category_name FROM products p JOIN categories c ON p.category_id = c.category_id ORDER BY p.name");
+    $products = $stmt->fetchAll();
+    ?>
+    <div class="action-buttons">
+        <a href="?section=products&action=add" class="add-btn">Neues Produkt hinzufügen</a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Beschreibung</th>
+                <th>Preis</th>
+                <th>Lager</th>
+                <th>Kategorie</th>
+                <th>Aktiv</th>
+                <th>Aktionen</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($products as $product): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($product['product_id']); ?></td>
+                    <td><?php echo htmlspecialchars($product['name']); ?></td>
+                    <td><?php echo htmlspecialchars(substr($product['description'], 0, 50)); ?><?php echo (strlen($product['description']) > 50 ? '...' : ''); ?></td>
+                    <td><?php echo formatEuroCurrency($product['price']); ?></td>
+                    <td><?php echo htmlspecialchars($product['stock_quantity']); ?></td>
+                    <td><?php echo htmlspecialchars($product['category_name']); ?></td>
+                    <td><?php echo ($product['is_active'] ? 'Ja' : 'Nein'); ?></td>
+                    <td class="action-buttons">
+                        <a href="?section=products&action=edit&id=<?php echo $product['product_id']; ?>" class="edit-btn">Bearbeiten</a>
+                        <form method="POST" action="?section=products&action=delete&id=<?php echo $product['product_id']; ?>" onsubmit="return confirm('Sicher? Dies löscht auch alle Bestellartikel, die dieses Produkt verwenden!');" style="display:inline;">
+                            <button type="submit" name="delete_product" class="delete-btn">Löschen</button>
+                        </form>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <?php
+}
+
+==================================================
 DATEINAME: src/partials/cart_content.php
 --------------------------------------------------
 <?php
@@ -4728,8 +6180,6 @@ DATEINAME: src/templates/footer.php
                     document.body.style.overflow = 'hidden';
                     checkoutLoadingOverlay.style.display = 'none'; // Immer versteckt beim Öffnen
                 } else {
-                    // NEU: Zeige eine Fehlermeldung, wenn der Warenkorb (im Frontend) leer ist, obwohl der Button aktiv ist
-                    // Dies kann passieren, wenn z.B. alle Items gelöscht wurden, bevor der Checkout geklickt wurde.
                     checkoutModal.style.display = 'flex';
                     checkoutLoadingOverlay.style.display = 'none';
                     checkoutMessageDiv.classList.add('error');
@@ -4752,16 +6202,13 @@ DATEINAME: src/templates/footer.php
         checkoutForm.addEventListener('submit', async (event) => {
             event.preventDefault();
 
-            // NEU: Client-seitige Warenkorb-Prüfung VOR dem Abschicken des Formulars.
-            // Der Warenkorb auf dem Client ist ein guter Indikator. Wenn der Warenkorb-Display
-            // 0 Artikel anzeigt, dann gar nicht erst abschicken.
             if (cartItemsList.querySelectorAll('.cart-item').length === 0) {
-                 checkoutLoadingOverlay.style.display = 'none'; // Loader ausblenden, falls er fälschlicherweise gestartet wurde
+                 checkoutLoadingOverlay.style.display = 'none';
                  checkoutMessageDiv.style.display = 'block';
                  checkoutMessageDiv.classList.add('error');
                  checkoutMessageDiv.classList.remove('success');
                  checkoutMessageDiv.textContent = 'Ihr Warenkorb ist leer. Bitte fügen Sie Produkte hinzu.';
-                 return; // Absenden verhindern
+                 return;
             }
 
             checkoutLoadingOverlay.style.display = 'flex';
@@ -4777,7 +6224,6 @@ DATEINAME: src/templates/footer.php
                 const response = await fetch('api/checkout_process.php', {
                     method: 'POST',
                     body: formData,
-                    // NEU: Hinzufügen von credential-Handling, um Session-Cookies zuverlässiger zu senden
                     credentials: 'include' 
                 });
                 const data = await response.json();
@@ -4809,7 +6255,6 @@ DATEINAME: src/templates/footer.php
             if (Object.keys(cart).length === 0) {
                 cartItemsList.innerHTML = '<li id="cart-empty-message">Ihr Warenkorb ist leer.</li>';
                 checkoutButton.disabled = true;
-                // NEU: Hier auch den Warenkorb-Button aus dem Modal ggf. deaktivieren
                 const checkoutSubmitButton = checkoutModal.querySelector('#checkout-submit-button');
                 if (checkoutSubmitButton) checkoutSubmitButton.disabled = true;
             } else {
@@ -4867,7 +6312,6 @@ DATEINAME: src/templates/footer.php
                 const response = await fetch('api/cart_process.php', {
                     method: 'POST',
                     body: formData,
-                    // NEU: Hinzufügen von credential-Handling
                     credentials: 'include'
                 });
                 const data = await response.json();
@@ -4932,44 +6376,29 @@ DATEINAME: src/templates/footer.php
 
         const isMobile = () => window.innerWidth <= 768;
 
+        // GEÄNDERT: Logik für das Auf- und Zuklappen des mobilen Warenkorbs
         const applyMobileCartState = () => {
-            const desktopHeader = cartSidebar.querySelector('.cart-header-desktop');
-            const mobileHeader = cartSidebar.querySelector('.cart-header-mobile');
-
-            const rootStyles = getComputedStyle(document.documentElement);
-            const mobileCollapsedHeight = parseFloat(rootStyles.getPropertyValue('--header-height-mobile-collapsed'));
-
-            if (isMobile()) {
-                if (desktopHeader) desktopHeader.style.display = 'none';
-                if (mobileHeader) mobileHeader.style.display = 'flex';
-
-                if (!cartSidebar.classList.contains('is-expanded')) {
-                    cartSidebar.classList.add('is-collapsed');
-                    cartSidebar.style.transform = `translateY(calc(100% - ${mobileCollapsedHeight}px))`;
-                }
-            } else {
-                if (desktopHeader) desktopHeader.style.display = 'block';
-                if (mobileHeader) mobileHeader.style.display = 'none';
-
-                cartSidebar.classList.remove('is-collapsed');
+            if (isMobile() && cartSidebar) {
+                // Standardmäßig zusammengeklappt
+                cartSidebar.classList.add('is-collapsed');
                 cartSidebar.classList.remove('is-expanded');
-                cartSidebar.style.transform = '';
+            } else if (cartSidebar) {
+                // Desktop-Ansicht: Klassen entfernen
+                cartSidebar.classList.remove('is-collapsed', 'is-expanded');
             }
         };
 
         if (cartToggleButton) {
             cartToggleButton.addEventListener('click', () => {
-                const rootStyles = getComputedStyle(document.documentElement);
-                const mobileCollapsedHeight = parseFloat(rootStyles.getPropertyValue('--header-height-mobile-collapsed'));
-
-                if (cartSidebar.classList.contains('is-collapsed')) {
+                const isCollapsed = cartSidebar.classList.contains('is-collapsed');
+                if (isCollapsed) {
                     cartSidebar.classList.remove('is-collapsed');
                     cartSidebar.classList.add('is-expanded');
-                    cartSidebar.style.transform = 'translateY(0)';
+                    document.body.style.overflow = 'hidden'; // Scrollen des Hintergrunds sperren
                 } else {
                     cartSidebar.classList.remove('is-expanded');
                     cartSidebar.classList.add('is-collapsed');
-                    cartSidebar.style.transform = `translateY(calc(100% - ${mobileCollapsedHeight}px))`;
+                    document.body.style.overflow = ''; // Scrollen wieder erlauben
                 }
             });
         }
@@ -5157,7 +6586,7 @@ if ($page === 'api' && isset($segments[1])) {
 
 // ADMIN ROUTING
 if ($page === 'admin') {
-    require_once ROOT_PATH . 'modules/admin.php'; // Pfad korrigiert, falls es nicht in einem Unterordner ist
+    require_once ROOT_PATH . 'modules/admin/index.php'; // Pfad korrigiert, falls es nicht in einem Unterordner ist
     exit();
 }
 
@@ -5271,7 +6700,7 @@ define('MAIL_FROM_EMAIL', getenv('MAIL_FROM_EMAIL') ?: 'noreply@example.com');
 define('MAIL_FROM_NAME', getenv('MAIL_FROM_NAME') ?: 'Your Application');
 
 // Für den Login auf der Admin Seite
-define('ADMIN_PASSWORD_HASH', getenv('ADMIN_PASSWORD_HASH') ?: ''); // Wichtige Umgebungsvariable
+define('ADMIN_PASSWORD', getenv('ADMIN_PASSWORD') ?: ''); // Wichtige Umgebungsvariable
 
 ?>
 EOF

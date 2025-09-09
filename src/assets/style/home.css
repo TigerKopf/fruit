@@ -262,58 +262,8 @@
 }
 
 /* Produkt Teaser Sektion */
-.product-teaser-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--spacing-lg);
-    margin-top: var(--spacing-xl);
-}
+/* ENTFERNT: Alle .product-teaser-* Regeln, da sie nicht mehr verwendet werden */
 
-.product-teaser-item {
-    background-color: var(--color-background-white);
-    padding: var(--spacing-sm);
-    border-radius: var(--border-radius-md);
-    box-shadow: 0 4px 12px var(--color-shadow-light);
-    text-align: center;
-    border: 1px solid var(--color-border);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    text-decoration: none;
-    color: inherit;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.product-teaser-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px var(--color-shadow-medium);
-}
-
-.product-teaser-item img {
-    max-width: 100%;
-    height: 150px;
-    object-fit: contain;
-    margin-bottom: var(--spacing-md);
-    border-radius: var(--border-radius-sm); /* Behält leichte Abrundung bei */
-    background-color: #FDFEFE; /* Behält weißen Hintergrund bei */
-    padding: var(--spacing-xs); /* Behält Padding bei */
-    /* ENTFERNT: mask-image und -webkit-mask-image für rechteckige Form */
-}
-
-
-.product-teaser-item h3 {
-    color: var(--color-text-dark);
-    font-size: 1.3em;
-    margin: 0 0 var(--spacing-xs) 0;
-    font-weight: 600;
-}
-
-.product-teaser-item p {
-    font-size: 1.1em;
-    color: var(--color-accent);
-    font-weight: 700;
-    margin-top: 0;
-}
 
 /* Call to Action Sektion */
 .cta-section {

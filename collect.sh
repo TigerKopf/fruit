@@ -9,6 +9,7 @@ TARGETS=(
     "src/api"
     "src/include"
     "src/modules"
+    "src/modules/admin"
     "src/partials"
     "src/templates"
     "src/index.php"

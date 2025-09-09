@@ -10,7 +10,8 @@ global $pdo;
 $featured_products = [];
 if (isset($pdo)) {
     try {
-        $stmt = $pdo->prepare("SELECT product_id, name, description, price, image_url FROM products WHERE is_active = TRUE ORDER BY created_at DESC LIMIT 3");
+        // GEÄNDERT: 'stock_quantity' zur Abfrage hinzugefügt
+        $stmt = $pdo->prepare("SELECT product_id, name, description, price, image_url, stock_quantity FROM products WHERE is_active = TRUE ORDER BY created_at DESC LIMIT 3");
         $stmt->execute();
         $featured_products = $stmt->fetchAll();
     } catch (PDOException $e) {
@@ -20,7 +21,6 @@ if (isset($pdo)) {
 }
 
 // Die Funktion formatEuroCurrency() wird über include/helpers.php geladen und ist global verfügbar.
-// Wir fügen sie hier sicherheitshalber nochmals hinzu, falls helper.php nicht überall geladen wird (was aber der loader.php tun sollte)
 if (!function_exists('formatEuroCurrency')) {
     function formatEuroCurrency(float $amount): string {
         if (fmod($amount, 1.0) == 0) {
@@ -83,17 +83,30 @@ if (!function_exists('formatEuroCurrency')) {
         <div class="home-section-content">
             <h2>Unsere beliebtesten Früchte</h2>
             <p>Entdecke eine Auswahl unserer exquisiten Produkte, die unsere Kunden lieben.</p>
-            <div class="product-teaser-grid">
+            <!-- GEÄNDERT: 'product-teaser-grid' wird zu 'product-grid' für Konsistenz -->
+            <div class="product-grid">
                 <?php if (!empty($featured_products)): ?>
-                    <?php foreach ($featured_products as $product): ?>
-                        <a href="/shop#product-<?php echo htmlspecialchars($product['product_id']); ?>" class="product-teaser-item">
-                            <img src="<?php echo htmlspecialchars($product['image_url'] ?: '/_placeholder.png'); ?>" alt="Bild von <?php echo htmlspecialchars($product['name']); ?>">
-                            <h3><?php echo htmlspecialchars($product['name']); ?></h3>
-                            <p><?php echo formatEuroCurrency($product['price']); ?></p>
-                            <!-- <div class="product-controls">
-                                // Hier könnte man einen "Zum Warenkorb"-Button hinzufügen, der direkt über JS arbeitet
-                            </div> -->
-                        </a>
+                    <?php foreach ($featured_products as $product):
+                        // GEÄNDERT: Komplette Struktur aus shop.php übernommen
+                        $is_sold_out = ((int)$product['stock_quantity'] <= 0);
+                        $button_text = $is_sold_out ? 'Ausverkauft' : 'In den Warenkorb';
+                        $is_disabled = $is_sold_out ? 'disabled' : '';
+                        $input_value = $is_sold_out ? '0' : '1';
+                    ?>
+                        <div class="product-item">
+                            <div class="product-image-container">
+                                <img src="<?php echo htmlspecialchars($product['image_url'] ?: '/_placeholder.png'); ?>" 
+                                     alt="Produktbild von <?php echo htmlspecialchars($product['name']); ?>" 
+                                     loading="lazy" decoding="async">
+                                <h3><?php echo htmlspecialchars($product['name']); ?></h3>
+                            </div>
+                            <p class="product-quantity-price-line">
+                                <span class="product-unit"><?php echo htmlspecialchars($product['description']); ?> für</span> 
+                                <span class="product-price-value"><?php echo formatEuroCurrency($product['price']); ?></span>
+                            </p>
+                            <div class="product-controls">
+                            </div>
+                        </div>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <p>Derzeit keine Produkte zum Anpreisen verfügbar. Besuchen Sie unseren <a href="/shop">Shop</a>!</p>
