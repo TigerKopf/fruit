@@ -7,10 +7,7 @@ RUN docker-php-ext-install pdo pdo_mysql
 # Aktivieren Sie mod_rewrite für unsere Regeln
 RUN a2enmod rewrite
 
-# Installiere Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Kopieren Sie die individuellen Apache-Konfigurationsdatei
+# Kopieren Sie die individuelle Apache-Konfigurationsdatei
 COPY my-custom.conf /etc/apache2/conf-available/my-custom.conf
 
 # Aktivieren Sie Ihre individuelle Apache-Konfigurationsdatei
@@ -18,6 +15,11 @@ RUN a2enconf my-custom
 
 # Kopieren Sie alle Webseiten-Dateien in den DocumentRoot
 COPY ./src /var/www/html/
+
+# Optional: Stellen Sie sicher, dass Ihre 404.html-Seite ebenfalls kopiert wird,
+# falls sie nicht bereits im ./src-Verzeichnis enthalten ist, das oben kopiert wird.
+# Wenn sie in ./src liegt, ist dieser Schritt überflüssig.
+# COPY ./src/404.html /var/www/html/404.html 
 
 # Stellen Sie sicher, dass das 'config'-Verzeichnis im DocumentRoot existiert.
 # Dies ist wichtig, damit die sensitive_config.php dort platziert werden kann.
@@ -57,14 +59,6 @@ define('ADMIN_PASSWORD', getenv('ADMIN_PASSWORD') ?: ''); // Wichtige Umgebungsv
 
 ?>
 EOF
-
-# Installiere Composer-Abhängigkeiten
-# Dies sollte NACH dem Kopieren der Anwendungsdateien erfolgen,
-# da composer.json und composer.lock im /var/www/html Verzeichnis liegen.
-# --no-dev: Installiert nur Produktions-Abhängigkeiten.
-# --optimize-autoloader: Optimiert den Autoloader für die Produktion.
-WORKDIR /var/www/html
-RUN composer install --no-dev --optimize-autoloader
 
 # Konfigurieren Sie Apache, um auf Port 801 zu lauschen
 EXPOSE 801
