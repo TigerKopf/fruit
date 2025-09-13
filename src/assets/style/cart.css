@@ -354,7 +354,7 @@
     .admin-content { padding: var(--spacing-lg); }
 
     .product-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: var(--spacing-md);
     }
 
@@ -369,95 +369,47 @@
     }
 }
 
-@media (max-width: 768px) { /* Mobilgeräte */
-    body {
-        /* Wichtiger Abstandshalter, damit der fixe Warenkorb nichts verdeckt! */
-        padding-bottom: calc(var(--header-height-mobile-collapsed) + var(--spacing-sm));
+@media (max-width: 992px) and (min-width: 701px) { /* Wichtig: Nur für Bildschirmbreiten zwischen 701px und 992px */
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr); /* Zwei Spalten ab 700px */
+        gap: var(--spacing-md); /* Oder angepasster Abstand */
+        max-width: var(--content-max-width); /* Stellt sicher, dass Ränder bei nicht Fullscreen da sind */
     }
-    
+    .product-item img {
+        height: 180px; /* Anpassen falls nötig */
+    }
+}
+
+@media (max-width: 700px) { /* Kleinere Mobilgeräte bis 700px */
+    main { 
+        padding: var(--spacing-md); /* Konsistentes Padding im main-Bereich */
+    }
     .site-content-wrapper, .admin-container {
-        flex-direction: column;
-        margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-md));
-        transform: none; /* KORREKTUR: Hebt das transform auf, damit position:fixed wieder funktioniert */
+        margin-top: calc(var(--header-height-mobile-collapsed) + var(--spacing-sm));
+        padding: 0 var(--spacing-md); /* Einheitliches Padding links/rechts */
     }
-    
-    main {
-        order: 1;
-        margin-right: 0;
-        margin-bottom: var(--spacing-md);
-        box-shadow: none; /* Auf Mobilgeräten oft überflüssig */
-    }
-
-    /* Mobile Warenkorb-Neugestaltung als Bottom-Drawer */
-    .cart-sidebar {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        width: 100%;
-        top: auto;
-        max-height: calc(var(--cart-max-height-ratio) * 100vh);
-        border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
-        box-shadow: 0 -4px 15px var(--color-shadow-medium);
-        transform: translateY(calc(100% - var(--header-height-mobile-collapsed))); 
-        transition: transform 0.3s ease-in-out;
-        z-index: 100;
-        background-color: var(--color-background-white);
-        gap: 0;
-    }
-    .cart-sidebar.is-expanded {
-        transform: translateY(0); /* Komplett sichtbar */
-    }
-    .cart-sidebar.is-collapsed {
-        overflow-y: hidden; /* Verhindert Scrollen im geschlossenen Zustand */
-    }
-    .cart-sidebar.is-collapsed .cart-body-content { 
-        display: none; /* Inhalt ausblenden, wenn zugeklappt */
-    }
-
-    .cart-header-desktop { display: none; }
-    .cart-header-mobile {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: var(--color-primary);
-        color: white;
-        padding: var(--spacing-sm) var(--spacing-md);
-        border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 1.1em;
-        position: relative;
-        z-index: 101;
-    }
-
-    .cart-toggle-button {
-        background: none;
-        border: none;
-        color: white;
-        font-size: 1.2em;
-        cursor: pointer;
-        line-height: 1;
-        display: flex;
-        align-items: center;
-        gap: var(--spacing-xs);
-    }
-
-    .cart-body-content {
-        max-height: calc(var(--cart-max-height-ratio) * 100vh - var(--header-height-mobile-collapsed));
-        background-color: transparent;
-        border: none;
-        border-radius: 0;
-        box-shadow: none;
+    .footer-content-wrapper {
+        margin: 0 var(--spacing-md) var(--spacing-sm) var(--spacing-md);
         padding: var(--spacing-md);
     }
 
-    .footer-container {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-md);
+    .product-grid { 
+        grid-template-columns: 1fr; /* Nur eine Spalte auf sehr kleinen Geräten */
+        gap: var(--spacing-md); /* Oder angepasster Abstand */
     }
-    .footer-section { margin-bottom: var(--spacing-md); }
-    .footer-section:last-child { margin-bottom: 0; }
+    .product-item {
+        /* Optional: Padding für Produktboxen selbst, falls diese auch Ränder innen brauchen */
+        padding: var(--spacing-sm); 
+    }
+    .product-item img { 
+        height: 160px; /* Höhe für einspaltige Darstellung anpassen */
+    }
+    .product-controls { 
+        flex-direction: column; /* Buttons untereinander auf kleinen Geräten */
+    }
+    .product-controls .add-to-cart-btn { 
+        width: 100%; 
+    }
 }
 
 @media (max-width: 500px) { /* Kleinere Mobilgeräte */

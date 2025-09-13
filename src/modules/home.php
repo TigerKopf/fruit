@@ -105,6 +105,19 @@ if (!function_exists('formatEuroCurrency')) {
                                 <span class="product-price-value"><?php echo formatEuroCurrency($product['price']); ?></span>
                             </p>
                             <div class="product-controls">
+                                <input type="number" class="quantity-input" value="<?php echo $input_value; ?>" min="0" 
+                                       max="<?php echo (int)$product['stock_quantity']; ?>" 
+                                       data-product-id="<?php echo (int)$product['product_id']; ?>" <?php echo $is_disabled; ?>>
+                                <button class="add-to-cart-btn"
+                                        data-product-id="<?php echo (int)$product['product_id']; ?>"
+                                        data-product-name="<?php echo htmlspecialchars($product['name']); ?>"
+                                        data-product-price="<?php echo htmlspecialchars($product['price']); ?>"
+                                        data-product-stock="<?php echo (int)$product['stock_quantity']; ?>"
+                                        data-product-image="<?php echo htmlspecialchars($product['image_url'] ?: '/_placeholder.png'); ?>"
+                                        data-product-description="<?php echo htmlspecialchars($product['description']); ?>"
+                                        <?php echo $is_disabled; ?>>
+                                    <?php echo $button_text; ?>
+                                </button>
                             </div>
                         </div>
                     <?php endforeach; ?>

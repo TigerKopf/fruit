@@ -54,6 +54,8 @@ is_excluded() {
 # Die Ausgabedatei zu Beginn leeren
 > "$OUTPUT_FILE"
 
+echo "Gebe mir alle Dateien immer vollständig aus." >> "$OUTPUT_FILE"
+
 # Durchlaufe alle Ziele in der Liste
 for TARGET in "${TARGETS[@]}"; do
     # Überprüfe, ob das Ziel (Verzeichnis oder Datei) selbst ausgeschlossen werden soll

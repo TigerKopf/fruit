@@ -1,3 +1,4 @@
+Gebe mir alle Dateien immer vollständig aus.
 ==================================================
 DATEINAME: src/assets/style/admin.css
 --------------------------------------------------
